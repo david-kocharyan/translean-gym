@@ -1,4 +1,25 @@
 @import "./icons/material-design-iconic-font/css/materialdesignicons.min.css";
+@import "./app.css";
+
+.mr-2 {
+    margin-right: .75rem;
+} 
+.ml-2 {
+    margin-left: .75rem;
+}
+.d-flex {
+    display: flex;
+}    
+.justify-content-between {
+    justify-content: space-between;
+}
+.align-items-center {
+    align-items: center;
+}
+
+
+
+
 
 @font-face {
     font-family: 'Rubik';
@@ -4403,7 +4424,7 @@ ul.common li a:hover {
 .table>thead>tr.active>th,
 .table>thead>tr>td.active,
 .table>thead>tr>th.active {
-    background-color: #f7fafc!important
+    /* background-color: #f7fafc!important */
 }
 
 .table-bordered,
