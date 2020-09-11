@@ -1,8 +1,5 @@
 @extends('layouts.app')
 
-
-
-
 {{--html in here--}}
 @section('content')
     <div class="row">
@@ -83,39 +80,49 @@
                     <tbody class="font-sm">
                         <tr>
                             <th class="d-flex justify-content-between align-items-center">
-                                Activity 
-                                <!-- <div class="green">
-                                    <i class="fas fa-plus-circle"></i>
-                                </div> -->
+                                Activity
                                 <button class="add-btn green" data-toggle="modal" data-target="#activity">
                                     <i class="fas fa-plus-circle"></i>
                                 </button>
                             </th>
                         </tr>
-                        <tr v-for="(activity, j) in finalActivityArray" :key="j">
+                        <tr v-if="finalActivityArray.length"
+                            v-for="(activity, j) in finalActivityArray" :key="j">
                             <td 
                                 v-for="(activity_info, j) in activity.arr" :key="j" 
                                 class="activity-td d-flex justify-content-between align-items-center"
-
                                 :class="{ 'activity-color text-success' : j == 0 }"
                                 v-if="activity_info.show" 
                             >
 
-                            <div v-if="!activity_info.open && j == 0"
-                                v-for="(activity_infojj, g) in activity.arr" :key="g" >
-                                    @{{ activity_infojj.name }} 
-                            </div>
+                                <!-- <div v-if="!activity_info.open && j == 0"
+                                    v-for="(activity_infojj, g) in activity.arr" :key="g" >
+                                        @{{ activity_infojj.name }} 
+                                </div> -->
 
-                            <div v-if="activity_info.open">
-                                <span>
-                                    @{{ activity_info.name }}
-                                </span>
-                            </div>
+                                <div v-if="activity_info.name">
+                                    <span>
+                                        @{{ activity_info.name }}
+                                        GUGI
+                                    </span>
+                                </div>
 
-                            <div  v-if="activity_info.head && activity_info.open">
-                                <i class="fas fa-edit"></i>
-                            </div>
+                                <!-- <div  v-if="activity_info.head && activity_info.open">
+                                    <i class="fas fa-edit"></i>
+                                </div> -->
 
+                            </td>
+                        </tr>
+                        <tr 
+                            v-if="finalActivityArray.length == 0"
+                            v-for="(time, i) in staticTimes" :key="time.id"
+                        >
+                            <td
+                                v-for="(minute, j) in time.minutes" :key="minute.minute"
+                                class="activity-td d-flex justify-content-between align-items-center"
+                                :class="{ 'activity-color' : j == 0 }"
+                                v-if="minute.show"
+                            >
                             </td>
                         </tr>
                     </tbody>
@@ -142,6 +149,7 @@
                         </tr>
                     </thead>
                     <tbody
+                        v-if="finalActivityArray.length"
                         v-for="(exp, k) in finalActivityArray" :key="k" 
                     >
                         <tr
@@ -156,6 +164,17 @@
                             <td><span v-if="exp_info.full" :class="{ 'text-dark font-weight-bold' : l == 0 }">600</span></td>
                             <td><span v-if="exp_info.full" :class="{ 'text-dark font-weight-bold' : l == 0 }">480</span></td>
                         </tr>
+                    </tbody>
+                    <tbody
+                        v-if="finalActivityArray.length == 0"
+                        v-for="(time, i) in staticTimes" :key="time.id"
+                    >
+                       <tr
+                            v-for="(minute, j) in time.minutes" :key="minute.minute"
+                            v-if="minute.show"
+                       >
+                        <td v-for="td in 7" :key="td"></td>
+                       </tr>
                     </tbody>
                 </table>
             </div>
@@ -177,20 +196,33 @@
                                 </button>
                             </th>
                         </tr>
-                        <tr v-for="(meal, j) in finalMealArray" :key="j">
+                        <tr 
+                            v-if="finalMealArray.length"
+                            v-for="(meal, j) in finalMealArray" :key="j">
                             <td
                                 v-for="(meal_info, b) in meal.arr" :key="b" 
                                 class="activity-td d-flex justify-content-between align-items-center"
                                 :class="{ 'activity-color text-success' : b == 0 }"
                                 v-if="meal_info.show" 
                             >
-
                                 <div>
                                     @{{ meal_info.name }}
                                 </div>
-
                             </td>
                         </tr>
+                        <tr 
+                            v-if="finalMealArray.length == 0"
+                            v-for="(time, i) in staticTimes" :key="time.id"
+                        >
+                            <td
+                                v-for="(minute, j) in time.minutes" :key="minute.minute"
+                                class="activity-td d-flex justify-content-between align-items-center"
+                                :class="{ 'activity-color' : j == 0 }"
+                                v-if="minute.show"
+                            >
+                            </td>
+                        </tr>
+                        
                     </tbody>
                 </table>
             </div>
@@ -212,18 +244,30 @@
                         </tr>
                     </thead>
                     <tbody
+                        v-if="finalMealArray.length"
                         v-for="(exp, k) in finalMealArray" :key="k" 
                     >
                         <tr
                             v-for="(exp_info, l) in exp.arr" :key="l" 
                             v-if="exp_info.show"
                         >
-                            <td> <span v-if="exp_info.full" class="green"> 10 </span> </td>
-                            <td> <span v-if="exp_info.full" :class="{ 'text-dark font-weight-bold' : l == 0 }">20</span></td>
-                            <td><span v-if="exp_info.full" :class="{ 'text-dark font-weight-bold' : l == 0 }">400</span></td>
-                            <td><span v-if="exp_info.full" :class="{ 'text-dark font-weight-bold' : l == 0 }">800</span></td>
-                            <td><span v-if="exp_info.full" :class="{ 'text-dark font-weight-bold' : l == 0 }">5000</span></td>
-                            <td><span v-if="exp_info.full" :class="{ 'text-dark font-weight-bold' : l == 0 }">600</span></td>
+                            <td><span v-if="exp_info.full" class="green"> @{{ exp_info.meals.fat }} </span> </td>
+                            <td><span v-if="exp_info.full" :class="{ 'text-dark font-weight-bold' : l == 0 }"> @{{ exp_info.meals.fat / 4 }}</span></td>
+                            <td><span v-if="exp_info.full"  :class="{ 'text-dark font-weight-bold' : l == 0 }">@{{ exp_info.meals.carbs }}</span></td>
+                            <td><span v-if="exp_info.full" :class="{ 'text-dark font-weight-bold' : l == 0 }">@{{ exp_info.meals.carbs / 4 }}</span></td>
+                            <td><span v-if="exp_info.full" :class="{ 'text-dark font-weight-bold' : l == 0 }">@{{ exp_info.meals.proteins }}</span></td>
+                            <td><span v-if="exp_info.full" :class="{ 'text-dark font-weight-bold' : l == 0 }">@{{ exp_info.meals.proteins / 4 }}</span></td>
+                        </tr>
+                    </tbody>
+                    <tbody
+                        v-if="finalMealArray.length == 0"
+                        v-for="(time, i) in staticTimes" :key="time.id"
+                    >
+                        <tr
+                            v-for="(minute, j) in time.minutes" :key="minute.minute"
+                            v-if="minute.show"
+                        >
+                            <td v-for="td in 6" :key="td"></td>
                         </tr>
                     </tbody>
                 </table>
@@ -516,62 +560,68 @@
             </div>{{--end modal content--}}
         </div>
     </div>
-
 @endsection
 
 {{--script in here --}}
 @push("footer")
-    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-    <script src="{{asset('assets/plugins/clockpicker/dist/jquery-clockpicker.js')}}"></script>
-    <script src="{{asset('assets/plugins/datepicker-new/js/bootstrap-datepicker.js')}}"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="{{asset('assets/plugins/clockpicker/dist/jquery-clockpicker.js')}}"></script>
+<script src="{{asset('assets/plugins/datepicker-new/js/bootstrap-datepicker.js')}}"></script>
 
-    <script !src="">
-        $(document).ready(function () {
+<script !src="">
+    $(document).ready(function () {
 
-            show_date();
-            getActivities();
+        show_date();
+        getActivities();
 
-            function show_date(type = 0, dateString = null) {
-                let date = 0;
+        function show_date(type = 0, dateString = null) {
+            let date = 0;
 
-                if (type == 1) {
-                    date = new Date(dateString);
-                    date.setDate(date.getDate() + 1);
-                } else if (type == 2) {
-                    date = new Date(dateString);
-                    date.setDate(date.getDate() - 1);
-                } else if (dateString != null) {
-                    date = new Date(dateString);
-                    date.setDate(date.getDate());
-                } else {
-                    date = new Date();
-                    date.setDate(date.getDate());
-                }
-
-                let day = ("0" + date.getDate()).slice(-2);
-                let month = ("0" + (date.getMonth() + 1)).slice(-2);
-                let dateShow = date.getFullYear() + "-" + (month) + "-" + (day);
-
-                $('.date-show').html(dateShow);
+            if (type == 1) {
+                date = new Date(dateString);
+                date.setDate(date.getDate() + 1);
+            } else if (type == 2) {
+                date = new Date(dateString);
+                date.setDate(date.getDate() - 1);
+            } else if (dateString != null) {
+                date = new Date(dateString);
+                date.setDate(date.getDate());
+            } else {
+                date = new Date();
+                date.setDate(date.getDate());
             }
 
-            function getActivities() {
-                let data = {
-                    date: $('.date-show').html(),
-                    id: $('.user_id').val(),
-                };
+            let day = ("0" + date.getDate()).slice(-2);
+            let month = ("0" + (date.getMonth() + 1)).slice(-2);
+            let dateShow = date.getFullYear() + "-" + (month) + "-" + (day);
 
-                $.ajax({
-                    type: "POST",
-                    headers: {
-                        'X-CSRF-TOKEN': '{{csrf_token()}}'
-                    },
-                    url: '{{ url('/day/get-all-data') }}',
-                    data: data,
-                    success: function (res) {
-                        console.log('activities : ', res)
-                        
-                        let activities = res.activity
+            $('.date-show').html(dateShow);
+            getActivities()
+        }
+
+        function getActivities() {
+            let data = {
+                date: $('.date-show').html(),
+                id: $('.user_id').val(),
+            };
+
+            days.createTimeGraphic()
+
+            $.ajax({
+                type: "POST",
+                headers: {
+                    'X-CSRF-TOKEN': '{{csrf_token()}}'
+                },
+                url: '{{ url('/day/get-all-data') }}',
+                data: data,
+                success: function (res) {
+                    $('.protein_must').html(res.protein_must_eat);
+                    
+                    let activities = res.activity
+
+                    if(activities.length == 0) {
+                        days.clearActivity()
+                    } else {
                         for(let i=0; i<activities.length; i++) {
                             let activityObj = {
                                 name: activities[i].get_activity.name,
@@ -580,131 +630,161 @@
                             }
                             days.addActivity(activityObj)
                         }
-                        let meals = res.meal
+                    }
+
+
+                    let meals = res.meal
+                    if(meals.length == 0) {
+                        days.clearMeals()
+                    }else {
                         for(let i=0; i<meals.length; i++) {
                             let activityObj = {
                                 name: meals[i].get_meals.name,
                                 start: meals[i].from,
-                                end: meals[i].to
+                                end: meals[i].to,
+                                meals: meals[i].get_meals
                             }
                             days.addMeals(activityObj)
                         }
                     }
-                })
+                }
+            })
+        }
+
+        $('.activity_from').clockpicker({
+            autoclose: true,
+            placement: 'bottom',
+        });
+        $('.activity_to').clockpicker({
+            autoclose: true,
+            placement: 'top',
+        });
+        $('.meal_from').clockpicker({
+            autoclose: true,
+            placement: 'top',
+        });
+        $('.meal_to').clockpicker({
+            autoclose: true,
+            placement: 'top',
+        });
+
+        $('.date').datepicker({autoclose: true, format: 'yyyy-mm-dd'}).on('changeDate', function (e) {
+            let str = new Date(e.date)
+            mnth = ("0" + (str.getMonth() + 1)).slice(-2),
+                day = ("0" + str.getDate()).slice(-2);
+            let date = [str.getFullYear(), mnth, day].join("-");
+            $('.date-show').html(date);
+            show_date(0, date);
+        });
+
+        $('.date-plus').click(function () {
+            let dateString = $('.date-show').html();
+            show_date(1, dateString)
+        });
+
+        $('.date-minus').click(function () {
+            let dateString = $('.date-show').html();
+            show_date(2, dateString)
+        });
+
+
+        $('.add-personal-meal').click(function () {
+            var form = $('.add-personal-meal-form');
+            $('.meal_date').val($('.date-show').html())
+
+            
+            $.ajax({
+                type: "POST",
+                url: "/day/add-meals",
+                headers: {
+                    'X-CSRF-TOKEN': '{{csrf_token()}}'
+                },
+                data: form.serialize(),
+                success: function (data) {
+                    $('#meal').modal('toggle');
+
+                    // let activityObj = {
+                    //     name: $('#meal_list').find(":selected").text(),
+                    //     start: $('.meal_from').val(),
+                    //     end: $('.meal_to').val()
+                    // }
+
+                    // console.log(activityObj)
+
+
+                    days.closeALl()
+
+                    getActivities()
+                    // days.addMeals(activityObj)
+
+                },
+                error: function (reject) {
+                    $('.m_errors').empty()
+                    $('.m_success').empty()
+                    if (reject.status === 422) {
+                        var err = $.parseJSON(reject.responseText);
+                        $.each(err.errors, function (key, val) {
+                            $('.m_errors').append(`<li>${val[0]}</li>`)
+                        });
+                    }
+                    setTimeout(function () {
+                        $('.m_errors').empty();
+                    }, 10000);
+                }
+            })
+        })
+
+
+        $('.activity_save').click(function () {
+            $('.error_modal_activity').empty();
+
+            let data = {
+                activity: $('#activity_list').find(":selected").val(),
+                from: $('.activity_from').val(),
+                to: $('.activity_to').val(),
+                date: $('.date-show').html(),
+                id: $('.user_id').val(),
+            };
+
+            let activityObj = {
+                name: $('#activity_list').find(":selected").text(),
+                start: $('.activity_from').val(),
+                end: $('.activity_to').val()
             }
 
-            $('.activity_from').clockpicker({
-                autoclose: true,
-                placement: 'bottom',
-            });
-            $('.activity_to').clockpicker({
-                autoclose: true,
-                placement: 'top',
-            });
-            $('.meal_from').clockpicker({
-                autoclose: true,
-                placement: 'top',
-            });
-            $('.meal_to').clockpicker({
-                autoclose: true,
-                placement: 'top',
-            });
-
-
-            $('.add-personal-meal').click(function () {
-                var form = $('.add-personal-meal-form');
-                $('.meal_date').val($('.date-show').html())
-
-                
-                $.ajax({
-                    type: "POST",
-                    url: "/day/add-meals",
-                    headers: {
-                        'X-CSRF-TOKEN': '{{csrf_token()}}'
-                    },
-                    data: form.serialize(),
-                    success: function (data) {
-                        $('#meal').modal('toggle');
-
-                        let activityObj = {
-                            name: $('#meal_list').find(":selected").text(),
-                            start: $('.meal_from').val(),
-                            end: $('.meal_to').val()
-                        }
-
-                        console.log(activityObj)
-
-                        days.closeALl()
-                        days.addMeals(activityObj)
-
-                    },
-                    error: function (reject) {
-                        $('.m_errors').empty()
-                        $('.m_success').empty()
-                        if (reject.status === 422) {
-                            var err = $.parseJSON(reject.responseText);
-                            $.each(err.errors, function (key, val) {
-                                $('.m_errors').append(`<li>${val[0]}</li>`)
-                            });
-                        }
-                        setTimeout(function () {
-                            $('.m_errors').empty();
-                        }, 10000);
-                    }
-                })
-            })
-
-
-            $('.activity_save').click(function () {
-                $('.error_modal_activity').empty();
-
-                let data = {
-                    activity: $('#activity_list').find(":selected").val(),
-                    from: $('.activity_from').val(),
-                    to: $('.activity_to').val(),
-                    date: $('.date-show').html(),
-                    id: $('.user_id').val(),
-                };
-
-                let activityObj = {
-                    name: $('#activity_list').find(":selected").text(),
-                    start: $('.activity_from').val(),
-                    end: $('.activity_to').val()
+            for (let i in data) {
+                if (data[i] === '' || data[i] === null) {
+                    $('.error_modal_activity').html('Please Fill All Inputs!')
+                    return;
                 }
+            }
 
-                for (let i in data) {
-                    if (data[i] === '' || data[i] === null) {
-                        $('.error_modal_activity').html('Please Fill All Inputs!')
-                        return;
-                    }
+            $.ajax({
+                type: "POST",
+                headers: {
+                    'X-CSRF-TOKEN': '{{csrf_token()}}'
+                },
+                url: '{{ url('/day/add-activity') }}',
+                data: data,
+                success: function (res) {
+                    $('#activity').modal('toggle');
+                    // let date = $('.date-show').html()
+
+                    // console.log(res)
+                    // console.log(date)
+
+                    days.closeALl()
+                    days.addActivity(activityObj)
+
+                    setTimeout(() => {
+                        console.log(days.$data.activities)
+                    }, 1000);
+
                 }
-
-                $.ajax({
-                    type: "POST",
-                    headers: {
-                        'X-CSRF-TOKEN': '{{csrf_token()}}'
-                    },
-                    url: '{{ url('/day/add-activity') }}',
-                    data: data,
-                    success: function (res) {
-                        $('#activity').modal('toggle');
-                        // let date = $('.date-show').html()
-
-                        // console.log(res)
-                        // console.log(date)
-
-                        days.closeALl()
-                        days.addActivity(activityObj)
-
-                        setTimeout(() => {
-                            console.log(days.$data.activities)
-                        }, 1000);
-
-                    }
-                });
             });
         });
-    </script>
+    });
+</script>
 
 
 <script !src="">
@@ -918,6 +998,15 @@
                         }
                     }
                 }
+
+                let = meals = this.finalMealArray
+                for(let j=0; j<meals.length; j++) {
+                    for(let k=0; k < meals[j].arr.length; k++) {
+                        if(k != 0) {
+                            meals[j].arr[k].show = false
+                        }
+                    }
+                }
             },
             toggleTimes(i, j) {
                 if(j == 0) {
@@ -969,163 +1058,181 @@
                     }
                     timeArr.push(timeObj)
                 }
-                console.log('TIME ARRAY : ', timeArr)
                 this.staticTimes = timeArr
             },
             activity() {
+
+                console.log('ACTIVITY STARTED .....')
 
                 let activitiesFinalArray = []
                 let staicTimes = this.staticTimes
                 let activities = this.activities
                 let end = null
                 let color = this.returnRandomColor()
-            
 
-                for(let i=0; i<staicTimes.length; i++) {
+                if(activities.length) {
+                    for(let i=0; i<staicTimes.length; i++) {
 
                     activitiesFinalArray.push(    { arr: [] }     )
                     let minutes = staicTimes[i].minutes
-                    
 
-                    for(let j=0; j<minutes.length; j++) {
-                        let minute = staicTimes[i].minutes[j].minute
-                        
-                        for(let t=0; t<activities.length; t++) {
-
-                            let activityObj = { 
-                                time: minute,
-                                show: j == 0 ? true : false,
-                            }
+                        for(let j=0; j<minutes.length; j++) {
+                            let minute = staicTimes[i].minutes[j].minute
                             
-                            if(activities[t].start == minute) {
+                            for(let t=0; t<activities.length; t++) {
 
-                                activityObj.start = minute  
-                                activityObj.end = activities[t].end
-                                activityObj.name = activities[t].name
-                                activityObj.full = true
-                                activityObj.head = true
-
-                                end = activities[t].end
-
-                                this.staticTimes[i].minutes[j].color = color
-                                // color = this.returnRandomColor()
-
-                                activitiesFinalArray[i].arr = activitiesFinalArray[i].arr.filter(ac => ac.time !== minute)
-                                activitiesFinalArray[i].arr.push(activityObj)
-
-                            }
-                            else {
-                                if(end != null) {
-                                    if(activityObj.time == end ) {
-                                        activityObj.full = true
-                                        this.staticTimes[i].minutes[j].color = color
-                                        end = null
-                                        color = this.returnRandomColor()
-                                    } else {
-                                        activityObj.full = true
-                                        this.staticTimes[i].minutes[j].color = color
-                                    }
-                                    
+                                let activityObj = { 
+                                    time: minute,
+                                    show: j == 0 ? true : false,
                                 }
-                            
-                                let index = activitiesFinalArray[i].arr
-                                    .findIndex(activity => activity.time === minute)
-                            
-                                if(index === -1) {
+                                
+                                if(activities[t].start == minute) {
+
+                                    activityObj.start = minute  
+                                    activityObj.end = activities[t].end
+                                    activityObj.name = activities[t].name
+                                    activityObj.full = true
+                                    activityObj.head = true
+
+                                    end = activities[t].end
+
+                                    this.staticTimes[i].minutes[j].color = color
+                                    // color = this.returnRandomColor()
+
+                                    activitiesFinalArray[i].arr = activitiesFinalArray[i].arr.filter(ac => ac.time !== minute)
                                     activitiesFinalArray[i].arr.push(activityObj)
+
+                                }
+                                else {
+                                    if(end != null) {
+                                        if(activityObj.time == end ) {
+                                            activityObj.full = true
+                                            this.staticTimes[i].minutes[j].color = color
+                                            end = null
+                                            color = this.returnRandomColor()
+                                        } else {
+                                            activityObj.full = true
+                                            this.staticTimes[i].minutes[j].color = color
+                                        }
+                                        
+                                    }
+                                
+                                    let index = activitiesFinalArray[i].arr
+                                        .findIndex(activity => activity.time === minute)
+                                
+                                    if(index === -1) {
+                                        activitiesFinalArray[i].arr.push(activityObj)
+                                    }
                                 }
                             }
                         }
                     }
+
+                    this.finalActivityArray = activitiesFinalArray
+
+                }else {
+                    this.finalActivityArray = activitiesFinalArray
                 }
-                this.finalActivityArray = activitiesFinalArray
-                // console.log(this.finalActivityArray)
+
+                
+                console.log('###### -----------', this.finalActivityArray)
             },
             meals() {
+                console.log('MEALS STARTED ...')
+
                 let mealFinalArray = []
                 let staicTimes = this.staticTimes
                 let meals = this.meal
                 let end = null
                 let color = this.returnRandomColor()
-            
 
-                for(let i=0; i<staicTimes.length; i++) {
+                if(meals.length) {
+                    for(let i=0; i<staicTimes.length; i++) {
 
                     mealFinalArray.push(    { arr: [] }     )
                     let minutes = staicTimes[i].minutes
-                    
 
-                    for(let j=0; j<minutes.length; j++) {
-                        let minute = staicTimes[i].minutes[j].minute
-                        
-                        for(let t=0; t<meals.length; t++) {
 
-                            let activityObj = { 
-                                time: minute,
-                                show: j == 0 ? true : false,
-                            }
+                        for(let j=0; j<minutes.length; j++) {
+                            let minute = staicTimes[i].minutes[j].minute
                             
-                            if(meals[t].start == minute) {
+                            for(let t=0; t<meals.length; t++) {
 
-                                activityObj.start = minute  
-                                activityObj.end = meals[t].end
-                                activityObj.name = meals[t].name
-                                activityObj.full = true
-                                activityObj.head = true
-
-                                end = meals[t].end
-
-                                this.staticTimes[i].minutes[j].color = color
-                                // color = this.returnRandomColor()
-
-                                mealFinalArray[i].arr = mealFinalArray[i].arr.filter(ac => ac.time !== minute)
-                                mealFinalArray[i].arr.push(activityObj)
-
-                            }
-                            else {
-                                if(end != null) {
-                                    if(activityObj.time == end ) {
-                                        activityObj.full = true
-                                        this.staticTimes[i].minutes[j].color = color
-                                        end = null
-                                        color = this.returnRandomColor()
-                                    } else {
-                                        activityObj.full = true
-                                        this.staticTimes[i].minutes[j].color = color
-                                    }
-                                    
+                                let activityObj = { 
+                                    time: minute,
+                                    show: j == 0 ? true : false,
                                 }
-                            
-                                let index = mealFinalArray[i].arr
-                                    .findIndex(activity => activity.time === minute)
-                            
-                                if(index === -1) {
+                                
+                                if(meals[t].start == minute) {
+
+                                    activityObj.start = minute  
+                                    activityObj.end = meals[t].end
+                                    activityObj.name = meals[t].name
+                                    activityObj.full = true
+                                    activityObj.head = true
+                                    activityObj.meals = meals[t].meals
+
+                                    end = meals[t].end
+
+                                    this.staticTimes[i].minutes[j].color = color
+                                    // color = this.returnRandomColor()
+
+                                    mealFinalArray[i].arr = mealFinalArray[i].arr.filter(ac => ac.time !== minute)
                                     mealFinalArray[i].arr.push(activityObj)
+
+                                }
+                                else {
+                                    if(end != null) {
+                                        if(activityObj.time == end ) {
+                                            activityObj.full = true
+                                            this.staticTimes[i].minutes[j].color = color
+                                            end = null
+                                            color = this.returnRandomColor()
+                                        } else {
+                                            activityObj.full = true
+                                            this.staticTimes[i].minutes[j].color = color
+                                        }
+                                        
+                                    }
+                                
+                                    let index = mealFinalArray[i].arr
+                                        .findIndex(activity => activity.time === minute)
+                                
+                                    if(index === -1) {
+                                        mealFinalArray[i].arr.push(activityObj)
+                                    }
+                                    activityObj.meals = meals[t].meals
                                 }
                             }
                         }
                     }
+                    this.finalMealArray = mealFinalArray
+                } else {
+                    this.finalMealArray = mealFinalArray
                 }
-                this.finalMealArray = mealFinalArray
+
             },
             addActivity(activityObj){
+                this.activities = []
                 this.activities.push(activityObj)
                 this.activity();
             },
             addMeals(activityObj){
+                this.meal = []
                 this.meal.push(activityObj)
                 this.meals();
-                setTimeout(() => {
-                    console.log('Meal final array : ', this.finalMealArray)
-                }, 2000);
+            },
+            clearActivity() {
+                this.activities = []
+                this.activity();
+            },
+            clearMeals() {
+                this.meal = []
+                this.meals();
             }
         },
         mounted() {
             this.createTimeGraphic();
-            setTimeout(()=>{
-                this.activity();
-                console.log('STATIC TIMES : ', this.staticTimes)
-            }, 1000)
         }
     })
 </script>
@@ -1303,6 +1410,7 @@
 
     })
 </script>
+
 @endpush
 
 {{--style in here--}}
@@ -1312,6 +1420,9 @@
 <style>
     .clockpicker-popover {
         z-index: 99999;
+    }
+    .table-condensed tr, .table-condensed td {
+        height: auto !important;
     }
 </style>
 @endpush

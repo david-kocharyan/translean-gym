@@ -4407,7 +4407,7 @@ ul.common li a:hover {
 }
 
 .table {
-    margin-bottom: 10px
+    margin-bottom: 10px;
 }
 
 .table-hover>tbody>tr:hover,
@@ -4444,7 +4444,7 @@ ul.common li a:hover {
 .table>tfoot>tr>th,
 .table>thead>tr>td,
 .table>thead>tr>th {
-    padding: 15px 8px
+    /* padding: 15px 8px */
 }
 
 .table-bordered>tbody>tr>td,
@@ -10380,4 +10380,12 @@ ul.pro-amenities li span i {
 
  .swal-modal {
      width: 660px !important;
+ }
+
+ .table>tbody>tr>td, .table>tbody>tr>th, .table>tfoot>tr>td, .table>tfoot>tr>th, .table>thead>tr>td, .table>thead>tr>th {
+    vertical-align: inherit;
+ }
+ .add-btn {
+     border: none;
+     background: transparent;
  }
