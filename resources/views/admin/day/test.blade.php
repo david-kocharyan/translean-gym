@@ -1,5 +1,8 @@
 @extends('layouts.app')
 
+
+
+
 {{--html in here--}}
 @section('content')
     <div class="row">
