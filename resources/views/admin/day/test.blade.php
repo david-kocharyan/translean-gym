@@ -103,13 +103,12 @@
                                 <div v-if="activity_info.name">
                                     <span>
                                         @{{ activity_info.name }}
-                                        GUGI
                                     </span>
                                 </div>
 
-                                <!-- <div  v-if="activity_info.head && activity_info.open">
+                                <div  v-if="activity_info.head && activity_info.open">
                                     <i class="fas fa-edit"></i>
-                                </div> -->
+                                </div>
 
                             </td>
                         </tr>
@@ -572,7 +571,7 @@
     $(document).ready(function () {
 
         show_date();
-        getActivities();
+        // getActivities();
 
         function show_date(type = 0, dateString = null) {
             let date = 0;
@@ -630,8 +629,8 @@
                             }
                             days.addActivity(activityObj)
                         }
+                        days.activity();
                     }
-
 
                     let meals = res.meal
                     if(meals.length == 0) {
@@ -646,6 +645,7 @@
                             }
                             days.addMeals(activityObj)
                         }
+                        days.meals();
                     }
                 }
             })
@@ -711,9 +711,7 @@
 
                     // console.log(activityObj)
 
-
                     days.closeALl()
-
                     getActivities()
                     // days.addMeals(activityObj)
 
@@ -733,7 +731,6 @@
                 }
             })
         })
-
 
         $('.activity_save').click(function () {
             $('.error_modal_activity').empty();
@@ -775,16 +772,15 @@
 
                     days.closeALl()
                     days.addActivity(activityObj)
-
-                    setTimeout(() => {
-                        console.log(days.$data.activities)
-                    }, 1000);
+                    days.activity();
 
                 }
             });
         });
     });
 </script>
+
+
 
 
 <script !src="">
@@ -963,6 +959,9 @@
 </script>
 
 
+
+
+<!-- VUE -->
 <script defer>
     let days = new Vue({
         el: '#_days',
@@ -991,19 +990,24 @@
                 }
 
                 let activities = this.finalActivityArray
-                for(let j=0; j<activities.length; j++) {
-                    for(let k=0; k < activities[j].arr.length; k++) {
-                        if(k != 0) {
-                            activities[j].arr[k].show = false
+                if(activities.length != 0) {
+                    for(let j=0; j<activities.length; j++) {
+                        for(let k=0; k < activities[j].arr.length; k++) {
+                            if(k != 0) {
+                                activities[j].arr[k].show = false
+                            }
                         }
                     }
                 }
+                
 
                 let = meals = this.finalMealArray
-                for(let j=0; j<meals.length; j++) {
-                    for(let k=0; k < meals[j].arr.length; k++) {
-                        if(k != 0) {
-                            meals[j].arr[k].show = false
+                if(meals.length != 0) {
+                    for(let j=0; j<meals.length; j++) {
+                        for(let k=0; k < meals[j].arr.length; k++) {
+                            if(k != 0) {
+                                meals[j].arr[k].show = false
+                            }
                         }
                     }
                 }
@@ -1017,25 +1021,28 @@
                         }
                     }
 
-                    let = activities = this.finalActivityArray[i].arr
-                    activities[0].open ? activities[0].open = false : activities[0].open = true
+                    
+                    if(this.finalActivityArray.length != 0) {
+                        let activities = this.finalActivityArray[i].arr
+                        activities[0].open ? activities[0].open = false : activities[0].open = true
 
-                    for(let l=0; l < activities.length; l++) {
-                        if(l != 0) {
-                            activities[l].show ? activities[l].show = false : activities[l].show = true
+                        for(let l=0; l < activities.length; l++) {
+                            if(l != 0) {
+                                activities[l].show ? activities[l].show = false : activities[l].show = true
+                            }
                         }
                     }
 
-                    let = meals = this.finalMealArray[i].arr
-                    meals[0].open ? meals[0].open = false : meals[0].open = true
+                    if(this.finalMealArray.length != 0) {
+                        let meals = this.finalMealArray[i].arr
+                        meals[0].open ? meals[0].open = false : meals[0].open = true
 
-                    for(let l=0; l < meals.length; l++) {
-                        if(l != 0) {
-                            meals[l].show ? meals[l].show = false : meals[l].show = true
+                        for(let l=0; l < meals.length; l++) {
+                            if(l != 0) {
+                                meals[l].show ? meals[l].show = false : meals[l].show = true
+                            }
                         }
                     }
-
-
                 }
             },
             createTimeGraphic() {
@@ -1061,21 +1068,19 @@
                 this.staticTimes = timeArr
             },
             activity() {
-
-                console.log('ACTIVITY STARTED .....')
-
+                console.log('activities ----------')
+                console.log(this.activities)
                 let activitiesFinalArray = []
                 let staicTimes = this.staticTimes
                 let activities = this.activities
                 let end = null
                 let color = this.returnRandomColor()
 
-                if(activities.length) {
+                if(activities.length != 0) {
                     for(let i=0; i<staicTimes.length; i++) {
 
                     activitiesFinalArray.push(    { arr: [] }     )
                     let minutes = staicTimes[i].minutes
-
                         for(let j=0; j<minutes.length; j++) {
                             let minute = staicTimes[i].minutes[j].minute
                             
@@ -1131,28 +1136,24 @@
                     this.finalActivityArray = activitiesFinalArray
 
                 }else {
-                    this.finalActivityArray = activitiesFinalArray
+                    this.finalActivityArray = []
                 }
 
-                
-                console.log('###### -----------', this.finalActivityArray)
+                console.log('###### ACTIVITY -----------', this.finalActivityArray)
             },
             meals() {
-                console.log('MEALS STARTED ...')
-
+                console.log('meals --------')
                 let mealFinalArray = []
                 let staicTimes = this.staticTimes
                 let meals = this.meal
                 let end = null
                 let color = this.returnRandomColor()
 
-                if(meals.length) {
+                if(meals.length != 0) {
                     for(let i=0; i<staicTimes.length; i++) {
 
                     mealFinalArray.push(    { arr: [] }     )
                     let minutes = staicTimes[i].minutes
-
-
                         for(let j=0; j<minutes.length; j++) {
                             let minute = staicTimes[i].minutes[j].minute
                             
@@ -1208,27 +1209,28 @@
                     }
                     this.finalMealArray = mealFinalArray
                 } else {
-                    this.finalMealArray = mealFinalArray
+                    this.finalMealArray = []
                 }
+                console.log('###### MEAL -----------', this.finalMealArray)
 
             },
             addActivity(activityObj){
-                this.activities = []
+                // this.activities = []
                 this.activities.push(activityObj)
-                this.activity();
+                // this.activity();
             },
             addMeals(activityObj){
-                this.meal = []
+                // this.meal = []
                 this.meal.push(activityObj)
-                this.meals();
+                // this.meals();
             },
             clearActivity() {
                 this.activities = []
-                this.activity();
+                // this.activity();
             },
             clearMeals() {
                 this.meal = []
-                this.meals();
+                // this.meals();
             }
         },
         mounted() {

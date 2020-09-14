@@ -13,6 +13,10 @@
   text-align: center;
 }
 
+th {
+  text-align: center;
+}
+
 .medium-table tbody tr:first-child {
   border-top: none;
 }
