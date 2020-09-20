@@ -55,7 +55,11 @@
                             </th>
                         </tr>
                     </thead>
-                    <tbody v-for="(time, i) in staticTimes" :key="time.id">
+                    <tbody 
+                        v-for="(time, i) in staticTimes" 
+                        :key="time.id"
+                        :class="{ circle: time.circle }"
+                    >
                         <tr 
                             v-for="(minute, j) in time.minutes" :key="minute.minute"
                             v-if="minute.show"
@@ -65,6 +69,7 @@
                         >
                             <th> @{{ minute.minute }} </th>
                         </tr>
+
                     </tbody>
                 </table>
             </div>
@@ -92,7 +97,8 @@
                                 v-for="(activity_info, j) in activity.arr" :key="j" 
                                 class="activity-td d-flex justify-content-between align-items-center"
                                 :class="{ 'activity-color text-success' : j == 0 }"
-                                v-if="activity_info.show" 
+                                v-if="activity_info.show"
+
                             >
 
                                 <!-- <div v-if="!activity_info.open && j == 0"
@@ -105,9 +111,21 @@
                                         @{{ activity_info.name }}
                                     </span>
                                 </div>
-
-                                <div  v-if="activity_info.head && activity_info.open">
+                                <div
+                                    class="pointer edit-activity"
+                                    v-if="activity_info.head" 
+                                    data-toggle="modal" data-target="#activity"
+                                >
                                     <i class="fas fa-edit"></i>
+                                
+                                    <div v-if="activity_info.start" class="activity_start display-none">
+                                        @{{ activity_info.start }}
+                                    </div>
+
+                                    <div v-if="activity_info.end" class="activity_end display-none">
+                                        @{{ activity_info.end }}
+                                    </div>
+
                                 </div>
 
                             </td>
@@ -135,15 +153,20 @@
                         <tr>
                             <th colspan="7" class="text-center position-relative">
                                 Energy Expenditure
+                                <button 
+                                    class="mode-switcher-button"
+                                    @click="energyExpendedModeSwitcher">
+                                    <i class="fas fa-expand-alt"></i>
+                                </button>
                             </th>
                         </tr>
                         <tr>
                             <td>Total&nbsp;cal</td>
-                            <td>Fat&nbsp;%</td>
-                            <td>Fat&nbsp;(c)</td>
+                            <td v-if='energyExpendedMode'>Fat&nbsp;%</td>
+                            <td v-if='energyExpendedMode'>Fat&nbsp;(c)</td>
                             <td>Fat&nbsp;(g)</td>
-                            <td>Carb&nbsp;%</td>
-                            <td>Carb&nbsp;(c)</td>
+                            <td v-if='energyExpendedMode'>Carb&nbsp;%</td>
+                            <td v-if='energyExpendedMode'>Carb&nbsp;(c)</td>
                             <td>Carb&nbsp;(g)</td>
                         </tr>
                     </thead>
@@ -155,12 +178,12 @@
                             v-for="(exp_info, l) in exp.arr" :key="l" 
                             v-if="exp_info.show"
                         >
-                            <td> <span v-if="exp_info.full" class="green"> 10 </span> </td>
-                            <td> <span v-if="exp_info.full" :class="{ 'text-dark font-weight-bold' : l == 0 }">20</span></td>
-                            <td><span v-if="exp_info.full" :class="{ 'text-dark font-weight-bold' : l == 0 }">400</span></td>
+                            <td><span v-if="exp_info.full" class="green"> 10 </span> </td>
+                            <td v-if="energyExpendedMode"><span v-if="exp_info.full" :class="{ 'text-dark font-weight-bold' : l == 0 }">20</span></td>
+                            <td v-if="energyExpendedMode"><span v-if="exp_info.full" :class="{ 'text-dark font-weight-bold' : l == 0 }">400</span></td>
                             <td><span v-if="exp_info.full" :class="{ 'text-dark font-weight-bold' : l == 0 }">800</span></td>
-                            <td><span v-if="exp_info.full" :class="{ 'text-dark font-weight-bold' : l == 0 }">5000</span></td>
-                            <td><span v-if="exp_info.full" :class="{ 'text-dark font-weight-bold' : l == 0 }">600</span></td>
+                            <td v-if="energyExpendedMode"><span v-if="exp_info.full" :class="{ 'text-dark font-weight-bold' : l == 0 }">5000</span></td>
+                            <td v-if="energyExpendedMode"><span v-if="exp_info.full" :class="{ 'text-dark font-weight-bold' : l == 0 }">600</span></td>
                             <td><span v-if="exp_info.full" :class="{ 'text-dark font-weight-bold' : l == 0 }">480</span></td>
                         </tr>
                     </tbody>
@@ -370,6 +393,7 @@
                     </ul>
                     <!-- Tab panes -->
                     <div class="tab-content">
+
                         <div role="tabpanel" class="tab-pane fade active in" id="personal">
                             <div class="m_success text-success"></div>
                             <div class=" text-danger">
@@ -450,14 +474,14 @@
 
                                 <div class="form-row">
                                     <div class="form-group col-md-6">
-                                        <label for="meal_from">From</label>
+                                        <label for="meal_from">Time</label>
                                         <input type="text" name="from" class="clockpicker meal_from form-control">
                                     </div>
 
-                                    <div class="form-group col-md-6">
+                                    <!-- <div class="form-group col-md-6">
                                         <label for="meal_to">To</label>
                                         <input type="text" name="to" class="clockpicker meal_to form-control">
-                                    </div>
+                                    </div> -->
                                 </div>
 
                                 <div class="form-row">
@@ -473,7 +497,7 @@
 
 
                         <div role="tabpanel" class="tab-pane fade" id="add">
-
+                            
                             <div class="success text-success"></div>
                             <div class=" text-danger">
                                 <ul class="errors"></ul>
@@ -544,15 +568,22 @@
                                     </div>
                                 </div>
 
+                                <div class="form-group col-md-6">
+                                    <label for="meal_from">Time</label>
+                                    <input type="text" name="from" class="clockpicker create_meal_time form-control">
+                                </div>
+
                                 <div class="form-row">
                                     <div class="form-group col-md-12">
-                                        <button type="button"
-                                                class="btn create-meal btn-success waves-effect waves-light m-r-10">
+                                        <button 
+                                            type="button"
+                                            class="btn create-meal btn-success waves-effect waves-light m-r-10">
                                             Save
                                         </button>
                                     </div>
                                 </div>
                             </form>
+
                         </div>
                     </div>{{--end tab content--}}
                 </div>{{--end modal body--}}
@@ -619,7 +650,6 @@
                     for (var z = 0; z < res.meal.length; z++){
                         p_met += parseFloat(res.meal[z].get_meals.proteins)
                     }
-                    console.log('p meet', p_met)
 
                     $('.protein_eat').html(p_met);
                     $('.protein_must').html(res.protein_must_eat);
@@ -671,7 +701,11 @@
             autoclose: true,
             placement: 'top',
         });
-        $('.meal_to').clockpicker({
+        // $('.meal_to').clockpicker({
+        //     autoclose: true,
+        //     placement: 'top',
+        // });
+        $('.create_meal_time').clockpicker({
             autoclose: true,
             placement: 'top',
         });
@@ -729,9 +763,10 @@
                     $('.m_success').empty()
                     if (reject.status === 422) {
                         var err = $.parseJSON(reject.responseText);
-                        $.each(err.errors, function (key, val) {
-                            $('.m_errors').append(`<li>${val[0]}</li>`)
-                        });
+                        // $.each(err.errors, function (key, val) {
+                        //     $('.m_errors').append(`<li>${val[0]}</li>`)
+                        // });
+                        $('.m_errors').append(`<li>Please choose a meal!</li>`)
                     }
                     setTimeout(function () {
                         $('.m_errors').empty();
@@ -787,9 +822,6 @@
         });
     });
 </script>
-
-
-
 
 <script !src="">
     $(document).ready(function () {
@@ -966,9 +998,6 @@
     })
 </script>
 
-
-
-
 <!-- VUE -->
 <script defer>
     let days = new Vue({
@@ -981,11 +1010,19 @@
                 meal: [],
                 finalActivityArray: [],
                 finalMealArray: [],
+                color: 0,
+                energyExpendedMode: true,
+                circleCount: 0,
             }
         },
         methods: {
             returnRandomColor() {
-                return "#" + ((1<<24) * Math.random()|0).toString(16)
+                this.color = this.color + 1
+                if(this.color % 2) {
+                    return '#F9C402'
+                } else {
+                    return '#FF6000'
+                }
             },
             closeALl() {
                 let times = this.staticTimes
@@ -1076,8 +1113,6 @@
                 this.staticTimes = timeArr
             },
             activity() {
-                console.log('activities ----------')
-                console.log(this.activities)
                 let activitiesFinalArray = []
                 let staicTimes = this.staticTimes
                 let activities = this.activities
@@ -1088,6 +1123,7 @@
                     for(let i=0; i<staicTimes.length; i++) {
 
                     activitiesFinalArray.push(    { arr: [] }     )
+
                     let minutes = staicTimes[i].minutes
                         for(let j=0; j<minutes.length; j++) {
                             let minute = staicTimes[i].minutes[j].minute
@@ -1114,7 +1150,7 @@
 
                                     activitiesFinalArray[i].arr = activitiesFinalArray[i].arr.filter(ac => ac.time !== minute)
                                     activitiesFinalArray[i].arr.push(activityObj)
-
+                                  
                                 }
                                 else {
                                     if(end != null) {
@@ -1137,11 +1173,33 @@
                                         activitiesFinalArray[i].arr.push(activityObj)
                                     }
                                 }
+
                             }
                         }
                     }
 
+                   
+                    for(let k=0; k<activitiesFinalArray.length; k++) {
+                        this.circleCount = 0
+
+                        for(let b=0;  b<activitiesFinalArray[k].arr.length;  b++) {
+                            
+                            if(activitiesFinalArray[k].arr[b].full) {
+                                this.circleCount ++
+                                if(this.circleCount == 6) {
+                                    this.staticTimes[k].circle = false
+                                    console.log(activitiesFinalArray[k].arr[b])
+                                }
+                            }
+                            else {
+                                    this.staticTimes[k].circle = true
+                                }
+                        }
+                    }
+
+                    console.log('-----', this.staticTimes)
                     this.finalActivityArray = activitiesFinalArray
+                    
 
                 }else {
                     this.finalActivityArray = []
@@ -1239,6 +1297,10 @@
             clearMeals() {
                 this.meal = []
                 // this.meals();
+            },
+            energyExpendedModeSwitcher() {
+                console.log('asdasd')
+                this.energyExpendedMode = !this.energyExpendedMode
             }
         },
         mounted() {
@@ -1417,6 +1479,29 @@
                 $('#m_total_glycemic_load').val(total_glycemic_load);
             });
         }
+        
+        // activity_from
+        // activity_to
+
+        $(document).on("click", ".edit-activity", function () {
+            console.log('edit activity')
+            
+            let from = $(this).find('div.activity_start').html()
+            let to =   $(this).find('div.activity_end').html()
+
+            from = from.replace(/\s/g,''); 
+            to = to.replace(/\s/g,''); 
+
+            $('.activity_from').clockpicker({
+                autoclose: true,
+                placement: 'bottom',
+            }).val(from);
+            $('.activity_to').clockpicker({
+                autoclose: true,
+                placement: 'bottom',
+            }).val(to);
+        });
+
 
     })
 </script>
@@ -1428,11 +1513,52 @@
 <link href="{{asset('assets/plugins/clockpicker/dist/jquery-clockpicker.min.css')}}" rel="stylesheet">
 <link href="{{asset('assets/plugins/datepicker-new/css/bootstrap-datepicker.css')}}" rel="stylesheet">    
 <style>
+
+    .position-relative {
+        position: relative;
+    }
+
+    .pointer {
+        cursor: pointer;
+    }
+
+    .display-none {
+        display: none;
+    }
+
     .clockpicker-popover {
         z-index: 99999;
     }
+
     .table-condensed tr, .table-condensed td {
         height: auto !important;
     }
+
+    .mode-switcher-button {
+        position: absolute;
+        right: 0;
+        margin-left: 10px;
+        background: transparent;
+        border: 1px solid #d4d4d4;
+        border-radius: 5px;
+    }
+
+    .mode-switcher-button:hover {
+        background-color: #fff;
+    }
+
+    .circle {
+        position: relative;
+    }
+    .circle:before {
+        content: "";
+        position: absolute;
+        width: 6px;
+        height: 6px;
+        background: #F44336;
+        border-radius: 50%;
+        left: 95px;
+    }
+
 </style>
 @endpush

@@ -240,6 +240,8 @@ tr {
 
 .font-sm {
   font-size: 12px;
+}
+.font-sm span {
   color: #1b1b1b !important;
 }
 .font-sm th {
