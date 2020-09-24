@@ -48,11 +48,6 @@
 
                                     <a href="{{"/day/".$val->id}}" data-toggle="tooltip"
                                        data-placement="top" title="Day View" class="btn btn-success btn-circle tooltip-success">
-                                        <i class="fas fa-eye"></i>
-                                    </a>
-
-                                    <a href="{{"/day-test/".$val->id}}" data-toggle="tooltip"
-                                       data-placement="top" title="Day View Test" class="btn btn-success btn-circle tooltip-success">
                                         <i class="fas fa-user-ninja"></i>
                                     </a>
 

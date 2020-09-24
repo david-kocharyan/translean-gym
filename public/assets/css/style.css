@@ -3,13 +3,13 @@
 
 .mr-2 {
     margin-right: .75rem;
-} 
+}
 .ml-2 {
     margin-left: .75rem;
 }
 .d-flex {
     display: flex;
-}    
+}
 .justify-content-between {
     justify-content: space-between;
 }
@@ -10389,3 +10389,32 @@ ul.pro-amenities li span i {
      border: none;
      background: transparent;
  }
+ #m_total_glycemic_load {
+     width: 95% !important;
+ }
+ table tr td {
+     text-align: center;
+ }
+ .display-inline {
+     display: inline-block;
+ }
+ .no-padding {
+     padding: 0;
+ }
+ .table-of-carb-fat {
+     margin-top: -25px;
+ }
+.select2-container {
+    display: block !important;
+}
+@media (min-width: 992px) {
+    .modal-lg {
+        width: 1300px !important;
+    }
+}
+@media (min-width: 992px) {
+    .col-md-1 {
+        width: 13% !important;
+    }
+}
+
