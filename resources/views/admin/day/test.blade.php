@@ -496,7 +496,7 @@
                                                     <th>Fat</th>
                                                 </tr>
                                             </thead>
-                                            <tbody id="meal-carb-fat"></tbody>
+                                            <tbody id="meal_carb_fat"></tbody>
                                         </table>
                                     </div>
                                 </div>
@@ -611,7 +611,7 @@
                                                     <th>Fat</th>
                                                 </tr>
                                                 </thead>
-                                                <tbody id="meal-carb-fat-add"></tbody>
+                                                <tbody id="meal_carb_fat_add"></tbody>
                                             </table>
                                         </div>
                                     </div>
@@ -977,8 +977,8 @@
                     $('#total_ph').val(total_ph);
                     $('#total_glycemic_load').val(total_glycemic_load);
 
-                    var tr = carbsCalculate(total_glycemic_load);
-                    $('#meal-carb-fat-add').html(tr);
+                    var tr = carbsCalculate(total_glycemic_load, total_carbs);
+                    $('#meal_carb_fat_add').html(tr);
                 }
             });
         }
@@ -1054,17 +1054,18 @@
     /**
      * Calculate carbs and fat dependency from glycemic total load
      * @param glycemicLoad
+     * @param carbs
      * @returns {string}
      */
-    function carbsCalculate(glycemicLoad) {
+    function carbsCalculate(glycemicLoad , carbs) {
         var tr = "";
         if (glycemicLoad <= 40) {
-            var carb = glycemicLoad / 4;
+            var carb = carbs / 4;
             for (var i = 0; i < 4; i++) {
                 tr += `<tr>
                                                     <td>${roundNumberDecimal(carb)}</td>
                                                     <td>4.5</td>
-                                                    <td></td>
+                                                    <td>${roundNumberDecimal(carb)}</td>
                                                     <td></td>
                                                     <td></td>
                                                     <td></td>
@@ -1072,35 +1073,35 @@
             }
 
         } else if (glycemicLoad > 40 && glycemicLoad <= 55) {
-            var carb = glycemicLoad / 3;
+            var carb = carbs / 3;
             for (var i = 0; i < 3; i++) {
                 tr += `<tr>
                                                     <td>${roundNumberDecimal(carb)}</td>
                                                     <td>4.5</td>
-                                                    <td></td>
+                                                    <td>${roundNumberDecimal(carb)}</td>
                                                     <td></td>
                                                     <td></td>
                                                     <td></td>
                                                 </tr>`;
             }
         } else if (glycemicLoad > 55 && glycemicLoad <= 70) {
-            var carb = glycemicLoad / 2;
+            var carb = carbs / 2;
             for (var i = 0; i < 2; i++) {
                 tr += `<tr>
                                                     <td>${roundNumberDecimal(carb)}</td>
                                                     <td>4.5</td>
-                                                    <td></td>
+                                                    <td>${roundNumberDecimal(carb)}</td>
                                                     <td></td>
                                                     <td></td>
                                                     <td></td>
                                                 </tr>`;
             }
         } else {
-            var carb = glycemicLoad;
+            var carb = carbs;
             tr += `<tr>
                                     <td>${roundNumberDecimal(carb)}</td>
                                     <td>4.5</td>
-                                    <td></td>
+                                    <td>${roundNumberDecimal(carb)}</td>
                                     <td></td>
                                     <td></td>
                                     <td></td>
@@ -1480,8 +1481,8 @@ console.log(meals)
                     $('#m_total_ph').val(roundNumberDecimal(data.ph));
                     $('#m_total_glycemic_load').val(roundNumberDecimal(data.glycemic_load));
 
-                    var tr = carbsCalculate(data.glycemic_load);
-                    $('#meal-carb-fat').html(tr);
+                    var tr = carbsCalculate(data.glycemic_load, data.carbs);
+                    $('#meal_carb_fat').html(tr);
 
                     var m_pl = ` <button type="button" class="btn btn-success col-md-2 m-b-20 m_plus"
                                                 style=" height: 100px;width: 100px;">
@@ -1627,8 +1628,11 @@ console.log(meals)
                     $('#m_total_fat').val(roundNumberDecimal(total_fat));
                     $('#m_total_proteins').val(roundNumberDecimal(total_proteins));
                     $('#m_total_calories').val(roundNumberDecimal(total_calories));
-                    $('#m_total_ph').val(roundNumberDecimal(total_ph));
-                    $('#m_total_glycemic_load').val(roundNumberDecimal(total_glycemic_load));
+                    $('#m_total_ph').val(total_ph);
+                    $('#m_total_glycemic_load').val(total_glycemic_load);
+
+                    var tr = carbsCalculate(total_glycemic_load, total_carbs);
+                    $('#meal_carb_fat').html(tr);
                 }
             });
         }
