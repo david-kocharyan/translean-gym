@@ -178,13 +178,13 @@
                             v-for="(exp_info, l) in exp.arr" :key="l"
                             v-if="exp_info.show"
                         >
-                            <td><span v-if="exp_info.full" class="green"> 10 </span> </td>
-                            <td v-if="energyExpendedMode"><span v-if="exp_info.full" :class="{ 'text-dark font-weight-bold' : l == 0 }">20</span></td>
-                            <td v-if="energyExpendedMode"><span v-if="exp_info.full" :class="{ 'text-dark font-weight-bold' : l == 0 }">400</span></td>
-                            <td><span v-if="exp_info.full" :class="{ 'text-dark font-weight-bold' : l == 0 }">800</span></td>
-                            <td v-if="energyExpendedMode"><span v-if="exp_info.full" :class="{ 'text-dark font-weight-bold' : l == 0 }">5000</span></td>
-                            <td v-if="energyExpendedMode"><span v-if="exp_info.full" :class="{ 'text-dark font-weight-bold' : l == 0 }">600</span></td>
-                            <td><span v-if="exp_info.full" :class="{ 'text-dark font-weight-bold' : l == 0 }">480</span></td>
+                            <td><span v-if="exp_info.full" class="green"> @{{ exp_info.totalCal }} </span> </td>
+                            <td v-if="energyExpendedMode"><span v-if="exp_info.full" :class="{ 'text-dark font-weight-bold' : l == 0 }">@{{ exp_info.fatPercentage }}</span></td>
+                            <td v-if="energyExpendedMode"><span v-if="exp_info.full" :class="{ 'text-dark font-weight-bold' : l == 0 }">@{{ exp_info.fatCal }}</span></td>
+                            <td><span v-if="exp_info.full" :class="{ 'text-dark font-weight-bold' : l == 0 }">@{{ exp_info.fatGr }}</span></td>
+                            <td v-if="energyExpendedMode"><span v-if="exp_info.full" :class="{ 'text-dark font-weight-bold' : l == 0 }">@{{ exp_info.carbPercentage }}</span></td>
+                            <td v-if="energyExpendedMode"><span v-if="exp_info.full" :class="{ 'text-dark font-weight-bold' : l == 0 }">@{{ exp_info.carbCal }}</span></td>
+                            <td><span v-if="exp_info.full" :class="{ 'text-dark font-weight-bold' : l == 0 }">@{{ exp_info.carbGr }}</span></td>
                         </tr>
                     </tbody>
                     <tbody
@@ -706,6 +706,9 @@
                         for(let i=0; i<activities.length; i++) {
                             let activityObj = {
                                 name: activities[i].get_activity.name,
+                                fatPercentage: activities[i].get_activity.fat_ratio,
+                                carbPercentage: activities[i].get_activity.carb_ratio,
+                                met: activities[i].get_activity.met,
                                 start: activities[i].from,
                                 end: activities[i].to
                             }
@@ -1051,6 +1054,9 @@
 
 <!-- VUE -->
 <script defer>
+
+    var bodyWeight = 55;
+
     /**
      * Calculate carbs and fat dependency from glycemic total load
      * @param glycemicLoad
@@ -1141,6 +1147,15 @@
         }
         endTime += ':' + startParts[1];
         return endTime;
+    }
+
+    /**
+     *
+     * @param met
+     * @returns {number}
+     */
+    function countTotalCalPerMin(met) {
+        return met * 0.0035 * bodyWeight;
     }
 
     let days = new Vue({
@@ -1271,18 +1286,33 @@
                         for(let j=0; j<minutes.length; j++) {
                             let minute = staicTimes[i].minutes[j].minute
 
-                            for(let t=0; t<activities.length; t++) {
+                            for (let t = 0; t < activities.length; t++) {
 
                                 let activityObj = {
                                     time: minute,
                                     show: j == 0 ? true : false,
                                 }
 
-                                if(activities[t].start == minute) {
+                                let minCountFromStartToEnd = this.minCountFromStartToEnd(activities[t].start, activities[t].end)
+                                let hourDiff = (minCountFromStartToEnd.hourCount >= 1) ? minCountFromStartToEnd.hourCount : 0
+                                let minDiff = (minCountFromStartToEnd.minDiff  >= 1 && minCountFromStartToEnd.hourCount >= 1 ) ?
+                                    minCountFromStartToEnd.minDiff + minCountFromStartToEnd.hourCount * 60
+                                    : (minCountFromStartToEnd.minDiff >= 1 ) ? minCountFromStartToEnd.minDiff : 0
+
+                                let totalCalPerMin =  countTotalCalPerMin(activities[t].met)
+
+                                if (activities[t].start == minute) {
 
                                     activityObj.start = minute
                                     activityObj.end = activities[t].end
                                     activityObj.name = activities[t].name
+                                    activityObj.totalCal = (hourDiff >= 1) ? totalCalPerMin * 60 : totalCalPerMin * minDiff
+                                    activityObj.fatPercentage = activities[t].fatPercentage
+                                    activityObj.carbPercentage = activities[t].carbPercentage
+                                    var cc = activityObj.carbCal = activityObj.totalCal  * activities[t].carbPercentage / 100
+                                    var fc = activityObj.fatCal = activityObj.totalCal * activities[t].fatPercentage / 100
+                                    activityObj.fatGr = fc / 9
+                                    activityObj.carbGr = cc / 4
                                     activityObj.full = true
                                     activityObj.head = true
 
@@ -1307,7 +1337,17 @@
                                             this.staticTimes[i].minutes[j].color = color
                                         }
 
+                                        activityObj.totalCal = (hourDiff >= 1) ? totalCalPerMin * (hourDiff  - 1) * 60  : countTotalCalPerMin(activities[t].activityMet) * minDiff
+                                        activityObj.fatPercentage = activities[t].fatPercentage
+                                        activityObj.carbPercentage = activities[t].carbPercentage
+                                        var cc = activityObj.carbCal = activityObj.totalCal  * activities[t].carbPercentage / 100
+                                        var fc = activityObj.fatCal = activityObj.totalCal * activities[t].fatPercentage / 100
+                                        activityObj.fatGr = fc / 9
+                                        activityObj.carbGr = cc / 4
+
                                     }
+
+
 
                                     let index = activitiesFinalArray[i].arr
                                         .findIndex(activity => activity.time === minute)
@@ -1357,7 +1397,7 @@
                 let meals = this.meal
                 let end = null
                 let color = this.returnRandomColor()
-console.log(meals)
+
                 if(meals.length != 0) {
                     for(let i=0; i<staicTimes.length; i++) {
 
@@ -1447,6 +1487,22 @@ console.log(meals)
             },
             roundNumberDecimal(number) {
                 return Math.round((number + Number.EPSILON) * 100) / 100
+            },
+            minCountFromStartToEnd(start, end) {
+                //08:10 - 12:40 = 3:30
+                var startParts = start.split(":");
+                var endParts = end.split(":");
+                var startHour = parseInt(startParts[0])
+                var startMin = parseInt(startParts[1])
+                var endHour = parseInt(endParts[0])
+                var endMin = parseInt(endParts[1])
+                var hourDiff = endHour - startHour
+                var minDiff = Math.abs(endMin - startMin);
+                var hourMinDiff = hourDiff * 5;
+                var minMinDiff = minDiff / 10;
+                var diffPerTenMin = hourMinDiff + minMinDiff;
+
+                return {'hourCount': hourDiff, 'minDiff': diffPerTenMin}
             },
         },
         mounted() {
