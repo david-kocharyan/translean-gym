@@ -315,8 +315,8 @@
                             v-for="(exp_info, l) in exp.arr" :key="l"
                             v-if="exp_info.show"
                         >
-                            <td> <span v-if="exp_info.full"> 10   <span class="green">(loss)</span> </span> </td>
-                            <td> <span v-if="exp_info.full">20  <span class="red">(access)</span></span></td>
+                            <td> <span v-if="exp_info.full"> @{{ exp_info.fatStatus }} <span class="green">@{{ exp_info.fatStatusText }} </span> </span> </td>
+                            <td> <span v-if="exp_info.full"> @{{ exp_info.carbStatus }}  <span class="red"> @{{ exp_info.carbStatusText }} </span></span></td>
                         </tr>
                     </tbody>
                 </table>
@@ -732,17 +732,40 @@
                         days.addMeals(activityObjArr)
                         days.meals();
                     }
+
+
                 }
             })
+        }
+
+        function roundTime(time) {
+            let timePart = time.split(':');
+            let minPart = parseInt(timePart[1]);
+            let newTime = '';
+            if (minPart % 10) {
+                let afterTimeRounded = (minPart % 10 > 5) ? Math.ceil(minPart / 10) * 10 : Math.floor(minPart / 10) * 10;
+                if (!afterTimeRounded) {
+                    afterTimeRounded = '00';
+                }
+                newTime += timePart[0] + ':' + afterTimeRounded;
+                return newTime;
+            }
+            return time;
         }
 
         $('.activity_from').clockpicker({
             autoclose: true,
             placement: 'bottom',
+        }).change(function(){
+            let roundedTime = roundTime($(this).val())
+            $(this).val(roundedTime)
         });
         $('.activity_to').clockpicker({
             autoclose: true,
             placement: 'top',
+        }).change(function(){
+            let roundedTime = roundTime($(this).val())
+            $(this).val(roundedTime)
         });
         $('.meal_from').clockpicker({
             autoclose: true,
@@ -856,13 +879,28 @@
                 success: function (res) {
                     $('#activity').modal('toggle');
                     // let date = $('.date-show').html()
+                    let activities = res.activity;
+                    days.closeALl();
+                    if(activities.length == 0) {
+                        days.clearActivity()
+                    } else {
+                        for(let i=0; i<activities.length; i++) {
+                            let activityObj = {
+                                name: activities[i].get_activity.name,
+                                fatPercentage: activities[i].get_activity.fat_ratio,
+                                carbPercentage: activities[i].get_activity.carb_ratio,
+                                met: activities[i].get_activity.met,
+                                start: activities[i].from,
+                                end: activities[i].to
+                            }
+                            days.addActivity(activityObj)
+                        }
+                        days.activity();
+                    }
 
-                    // console.log(res)
-                    // console.log(date)
-
-                    days.closeALl()
-                    days.addActivity(activityObj)
-                    days.activity();
+                    // days.closeALl()
+                    // days.addActivity(activityObj)
+                    // days.activity();
 
                 }
             });
@@ -980,7 +1018,7 @@
                     $('#total_ph').val(total_ph);
                     $('#total_glycemic_load').val(total_glycemic_load);
 
-                    var tr = carbsCalculate(total_glycemic_load, total_carbs);
+                    var tr = calculateCarbDigestion(total_glycemic_load, total_carbs, total_fat);
                     $('#meal_carb_fat_add').html(tr);
                 }
             });
@@ -1061,57 +1099,25 @@
      * Calculate carbs and fat dependency from glycemic total load
      * @param glycemicLoad
      * @param carbs
+     * @param fat
      * @returns {string}
      */
-    function carbsCalculate(glycemicLoad , carbs) {
+    function calculateCarbDigestion(glycemicLoad , carbs, fat) {
         var tr = "";
-        if (glycemicLoad <= 40) {
-            var carb = carbs / 4;
-            for (var i = 0; i < 4; i++) {
-                tr += `<tr>
-                                                    <td>${roundNumberDecimal(carb)}</td>
-                                                    <td>4.5</td>
-                                                    <td>${roundNumberDecimal(carb)}</td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                </tr>`;
-            }
-
-        } else if (glycemicLoad > 40 && glycemicLoad <= 55) {
-            var carb = carbs / 3;
-            for (var i = 0; i < 3; i++) {
-                tr += `<tr>
-                                                    <td>${roundNumberDecimal(carb)}</td>
-                                                    <td>4.5</td>
-                                                    <td>${roundNumberDecimal(carb)}</td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                </tr>`;
-            }
-        } else if (glycemicLoad > 55 && glycemicLoad <= 70) {
-            var carb = carbs / 2;
-            for (var i = 0; i < 2; i++) {
-                tr += `<tr>
-                                                    <td>${roundNumberDecimal(carb)}</td>
-                                                    <td>4.5</td>
-                                                    <td>${roundNumberDecimal(carb)}</td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                </tr>`;
-            }
-        } else {
-            var carb = carbs;
+        var carb = (glycemicLoad <= 40 ) ? carbs / 4 : (glycemicLoad > 40 && glycemicLoad <= 55) ? carbs / 3 : (glycemicLoad > 55 && glycemicLoad <= 70) ? carbs / 2 : carbs;
+        var fourHourFat = fat / 4;
+        var prevCarb = 0;
+        for (var i = 0; i < 4; i++) {
+            prevCarb += carb;
+            var currentCarb = (prevCarb != carbs) ? roundNumberDecimal(carb) : '-'
             tr += `<tr>
-                                    <td>${roundNumberDecimal(carb)}</td>
-                                    <td>4.5</td>
-                                    <td>${roundNumberDecimal(carb)}</td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                </tr>`;
+                        <td></td>
+                        <td></td>
+                        <td>${currentCarb}</td>
+                        <td>${roundNumberDecimal(fourHourFat)}</td>
+                        <td></td>
+                        <td></td>
+                    </tr>`;
         }
 
         return tr;
@@ -1271,20 +1277,20 @@
                 this.staticTimes = timeArr
             },
             activity() {
-                let activitiesFinalArray = []
-                let staicTimes = this.staticTimes
-                let activities = this.activities
-                let end = null
-                let color = this.returnRandomColor()
+                let activitiesFinalArray = [];
+                let staicTimes = this.staticTimes;
+                let activities = this.activities;
+                let end = null;
+                let color = this.returnRandomColor();
 
                 if(activities.length != 0) {
                     for(let i=0; i<staicTimes.length; i++) {
 
-                    activitiesFinalArray.push(    { arr: [] }     )
+                    activitiesFinalArray.push( { arr: [] } );
 
-                    let minutes = staicTimes[i].minutes
+                    let minutes = staicTimes[i].minutes;
                         for(let j=0; j<minutes.length; j++) {
-                            let minute = staicTimes[i].minutes[j].minute
+                            let minute = staicTimes[i].minutes[j].minute;
 
                             for (let t = 0; t < activities.length; t++) {
 
@@ -1293,56 +1299,67 @@
                                     show: j == 0 ? true : false,
                                 }
 
-                                let minCountFromStartToEnd = this.minCountFromStartToEnd(activities[t].start, activities[t].end)
-                                let hourDiff = (minCountFromStartToEnd.hourCount >= 1) ? minCountFromStartToEnd.hourCount : 0
+                                let minCountFromStartToEnd = this.minCountFromStartToEnd(activities[t].start, activities[t].end);
+                                let hourDiff = (minCountFromStartToEnd.hourCount >= 1) ? minCountFromStartToEnd.hourCount : 0;
                                 let minDiff = (minCountFromStartToEnd.minDiff  >= 1 && minCountFromStartToEnd.hourCount >= 1 ) ?
                                     minCountFromStartToEnd.minDiff + minCountFromStartToEnd.hourCount * 60
-                                    : (minCountFromStartToEnd.minDiff >= 1 ) ? minCountFromStartToEnd.minDiff : 0
+                                    : (minCountFromStartToEnd.minDiff >= 1 ) ? minCountFromStartToEnd.minDiff : 0;
 
-                                let totalCalPerMin =  countTotalCalPerMin(activities[t].met)
+                                let totalCalPerMin =  countTotalCalPerMin(activities[t].met);
 
                                 if (activities[t].start == minute) {
 
-                                    activityObj.start = minute
-                                    activityObj.end = activities[t].end
-                                    activityObj.name = activities[t].name
-                                    activityObj.totalCal = (hourDiff >= 1) ? totalCalPerMin * 60 : totalCalPerMin * minDiff
-                                    activityObj.fatPercentage = activities[t].fatPercentage
-                                    activityObj.carbPercentage = activities[t].carbPercentage
-                                    var cc = activityObj.carbCal = activityObj.totalCal  * activities[t].carbPercentage / 100
-                                    var fc = activityObj.fatCal = activityObj.totalCal * activities[t].fatPercentage / 100
-                                    activityObj.fatGr = fc / 9
-                                    activityObj.carbGr = cc / 4
-                                    activityObj.full = true
-                                    activityObj.head = true
+                                    activityObj.start = minute;
+                                    activityObj.end = activities[t].end;
+                                    activityObj.name = activities[t].name;
+                                    activityObj.totalCal = Math.round( (hourDiff >= 1) ? totalCalPerMin * 60 : totalCalPerMin * minDiff );
+                                    activityObj.fatPercentage = activities[t].fatPercentage;
+                                    activityObj.carbPercentage = activities[t].carbPercentage;
+                                    var cc = activityObj.carbCal = Math.round(activityObj.totalCal  * activities[t].carbPercentage / 100);
+                                    var fc = activityObj.fatCal = Math.round(activityObj.totalCal * activities[t].fatPercentage / 100);
+                                    var fG = activityObj.fatGr = Math.round(fc / 9);
+                                    var cG = activityObj.carbGr = Math.round(cc / 4);
 
-                                    end = activities[t].end
 
-                                    this.staticTimes[i].minutes[j].color = color
+                                    activityObj.full = true;
+                                    activityObj.head = true;
+
+                                    end = activities[t].end;
+
+                                    this.staticTimes[i].minutes[j].color = color;
                                     // color = this.returnRandomColor()
 
-                                    activitiesFinalArray[i].arr = activitiesFinalArray[i].arr.filter(ac => ac.time !== minute)
-                                    activitiesFinalArray[i].arr.push(activityObj)
+                                    let status = this.calculateStatus(fG , cG);
+                                    activityObj.fatStatus = status.fatStatus;
+                                    activityObj.fatStatusText = status.fatStatusText;
+                                    activityObj.carbStatus = status.carbStatus;
+                                    activityObj.carbStatusText = status.carbStatusText;
+
+                                    activitiesFinalArray[i].arr = activitiesFinalArray[i].arr.filter(ac => ac.time !== minute);
+                                    activitiesFinalArray[i].arr.push(activityObj);
+
+
 
                                 }
                                 else {
                                     if(end != null) {
                                         if(activityObj.time == end ) {
-                                            activityObj.full = true
-                                            this.staticTimes[i].minutes[j].color = color
-                                            end = null
-                                            color = this.returnRandomColor()
+                                            activityObj.full = true;
+                                            this.staticTimes[i].minutes[j].color = color;
+                                            end = null;
+                                            color = this.returnRandomColor();
                                         } else {
-                                            activityObj.full = true
-                                            this.staticTimes[i].minutes[j].color = color
+                                            activityObj.full = true;
+                                            this.staticTimes[i].minutes[j].color = color;
                                         }
 
-                                        activityObj.totalCal = (hourDiff >= 1) ? totalCalPerMin * (hourDiff  - 1) * 60  : countTotalCalPerMin(activities[t].activityMet) * minDiff
+                                        activityObj.totalCal = Math.round( (hourDiff >= 1) ? totalCalPerMin * (hourDiff  - 1) * 60  : countTotalCalPerMin(activities[t].activityMet) * minDiff );
                                         activityObj.fatPercentage = activities[t].fatPercentage
                                         activityObj.carbPercentage = activities[t].carbPercentage
                                         var cc = activityObj.carbCal = activityObj.totalCal  * activities[t].carbPercentage / 100
                                         var fc = activityObj.fatCal = activityObj.totalCal * activities[t].fatPercentage / 100
-                                        activityObj.fatGr = fc / 9
+                                        activityObj.fatGr = Math.round(fc / 9);
+
                                         activityObj.carbGr = cc / 4
 
                                     }
@@ -1430,6 +1447,7 @@
                                     mealFinalArray[i].arr = mealFinalArray[i].arr.filter(ac => ac.time !== minute)
                                     mealFinalArray[i].arr.push(activityObj)
 
+
                                 }
                                 else {
                                     if(end != null) {
@@ -1452,6 +1470,8 @@
                                         mealFinalArray[i].arr.push(activityObj)
                                     }
                                     activityObj.meals = meals[t].meals
+
+
                                 }
                             }
                         }
@@ -1461,7 +1481,22 @@
                     this.finalMealArray = []
                 }
                 console.log('###### MEAL -----------', this.finalMealArray)
+            },
+            calculateStatus(fatGr, carbGr) {
+                var fatStatus = fatGr - 0;
+                var fatStatusText = fatStatus > 0 ? "loss" : "access";
+                fatStatus = Math.abs(fatStatus);
 
+                var carbStatus = carbGr - 0;
+                var carbStatusText = carbStatus > 0 ? "loss" : "access";
+                carbStatus = Math.abs(carbStatus);
+
+                return {
+                    'carbStatus': carbStatus,
+                    'carbStatusText': carbStatusText,
+                    'fatStatusText': fatStatusText,
+                    'fatStatus': fatStatus
+                }
             },
             addActivity(activityObj){
                 // this.activities = []
@@ -1482,7 +1517,6 @@
                 // this.meals();
             },
             energyExpendedModeSwitcher() {
-                console.log('asdasd')
                 this.energyExpendedMode = !this.energyExpendedMode
             },
             roundNumberDecimal(number) {
@@ -1537,7 +1571,7 @@
                     $('#m_total_ph').val(roundNumberDecimal(data.ph));
                     $('#m_total_glycemic_load').val(roundNumberDecimal(data.glycemic_load));
 
-                    var tr = carbsCalculate(data.glycemic_load, data.carbs);
+                    var tr = calculateCarbDigestion(data.glycemic_load, data.carbs, data.fat);
                     $('#meal_carb_fat').html(tr);
 
                     var m_pl = ` <button type="button" class="btn btn-success col-md-2 m-b-20 m_plus"
@@ -1687,7 +1721,7 @@
                     $('#m_total_ph').val(total_ph);
                     $('#m_total_glycemic_load').val(total_glycemic_load);
 
-                    var tr = carbsCalculate(total_glycemic_load, total_carbs);
+                    var tr = calculateCarbDigestion(total_glycemic_load, total_carbs, total_fat);
                     $('#meal_carb_fat').html(tr);
                 }
             });
