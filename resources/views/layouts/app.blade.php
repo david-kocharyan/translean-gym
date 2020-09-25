@@ -26,6 +26,8 @@
     <link href="{{asset('assets/plugins/datatables/media/css/dataTables.bootstrap.css')}}" rel="stylesheet"
           type="text/css"/>
 
+    <link rel="stylesheet" type="text/css" href="{{asset('assets/plugins/select2/dist/css/select2.min.css')}}">
+
     @stack('header')
 </head>
 
@@ -153,6 +155,7 @@
 <script src="{{asset('assets/js/custom.min.js')}}"></script>
 <!--Datatable js-->
 <script src="{{asset('assets/plugins/datatables/datatables.min.js')}}"></script>
+<script src="{{asset('assets/plugins/select2/dist/js/select2.js')}}"></script>
 
 @stack('footer')
 

@@ -55,12 +55,12 @@
                             </th>
                         </tr>
                     </thead>
-                    <tbody 
-                        v-for="(time, i) in staticTimes" 
+                    <tbody
+                        v-for="(time, i) in staticTimes"
                         :key="time.id"
                         :class="{ circle: time.circle }"
                     >
-                        <tr 
+                        <tr
                             v-for="(minute, j) in time.minutes" :key="minute.minute"
                             v-if="minute.show"
                             :class="[minute.font]"
@@ -93,8 +93,8 @@
                         </tr>
                         <tr v-if="finalActivityArray.length"
                             v-for="(activity, j) in finalActivityArray" :key="j">
-                            <td 
-                                v-for="(activity_info, j) in activity.arr" :key="j" 
+                            <td
+                                v-for="(activity_info, j) in activity.arr" :key="j"
                                 class="activity-td d-flex justify-content-between align-items-center"
                                 :class="{ 'activity-color text-success' : j == 0 }"
                                 v-if="activity_info.show"
@@ -103,7 +103,7 @@
 
                                 <!-- <div v-if="!activity_info.open && j == 0"
                                     v-for="(activity_infojj, g) in activity.arr" :key="g" >
-                                        @{{ activity_infojj.name }} 
+                                        @{{ activity_infojj.name }}
                                 </div> -->
 
                                 <div v-if="activity_info.name">
@@ -113,11 +113,11 @@
                                 </div>
                                 <div
                                     class="pointer edit-activity"
-                                    v-if="activity_info.head" 
+                                    v-if="activity_info.head"
                                     data-toggle="modal" data-target="#activity"
                                 >
                                     <i class="fas fa-edit"></i>
-                                
+
                                     <div v-if="activity_info.start" class="activity_start display-none">
                                         @{{ activity_info.start }}
                                     </div>
@@ -130,7 +130,7 @@
 
                             </td>
                         </tr>
-                        <tr 
+                        <tr
                             v-if="finalActivityArray.length == 0"
                             v-for="(time, i) in staticTimes" :key="time.id"
                         >
@@ -153,7 +153,7 @@
                         <tr>
                             <th colspan="7" class="text-center position-relative">
                                 Energy Expenditure
-                                <button 
+                                <button
                                     class="mode-switcher-button"
                                     @click="energyExpendedModeSwitcher">
                                     <i class="fas fa-expand-alt"></i>
@@ -172,19 +172,19 @@
                     </thead>
                     <tbody
                         v-if="finalActivityArray.length"
-                        v-for="(exp, k) in finalActivityArray" :key="k" 
+                        v-for="(exp, k) in finalActivityArray" :key="k"
                     >
                         <tr
-                            v-for="(exp_info, l) in exp.arr" :key="l" 
+                            v-for="(exp_info, l) in exp.arr" :key="l"
                             v-if="exp_info.show"
                         >
-                            <td><span v-if="exp_info.full" class="green"> 10 </span> </td>
-                            <td v-if="energyExpendedMode"><span v-if="exp_info.full" :class="{ 'text-dark font-weight-bold' : l == 0 }">20</span></td>
-                            <td v-if="energyExpendedMode"><span v-if="exp_info.full" :class="{ 'text-dark font-weight-bold' : l == 0 }">400</span></td>
-                            <td><span v-if="exp_info.full" :class="{ 'text-dark font-weight-bold' : l == 0 }">800</span></td>
-                            <td v-if="energyExpendedMode"><span v-if="exp_info.full" :class="{ 'text-dark font-weight-bold' : l == 0 }">5000</span></td>
-                            <td v-if="energyExpendedMode"><span v-if="exp_info.full" :class="{ 'text-dark font-weight-bold' : l == 0 }">600</span></td>
-                            <td><span v-if="exp_info.full" :class="{ 'text-dark font-weight-bold' : l == 0 }">480</span></td>
+                            <td><span v-if="exp_info.full" class="green"> @{{ exp_info.totalCal }} </span> </td>
+                            <td v-if="energyExpendedMode"><span v-if="exp_info.full" :class="{ 'text-dark font-weight-bold' : l == 0 }">@{{ exp_info.fatPercentage }}</span></td>
+                            <td v-if="energyExpendedMode"><span v-if="exp_info.full" :class="{ 'text-dark font-weight-bold' : l == 0 }">@{{ exp_info.fatCal }}</span></td>
+                            <td><span v-if="exp_info.full" :class="{ 'text-dark font-weight-bold' : l == 0 }">@{{ exp_info.fatGr }}</span></td>
+                            <td v-if="energyExpendedMode"><span v-if="exp_info.full" :class="{ 'text-dark font-weight-bold' : l == 0 }">@{{ exp_info.carbPercentage }}</span></td>
+                            <td v-if="energyExpendedMode"><span v-if="exp_info.full" :class="{ 'text-dark font-weight-bold' : l == 0 }">@{{ exp_info.carbCal }}</span></td>
+                            <td><span v-if="exp_info.full" :class="{ 'text-dark font-weight-bold' : l == 0 }">@{{ exp_info.carbGr }}</span></td>
                         </tr>
                     </tbody>
                     <tbody
@@ -218,21 +218,22 @@
                                 </button>
                             </th>
                         </tr>
-                        <tr 
+                        <tr
                             v-if="finalMealArray.length"
                             v-for="(meal, j) in finalMealArray" :key="j">
                             <td
-                                v-for="(meal_info, b) in meal.arr" :key="b" 
+                                v-for="(meal_info, b) in meal.arr" :key="b"
                                 class="activity-td d-flex justify-content-between align-items-center"
                                 :class="{ 'activity-color text-success' : b == 0 }"
-                                v-if="meal_info.show" 
+                                v-if="meal_info.show"
                             >
                                 <div>
                                     @{{ meal_info.name }}
                                 </div>
+                                <i v-if="meal_info.name" class="fas fa-edit"></i>
                             </td>
                         </tr>
-                        <tr 
+                        <tr
                             v-if="finalMealArray.length == 0"
                             v-for="(time, i) in staticTimes" :key="time.id"
                         >
@@ -244,7 +245,7 @@
                             >
                             </td>
                         </tr>
-                        
+
                     </tbody>
                 </table>
             </div>
@@ -267,18 +268,18 @@
                     </thead>
                     <tbody
                         v-if="finalMealArray.length"
-                        v-for="(exp, k) in finalMealArray" :key="k" 
+                        v-for="(exp, k) in finalMealArray" :key="k"
                     >
                         <tr
-                            v-for="(exp_info, l) in exp.arr" :key="l" 
+                            v-for="(exp_info, l) in exp.arr" :key="l"
                             v-if="exp_info.show"
                         >
-                            <td><span v-if="exp_info.full" class="green"> @{{ exp_info.meals.fat }} </span> </td>
-                            <td><span v-if="exp_info.full" :class="{ 'text-dark font-weight-bold' : l == 0 }"> @{{ exp_info.meals.fat / 4 }}</span></td>
-                            <td><span v-if="exp_info.full"  :class="{ 'text-dark font-weight-bold' : l == 0 }">@{{ exp_info.meals.carbs }}</span></td>
-                            <td><span v-if="exp_info.full" :class="{ 'text-dark font-weight-bold' : l == 0 }">@{{ exp_info.meals.carbs / 4 }}</span></td>
-                            <td><span v-if="exp_info.full" :class="{ 'text-dark font-weight-bold' : l == 0 }">@{{ exp_info.meals.proteins }}</span></td>
-                            <td><span v-if="exp_info.full" :class="{ 'text-dark font-weight-bold' : l == 0 }">@{{ exp_info.meals.proteins / 4 }}</span></td>
+                            <td><span v-if="exp_info.full" class="green"> @{{ roundNumberDecimal(exp_info.meals.fat) }} </span> </td>
+                            <td><span v-if="exp_info.full" :class="{ 'text-dark font-weight-bold' : l == 0 }"> @{{ roundNumberDecimal(exp_info.meals.fat / 4) }}</span></td>
+                            <td><span v-if="exp_info.full"  :class="{ 'text-dark font-weight-bold' : l == 0 }">@{{ roundNumberDecimal(exp_info.meals.carbs) }}</span></td>
+                            <td><span v-if="exp_info.full" :class="{ 'text-dark font-weight-bold' : l == 0 }">@{{ roundNumberDecimal(exp_info.meals.carbs / 4) }}</span></td>
+                            <td><span v-if="exp_info.full" :class="{ 'text-dark font-weight-bold' : l == 0 }">@{{ roundNumberDecimal(exp_info.meals.proteins) }}</span></td>
+                            <td><span v-if="exp_info.full" :class="{ 'text-dark font-weight-bold' : l == 0 }">@{{ roundNumberDecimal(exp_info.meals.proteins / 4) }}</span></td>
                         </tr>
                     </tbody>
                     <tbody
@@ -308,14 +309,14 @@
                         </tr>
                     </thead>
                     <tbody
-                        v-for="(exp, k) in finalActivityArray" :key="k" 
+                        v-for="(exp, k) in finalActivityArray" :key="k"
                     >
                         <tr
-                            v-for="(exp_info, l) in exp.arr" :key="l" 
+                            v-for="(exp_info, l) in exp.arr" :key="l"
                             v-if="exp_info.show"
                         >
-                            <td> <span v-if="exp_info.full"> 10   <span class="green">(loss)</span> </span> </td>
-                            <td> <span v-if="exp_info.full">20  <span class="red">(access)</span></span></td>
+                            <td> <span v-if="exp_info.full"> @{{ exp_info.fatStatus }} <span class="green">@{{ exp_info.fatStatusText }} </span> </span> </td>
+                            <td> <span v-if="exp_info.full"> @{{ exp_info.carbStatus }}  <span class="red"> @{{ exp_info.carbStatusText }} </span></span></td>
                         </tr>
                     </tbody>
                 </table>
@@ -403,7 +404,7 @@
                                 <input type="hidden" class="user_id" name="id" value="{{$user->id}}">
                                 <input type="hidden" class="meal_date" name="date">
                                 <div class="form-row">
-                                    <div class="form-group">
+                                    <div class="form-group col-md-12">
                                         <label for="activity_list">Choose Meal</label>
                                         <select name="meal" id="meal_list" class="meal_list form-control">
                                             <option value="">Choose Meal</option>
@@ -414,49 +415,49 @@
                                     </div>
                                 </div>
 
-                                <div class="form-row">
-                                    <div class="form-group col-md-3">
+                                <div class="form-row display-inline">
+                                    <div class="form-group col-md-1">
                                         <label for="total_mass">Total Mass</label>
                                         <input type="number" class="form-control" id="m_total_mass"
                                                placeholder="Total Mass"
                                                name="total_mass" readonly required value="">
                                     </div>
 
-                                    <div class="form-group col-md-3">
+                                    <div class="form-group col-md-1">
                                         <label for="total_carbs">Total Carbs</label>
                                         <input type="number" class="form-control" id="m_total_carbs"
                                                placeholder="Total Carbs"
                                                name="total_carbs" readonly required value="">
                                     </div>
 
-                                    <div class="form-group col-md-3">
+                                    <div class="form-group col-md-1">
                                         <label for="total_fat">Total Fat</label>
                                         <input type="number" class="form-control" id="m_total_fat"
                                                placeholder="Total Fat"
                                                name="total_fat" readonly required value="">
                                     </div>
 
-                                    <div class="form-group col-md-3">
+                                    <div class="form-group col-md-1">
                                         <label for="total_proteins">Total Proteins</label>
                                         <input type="number" class="form-control" id="m_total_proteins"
                                                placeholder="Total Proteins" name="total_proteins" readonly required
                                                value="">
                                     </div>
 
-                                    <div class="form-group col-md-3">
+                                    <div class="form-group col-md-1">
                                         <label for="total_calories">Total Calories</label>
                                         <input type="number" class="form-control" id="m_total_calories"
                                                placeholder="Total Calories" name="total_calories" readonly required
                                                value="">
                                     </div>
 
-                                    <div class="form-group col-md-3">
+                                    <div class="form-group col-md-1">
                                         <label for="total_ph">Total PH</label>
                                         <input type="number" class="form-control" id="m_total_ph" placeholder="Total PH"
                                                name="total_ph" readonly required value="">
                                     </div>
 
-                                    <div class="form-group col-md-3">
+                                    <div class="form-group col-md-2">
                                         <label for="total_glycemic_load">Total Glycemic Load</label>
                                         <input type="number" class="form-control" id="m_total_glycemic_load"
                                                placeholder="Total Glycemic Load" name="total_glycemic_load" readonly
@@ -465,7 +466,7 @@
                                 </div>
 
                                 <div class="form-row">
-                                    <div class="col-md-12">
+                                    <div class="col-md-12 no-padding">
                                         <div class="m_foods">
 
                                         </div>
@@ -473,15 +474,31 @@
                                 </div>
 
                                 <div class="form-row">
-                                    <div class="form-group col-md-6">
+                                    <div class="form-group col-md-3">
                                         <label for="meal_from">Time</label>
                                         <input type="text" name="from" class="clockpicker meal_from form-control">
                                     </div>
 
-                                    <!-- <div class="form-group col-md-6">
-                                        <label for="meal_to">To</label>
-                                        <input type="text" name="to" class="clockpicker meal_to form-control">
-                                    </div> -->
+                                    <div class="col-md-9 table-of-carb-fat">
+                                        <table class="intake-table border-green table table-striped">
+                                            <thead>
+                                                <tr>
+                                                    <th colspan="2">Expenditure</th>
+                                                    <th colspan="2">Intake</th>
+                                                    <th colspan="2">Status</th>
+                                                </tr>
+                                                <tr>
+                                                    <th>Carb</th>
+                                                    <th>Fat</th>
+                                                    <th>Carb</th>
+                                                    <th>Fat</th>
+                                                    <th>Carb</th>
+                                                    <th>Fat</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="meal_carb_fat"></tbody>
+                                        </table>
+                                    </div>
                                 </div>
 
                                 <div class="form-row">
@@ -497,13 +514,15 @@
 
 
                         <div role="tabpanel" class="tab-pane fade" id="add">
-                            
+
                             <div class="success text-success"></div>
                             <div class=" text-danger">
                                 <ul class="errors"></ul>
                             </div>
 
                             <form class="create_meal_form">
+                                <input type="hidden" class="user_id" name="id" value="{{$user->id}}">
+                                <input type="hidden" class="meal_date" name="date">
                                 <div class="form-group">
                                     <label for="name">Name</label>
                                     <input type="text" class="form-control" id="name"
@@ -512,45 +531,45 @@
 
                                 <div class="form-row">
 
-                                    <div class="form-group col-md-3">
+                                    <div class="form-group col-md-1">
                                         <label for="total_mass">Total Mass</label>
                                         <input type="number" class="form-control" id="total_mass"
                                                placeholder="Total Mass"
                                                name="total_mass" readonly required>
                                     </div>
 
-                                    <div class="form-group col-md-3">
+                                    <div class="form-group col-md-1">
                                         <label for="total_carbs">Total Carbs</label>
                                         <input type="number" class="form-control" id="total_carbs"
                                                placeholder="Total Carbs"
                                                name="total_carbs" readonly required>
                                     </div>
 
-                                    <div class="form-group col-md-3">
+                                    <div class="form-group col-md-1">
                                         <label for="total_fat">Total Fat</label>
                                         <input type="number" class="form-control" id="total_fat" placeholder="Total Fat"
                                                name="total_fat" readonly required>
                                     </div>
 
-                                    <div class="form-group col-md-3">
+                                    <div class="form-group col-md-1">
                                         <label for="total_proteins">Total Proteins</label>
                                         <input type="number" class="form-control" id="total_proteins"
                                                placeholder="Total Proteins" name="total_proteins" readonly required>
                                     </div>
 
-                                    <div class="form-group col-md-3">
+                                    <div class="form-group col-md-1">
                                         <label for="total_calories">Total Calories</label>
                                         <input type="number" class="form-control" id="total_calories"
                                                placeholder="Total Calories" name="total_calories" readonly required>
                                     </div>
 
-                                    <div class="form-group col-md-3">
+                                    <div class="form-group col-md-1">
                                         <label for="total_ph">Total PH</label>
                                         <input type="number" class="form-control" id="total_ph" placeholder="Total PH"
                                                name="total_ph" readonly required>
                                     </div>
 
-                                    <div class="form-group col-md-3">
+                                    <div class="form-group col-md-2">
                                         <label for="total_glycemic_load">Total Glycemic Load</label>
                                         <input type="number" class="form-control" id="total_glycemic_load"
                                                placeholder="Total Glycemic Load" name="total_glycemic_load" readonly
@@ -562,20 +581,45 @@
                                     <div class="col-md-12">
                                         <div class="foods">
                                             <button type="button" class="btn btn-success col-md-2 m-b-20 plus"
-                                                    style=" height: 200px;width: 200px;">
-                                                <i class="fa fa-plus" style="font-size: 100px;"></i></button>
+                                                    style="height: 100px;width: 100px;margin-top: 24px;">
+                                                <i class="fa fa-plus" style="font-size: 60px;"></i></button>
                                         </div>
                                     </div>
                                 </div>
 
-                                <div class="form-group col-md-6">
-                                    <label for="meal_from">Time</label>
-                                    <input type="text" name="from" class="clockpicker create_meal_time form-control">
+                                <div class="form-row">
+                                    <div class="col-md-12">
+                                        <div class="form-group col-md-3">
+                                            <label for="meal_from">Time</label>
+                                            <input type="text" name="from"
+                                                   class="clockpicker create_meal_time form-control">
+                                        </div>
+                                        <div class="col-md-9 table-of-carb-fat">
+                                            <table class="intake-table border-green table table-striped">
+                                                <thead>
+                                                <tr>
+                                                    <th colspan="2">Expenditure</th>
+                                                    <th colspan="2">Intake</th>
+                                                    <th colspan="2">Status</th>
+                                                </tr>
+                                                <tr>
+                                                    <th>Carb</th>
+                                                    <th>Fat</th>
+                                                    <th>Carb</th>
+                                                    <th>Fat</th>
+                                                    <th>Carb</th>
+                                                    <th>Fat</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody id="meal_carb_fat_add"></tbody>
+                                            </table>
+                                        </div>
+                                    </div>
                                 </div>
 
                                 <div class="form-row">
                                     <div class="form-group col-md-12">
-                                        <button 
+                                        <button
                                             type="button"
                                             class="btn create-meal btn-success waves-effect waves-light m-r-10">
                                             Save
@@ -645,7 +689,7 @@
                 url: '{{ url('/day/get-all-data') }}',
                 data: data,
                 success: function (res) {
-                   
+
                     let p_met = 0;
                     for (var z = 0; z < res.meal.length; z++){
                         p_met += parseFloat(res.meal[z].get_meals.proteins)
@@ -653,7 +697,7 @@
 
                     $('.protein_eat').html(p_met);
                     $('.protein_must').html(res.protein_must_eat);
-                    
+
                     let activities = res.activity
 
                     if(activities.length == 0) {
@@ -662,6 +706,9 @@
                         for(let i=0; i<activities.length; i++) {
                             let activityObj = {
                                 name: activities[i].get_activity.name,
+                                fatPercentage: activities[i].get_activity.fat_ratio,
+                                carbPercentage: activities[i].get_activity.carb_ratio,
+                                met: activities[i].get_activity.met,
                                 start: activities[i].from,
                                 end: activities[i].to
                             }
@@ -671,35 +718,61 @@
                     }
 
                     let meals = res.meal
+                    let activityObjArr = [];
                     if(meals.length == 0) {
                         days.clearMeals()
                     }else {
                         for(let i=0; i<meals.length; i++) {
-                            let activityObj = {
+                            activityObjArr.push({
                                 name: meals[i].get_meals.name,
                                 start: meals[i].from,
-                                end: meals[i].to,
                                 meals: meals[i].get_meals
-                            }
-                            days.addMeals(activityObj)
+                            });
                         }
+                        days.addMeals(activityObjArr)
                         days.meals();
                     }
+
+
                 }
             })
+        }
+
+        function roundTime(time) {
+            let timePart = time.split(':');
+            let minPart = parseInt(timePart[1]);
+            let newTime = '';
+            if (minPart % 10) {
+                let afterTimeRounded = (minPart % 10 > 5) ? Math.ceil(minPart / 10) * 10 : Math.floor(minPart / 10) * 10;
+                if (!afterTimeRounded) {
+                    afterTimeRounded = '00';
+                }
+                newTime += timePart[0] + ':' + afterTimeRounded;
+                return newTime;
+            }
+            return time;
         }
 
         $('.activity_from').clockpicker({
             autoclose: true,
             placement: 'bottom',
+        }).change(function(){
+            let roundedTime = roundTime($(this).val())
+            $(this).val(roundedTime)
         });
         $('.activity_to').clockpicker({
             autoclose: true,
             placement: 'top',
+        }).change(function(){
+            let roundedTime = roundTime($(this).val())
+            $(this).val(roundedTime)
         });
         $('.meal_from').clockpicker({
             autoclose: true,
             placement: 'top',
+        }).change(function(){
+            let roundedTime = roundTime($(this).val())
+            $(this).val(roundedTime)
         });
         // $('.meal_to').clockpicker({
         //     autoclose: true,
@@ -734,7 +807,7 @@
             var form = $('.add-personal-meal-form');
             $('.meal_date').val($('.date-show').html())
 
-            
+
             $.ajax({
                 type: "POST",
                 url: "/day/add-meals",
@@ -809,13 +882,28 @@
                 success: function (res) {
                     $('#activity').modal('toggle');
                     // let date = $('.date-show').html()
+                    let activities = res.activity;
+                    days.closeALl();
+                    if(activities.length == 0) {
+                        days.clearActivity()
+                    } else {
+                        for(let i=0; i<activities.length; i++) {
+                            let activityObj = {
+                                name: activities[i].get_activity.name,
+                                fatPercentage: activities[i].get_activity.fat_ratio,
+                                carbPercentage: activities[i].get_activity.carb_ratio,
+                                met: activities[i].get_activity.met,
+                                start: activities[i].from,
+                                end: activities[i].to
+                            }
+                            days.addActivity(activityObj)
+                        }
+                        days.activity();
+                    }
 
-                    // console.log(res)
-                    // console.log(date)
-
-                    days.closeALl()
-                    days.addActivity(activityObj)
-                    days.activity();
+                    // days.closeALl()
+                    // days.addActivity(activityObj)
+                    // days.activity();
 
                 }
             });
@@ -901,40 +989,47 @@
 
             $(document).find(".food_items").each(function () {
 
-                let mass = parseFloat($(this).find("#mass").val());
-                food_mass = parseFloat($(this).find("#food_sel").find(":selected").data('quantity_measure'));
+                if($(this).find('input').val()) {
+                    let mass = parseFloat($(this).find("#mass").val());
+                    food_mass = parseFloat($(this).find("#food_sel").find(":selected").data('quantity_measure'));
 
-                total_mass += parseFloat($(this).find("#mass").val());
-                total_carbs += parseFloat($(this).find("#food_sel").find(":selected").data('carbs')) / food_mass * mass;
-                total_fat += parseFloat($(this).find("#food_sel").find(":selected").data('fat')) / food_mass * mass;
-                total_proteins += parseFloat($(this).find("#food_sel").find(":selected").data('proteins')) / food_mass * mass;
-                total_calories += parseFloat($(this).find("#food_sel").find(":selected").data('calories')) / food_mass * mass;
+                    total_mass += parseFloat($(this).find("#mass").val());
+                    total_carbs += parseFloat($(this).find("#food_sel").find(":selected").data('carbs')) / food_mass * mass;
+                    total_fat += parseFloat($(this).find("#food_sel").find(":selected").data('fat')) / food_mass * mass;
+                    total_proteins += parseFloat($(this).find("#food_sel").find(":selected").data('proteins')) / food_mass * mass;
+                    total_calories += parseFloat($(this).find("#food_sel").find(":selected").data('calories')) / food_mass * mass;
 
-                let nums = $('.food_items').length;
+                    let nums = $('.food_items').length;
 
-                // ph calculate Average (Sum of (Food Item Mass * PH) / total Mass)
-                let ph = Number($(this).find("#food_sel").find(":selected").data('ph'));
-                ph_sum += parseFloat(mass * ph);
-                ph_d += ph_sum / total_mass;
-                total_ph = parseFloat(ph_d / nums).toFixed(2);
+                    // ph calculate Average (Sum of (Food Item Mass * PH) / total Mass)
+                    let ph = Number($(this).find("#food_sel").find(":selected").data('ph'));
+                    ph_sum += parseFloat(mass * ph);
+                    ph_d += ph_sum / total_mass;
+                    total_ph = parseFloat(ph_d / nums).toFixed(2);
 
-                // total_glycemic_load calculate Average (Sum of (Food Item Mass * Glycemic Load) / total Mass)
-                let gl = parseFloat($(this).find("#food_sel").find(":selected").data('glycemic_load'));
-                gl_sum += parseFloat(mass * gl);
-                gl_d += gl_sum / total_mass;
-                total_glycemic_load = parseFloat(gl_d / nums).toFixed(2);
+                    // total_glycemic_load calculate Average (Sum of (Food Item Mass * Glycemic Load) / total Mass)
+                    let gl = parseFloat($(this).find("#food_sel").find(":selected").data('glycemic_load'));
+                    gl_sum += parseFloat(mass * gl);
+                    gl_d += gl_sum / total_mass;
+                    total_glycemic_load = parseFloat(gl_d / nums).toFixed(2);
 
-                $('#total_mass').val(total_mass);
-                $('#total_carbs').val(total_carbs);
-                $('#total_fat').val(total_fat);
-                $('#total_proteins').val(total_proteins);
-                $('#total_calories').val(total_calories);
-                $('#total_ph').val(total_ph);
-                $('#total_glycemic_load').val(total_glycemic_load);
+                    $('#total_mass').val(total_mass);
+                    $('#total_carbs').val(total_carbs);
+                    $('#total_fat').val(total_fat);
+                    $('#total_proteins').val(total_proteins);
+                    $('#total_calories').val(total_calories);
+                    $('#total_ph').val(total_ph);
+                    $('#total_glycemic_load').val(total_glycemic_load);
+
+                    var tr = calculateCarbDigestion(total_glycemic_load, total_carbs, total_fat);
+                    $('#meal_carb_fat_add').html(tr);
+                }
             });
         }
 
         $('.create-meal').click(function () {
+
+            $('.meal_date').val($('.date-show').html())
             var form = $('.create_meal_form');
 
             $.ajax({
@@ -1000,10 +1095,82 @@
 
 <!-- VUE -->
 <script defer>
+
+    var bodyWeight = 55;
+
+    /**
+     * Calculate carbs and fat dependency from glycemic total load
+     * @param glycemicLoad
+     * @param carbs
+     * @param fat
+     * @returns {string}
+     */
+    function calculateCarbDigestion(glycemicLoad , carbs, fat) {
+        var tr = "";
+        var carb = (glycemicLoad <= 40 ) ? carbs / 4 : (glycemicLoad > 40 && glycemicLoad <= 55) ? carbs / 3 : (glycemicLoad > 55 && glycemicLoad <= 70) ? carbs / 2 : carbs;
+        var fourHourFat = fat / 4;
+        var prevCarb = 0;
+        for (var i = 0; i < 4; i++) {
+            prevCarb += carb;
+            var currentCarb = (prevCarb != carbs) ? roundNumberDecimal(carb) : '-'
+            tr += `<tr>
+                        <td></td>
+                        <td></td>
+                        <td>${currentCarb}</td>
+                        <td>${roundNumberDecimal(fourHourFat)}</td>
+                        <td></td>
+                        <td></td>
+                    </tr>`;
+        }
+
+        return tr;
+    }
+
+    /**
+     *
+     * @param number
+     * @returns {number}
+     */
+    function roundNumberDecimal(number) {
+        return Math.round((number + Number.EPSILON) * 100) / 100
+    }
+
+    /**
+     *
+     * @param startTime
+     * @returns {string|number}
+     */
+    function getEndTime(startTime) {
+        var endTime = null;
+        if (typeof startTime == 'undefined' || startTime == '') {
+            return '';
+        }
+        var startParts = startTime.split(":");
+        var hourPart = parseInt(startParts[0]);
+        endTime = hourPart + 4;
+        if (endTime > 20) {
+            endTime = 20;
+        }
+        if (endTime < 10) {
+            endTime += '0:' + endTime;
+        }
+        endTime += ':' + startParts[1];
+        return endTime;
+    }
+
+    /**
+     *
+     * @param met
+     * @returns {number}
+     */
+    function countTotalCalPerMin(met) {
+        return met * 0.0035 * bodyWeight;
+    }
+
     let days = new Vue({
         el: '#_days',
         data() {
-            let self = this; 
+            let self = this;
             return {
                 staticTimes: [],
                 activities: [],
@@ -1044,9 +1211,9 @@
                         }
                     }
                 }
-                
 
-                let = meals = this.finalMealArray
+
+                let meals = this.finalMealArray
                 if(meals.length != 0) {
                     for(let j=0; j<meals.length; j++) {
                         for(let k=0; k < meals[j].arr.length; k++) {
@@ -1066,7 +1233,7 @@
                         }
                     }
 
-                    
+
                     if(this.finalActivityArray.length != 0) {
                         let activities = this.finalActivityArray[i].arr
                         activities[0].open ? activities[0].open = false : activities[0].open = true
@@ -1093,7 +1260,7 @@
             createTimeGraphic() {
                 let timeArr = []
                 for(let i=8; i<=20; i++) {
-                    let timeObj = { 
+                    let timeObj = {
                         id: i,
                         time: i,
                         minutes: []
@@ -1113,62 +1280,98 @@
                 this.staticTimes = timeArr
             },
             activity() {
-                let activitiesFinalArray = []
-                let staicTimes = this.staticTimes
-                let activities = this.activities
-                let end = null
-                let color = this.returnRandomColor()
+                let activitiesFinalArray = [];
+                let staicTimes = this.staticTimes;
+                let activities = this.activities;
+                let end = null;
+                let color = this.returnRandomColor();
 
                 if(activities.length != 0) {
                     for(let i=0; i<staicTimes.length; i++) {
 
-                    activitiesFinalArray.push(    { arr: [] }     )
+                    activitiesFinalArray.push( { arr: [] } );
 
-                    let minutes = staicTimes[i].minutes
+                    let minutes = staicTimes[i].minutes;
                         for(let j=0; j<minutes.length; j++) {
-                            let minute = staicTimes[i].minutes[j].minute
-                            
-                            for(let t=0; t<activities.length; t++) {
+                            let minute = staicTimes[i].minutes[j].minute;
 
-                                let activityObj = { 
+                            for (let t = 0; t < activities.length; t++) {
+
+                                let activityObj = {
                                     time: minute,
                                     show: j == 0 ? true : false,
                                 }
-                                
-                                if(activities[t].start == minute) {
 
-                                    activityObj.start = minute  
-                                    activityObj.end = activities[t].end
-                                    activityObj.name = activities[t].name
-                                    activityObj.full = true
-                                    activityObj.head = true
+                                let minCountFromStartToEnd = this.minCountFromStartToEnd(activities[t].start, activities[t].end);
+                                let hourDiff = (minCountFromStartToEnd.hourCount >= 1) ? minCountFromStartToEnd.hourCount : 0;
+                                let minDiff = (minCountFromStartToEnd.minDiff  >= 1 && minCountFromStartToEnd.hourCount >= 1 ) ?
+                                    minCountFromStartToEnd.minDiff + minCountFromStartToEnd.hourCount * 60
+                                    : (minCountFromStartToEnd.minDiff >= 1 ) ? minCountFromStartToEnd.minDiff : 0;
 
-                                    end = activities[t].end
+                                let totalCalPerMin =  countTotalCalPerMin(activities[t].met);
 
-                                    this.staticTimes[i].minutes[j].color = color
+                                if (activities[t].start == minute) {
+
+                                    activityObj.start = minute;
+                                    activityObj.end = activities[t].end;
+                                    activityObj.name = activities[t].name;
+                                    activityObj.totalCal = Math.round( (hourDiff >= 1) ? totalCalPerMin * 60 : totalCalPerMin * minDiff );
+                                    activityObj.fatPercentage = activities[t].fatPercentage;
+                                    activityObj.carbPercentage = activities[t].carbPercentage;
+                                    var cc = activityObj.carbCal = Math.round(activityObj.totalCal  * activities[t].carbPercentage / 100);
+                                    var fc = activityObj.fatCal = Math.round(activityObj.totalCal * activities[t].fatPercentage / 100);
+                                    var fG = activityObj.fatGr = Math.round(fc / 9);
+                                    var cG = activityObj.carbGr = Math.round(cc / 4);
+
+
+                                    activityObj.full = true;
+                                    activityObj.head = true;
+
+                                    end = activities[t].end;
+
+                                    this.staticTimes[i].minutes[j].color = color;
                                     // color = this.returnRandomColor()
 
-                                    activitiesFinalArray[i].arr = activitiesFinalArray[i].arr.filter(ac => ac.time !== minute)
-                                    activitiesFinalArray[i].arr.push(activityObj)
-                                  
+                                    let status = this.calculateStatus(fG , cG);
+                                    activityObj.fatStatus = status.fatStatus;
+                                    activityObj.fatStatusText = status.fatStatusText;
+                                    activityObj.carbStatus = status.carbStatus;
+                                    activityObj.carbStatusText = status.carbStatusText;
+
+                                    activitiesFinalArray[i].arr = activitiesFinalArray[i].arr.filter(ac => ac.time !== minute);
+                                    activitiesFinalArray[i].arr.push(activityObj);
+
+
+
                                 }
                                 else {
                                     if(end != null) {
                                         if(activityObj.time == end ) {
-                                            activityObj.full = true
-                                            this.staticTimes[i].minutes[j].color = color
-                                            end = null
-                                            color = this.returnRandomColor()
+                                            activityObj.full = true;
+                                            this.staticTimes[i].minutes[j].color = color;
+                                            end = null;
+                                            color = this.returnRandomColor();
                                         } else {
-                                            activityObj.full = true
-                                            this.staticTimes[i].minutes[j].color = color
+                                            activityObj.full = true;
+                                            this.staticTimes[i].minutes[j].color = color;
                                         }
-                                        
+
+                                        activityObj.totalCal = Math.round( (hourDiff >= 1) ? totalCalPerMin * (hourDiff  - 1) * 60  : countTotalCalPerMin(activities[t].activityMet) * minDiff );
+                                        activityObj.fatPercentage = activities[t].fatPercentage
+                                        activityObj.carbPercentage = activities[t].carbPercentage
+                                        var cc = activityObj.carbCal = activityObj.totalCal  * activities[t].carbPercentage / 100
+                                        var fc = activityObj.fatCal = activityObj.totalCal * activities[t].fatPercentage / 100
+                                        activityObj.fatGr = Math.round(fc / 9);
+
+                                        activityObj.carbGr = cc / 4
+
                                     }
-                                
+
+
+
                                     let index = activitiesFinalArray[i].arr
                                         .findIndex(activity => activity.time === minute)
-                                
+
                                     if(index === -1) {
                                         activitiesFinalArray[i].arr.push(activityObj)
                                     }
@@ -1178,12 +1381,12 @@
                         }
                     }
 
-                   
+
                     for(let k=0; k<activitiesFinalArray.length; k++) {
                         this.circleCount = 0
 
                         for(let b=0;  b<activitiesFinalArray[k].arr.length;  b++) {
-                            
+
                             if(activitiesFinalArray[k].arr[b].full) {
                                 this.circleCount ++
                                 if(this.circleCount == 6) {
@@ -1199,7 +1402,7 @@
 
                     console.log('-----', this.staticTimes)
                     this.finalActivityArray = activitiesFinalArray
-                    
+
 
                 }else {
                     this.finalActivityArray = []
@@ -1222,30 +1425,31 @@
                     let minutes = staicTimes[i].minutes
                         for(let j=0; j<minutes.length; j++) {
                             let minute = staicTimes[i].minutes[j].minute
-                            
+
                             for(let t=0; t<meals.length; t++) {
 
-                                let activityObj = { 
+                                let activityObj = {
                                     time: minute,
                                     show: j == 0 ? true : false,
                                 }
-                                
+
                                 if(meals[t].start == minute) {
 
-                                    activityObj.start = minute  
-                                    activityObj.end = meals[t].end
+                                    activityObj.start = meals[t].start
+                                    activityObj.end = getEndTime(meals[t].start)
                                     activityObj.name = meals[t].name
                                     activityObj.full = true
                                     activityObj.head = true
                                     activityObj.meals = meals[t].meals
 
-                                    end = meals[t].end
+                                    end = getEndTime(activityObj.start)
 
                                     this.staticTimes[i].minutes[j].color = color
                                     // color = this.returnRandomColor()
 
                                     mealFinalArray[i].arr = mealFinalArray[i].arr.filter(ac => ac.time !== minute)
                                     mealFinalArray[i].arr.push(activityObj)
+
 
                                 }
                                 else {
@@ -1259,16 +1463,18 @@
                                             activityObj.full = true
                                             this.staticTimes[i].minutes[j].color = color
                                         }
-                                        
+
                                     }
-                                
+
                                     let index = mealFinalArray[i].arr
                                         .findIndex(activity => activity.time === minute)
-                                
+
                                     if(index === -1) {
                                         mealFinalArray[i].arr.push(activityObj)
                                     }
                                     activityObj.meals = meals[t].meals
+
+
                                 }
                             }
                         }
@@ -1278,7 +1484,22 @@
                     this.finalMealArray = []
                 }
                 console.log('###### MEAL -----------', this.finalMealArray)
+            },
+            calculateStatus(fatGr, carbGr) {
+                var fatStatus = fatGr - 0;
+                var fatStatusText = fatStatus > 0 ? "loss" : "access";
+                fatStatus = Math.abs(fatStatus);
 
+                var carbStatus = carbGr - 0;
+                var carbStatusText = carbStatus > 0 ? "loss" : "access";
+                carbStatus = Math.abs(carbStatus);
+
+                return {
+                    'carbStatus': carbStatus,
+                    'carbStatusText': carbStatusText,
+                    'fatStatusText': fatStatusText,
+                    'fatStatus': fatStatus
+                }
             },
             addActivity(activityObj){
                 // this.activities = []
@@ -1287,7 +1508,7 @@
             },
             addMeals(activityObj){
                 // this.meal = []
-                this.meal.push(activityObj)
+                this.meal = activityObj;
                 // this.meals();
             },
             clearActivity() {
@@ -1299,9 +1520,27 @@
                 // this.meals();
             },
             energyExpendedModeSwitcher() {
-                console.log('asdasd')
                 this.energyExpendedMode = !this.energyExpendedMode
-            }
+            },
+            roundNumberDecimal(number) {
+                return Math.round((number + Number.EPSILON) * 100) / 100
+            },
+            minCountFromStartToEnd(start, end) {
+                //08:10 - 12:40 = 3:30
+                var startParts = start.split(":");
+                var endParts = end.split(":");
+                var startHour = parseInt(startParts[0])
+                var startMin = parseInt(startParts[1])
+                var endHour = parseInt(endParts[0])
+                var endMin = parseInt(endParts[1])
+                var hourDiff = endHour - startHour
+                var minDiff = Math.abs(endMin - startMin);
+                var hourMinDiff = hourDiff * 5;
+                var minMinDiff = minDiff / 10;
+                var diffPerTenMin = hourMinDiff + minMinDiff;
+
+                return {'hourCount': hourDiff, 'minDiff': diffPerTenMin}
+            },
         },
         mounted() {
             this.createTimeGraphic();
@@ -1315,6 +1554,8 @@
         foods = JSON.parse(foods);
         let row = 0;
 
+        $('#meal_list').select2();
+
         $('#meal_list').change(function () {
             var id = $(this).val();
             $.ajax({
@@ -1325,17 +1566,20 @@
                 },
                 data: {id},
                 success: function (data) {
-                    $('#m_total_mass').val(data.mass);
-                    $('#m_total_carbs').val(data.carbs);
-                    $('#m_total_fat').val(data.fat);
-                    $('#m_total_proteins').val(data.proteins);
-                    $('#m_total_calories').val(data.calories);
-                    $('#m_total_ph').val(data.ph);
-                    $('#m_total_glycemic_load').val(data.glycemic_load);
+                    $('#m_total_mass').val(roundNumberDecimal(data.mass));
+                    $('#m_total_carbs').val(roundNumberDecimal(data.carbs));
+                    $('#m_total_fat').val(roundNumberDecimal(data.fat));
+                    $('#m_total_proteins').val(roundNumberDecimal(data.proteins));
+                    $('#m_total_calories').val(roundNumberDecimal(data.calories));
+                    $('#m_total_ph').val(roundNumberDecimal(data.ph));
+                    $('#m_total_glycemic_load').val(roundNumberDecimal(data.glycemic_load));
+
+                    var tr = calculateCarbDigestion(data.glycemic_load, data.carbs, data.fat);
+                    $('#meal_carb_fat').html(tr);
 
                     var m_pl = ` <button type="button" class="btn btn-success col-md-2 m-b-20 m_plus"
-                                                style=" height: 200px;width: 200px;">
-                                            <i class="fa fa-plus" style="font-size: 100px;"></i></button>`
+                                                style=" height: 100px;width: 100px;">
+                                            <i class="fa fa-plus" style="font-size: 60px;"></i></button>`
                     $('.m_foods').empty();
                     $('.m_foods').append(m_pl);
 
@@ -1361,7 +1605,7 @@
                                                 </option>`
                         }
 
-                        var elem = `<div class="form-group row_${i} m_food_items col-md-3">
+                        var elem = `<div class="form-group row_${i} m_food_items col-md-1">
                                             <select name="food[]" class="form-control m-b-20 m_food_sel">
                                                 ${opt}
                                             </select>
@@ -1394,7 +1638,7 @@
 
             let btn = `<button type="button" class="btn btn-danger col-md-12 m-b-20 m_minus" data-row="${row}"><i class="fa fa-minus"></i></button>`
             let element = `
-                            <div class="form-group row_${row} m_food_items col-md-3">
+                            <div class="form-group row_${row} m_food_items col-md-1">
                                 <select name="food[]" class="form-control m-b-20 m_food_sel">
                                     ${food}
                                 </select>
@@ -1447,50 +1691,56 @@
 
             $(document).find(".m_food_items").each(function () {
 
-                let mass = parseFloat($(this).find(".m_mass").val());
-                food_mass = parseFloat($(this).find(".m_food_sel").find(":selected").data('quantity_measure'));
+                if($(this).find('input').val()) {
 
-                total_mass += parseFloat($(this).find(".m_mass").val());
-                total_carbs += parseFloat($(this).find(".m_food_sel").find(":selected").data('carbs')) / food_mass * mass;
-                total_fat += parseFloat($(this).find(".m_food_sel").find(":selected").data('fat')) / food_mass * mass;
-                total_proteins += parseFloat($(this).find(".m_food_sel").find(":selected").data('proteins')) / food_mass * mass;
-                total_calories += parseFloat($(this).find(".m_food_sel").find(":selected").data('calories')) / food_mass * mass;
+                    let mass = parseFloat($(this).find(".m_mass").val());
+                    food_mass = parseFloat($(this).find(".m_food_sel").find(":selected").data('quantity_measure'));
 
-                let nums = $('.food_items').length;
+                    total_mass += parseFloat($(this).find(".m_mass").val());
+                    total_carbs += parseFloat($(this).find(".m_food_sel").find(":selected").data('carbs')) / food_mass * mass;
+                    total_fat += parseFloat($(this).find(".m_food_sel").find(":selected").data('fat')) / food_mass * mass;
+                    total_proteins += parseFloat($(this).find(".m_food_sel").find(":selected").data('proteins')) / food_mass * mass;
+                    total_calories += parseFloat($(this).find(".m_food_sel").find(":selected").data('calories')) / food_mass * mass;
 
-                // ph calculate Average (Sum of (Food Item Mass * PH) / total Mass)
-                let ph = Number($(this).find(".m_food_sel").find(":selected").data('ph'));
-                ph_sum += parseFloat(mass * ph);
-                ph_d += ph_sum / total_mass;
-                total_ph = parseFloat(ph_d / nums).toFixed(2);
+                    let nums = $('.food_items').length;
 
-                // total_glycemic_load calculate Average (Sum of (Food Item Mass * Glycemic Load) / total Mass)
-                let gl = parseFloat($(this).find(".m_food_sel").find(":selected").data('glycemic_load'));
-                gl_sum += parseFloat(mass * gl);
-                gl_d += gl_sum / total_mass;
-                total_glycemic_load = parseFloat(gl_d / nums).toFixed(2);
+                    // ph calculate Average (Sum of (Food Item Mass * PH) / total Mass)
+                    let ph = Number($(this).find(".m_food_sel").find(":selected").data('ph'));
+                    ph_sum += parseFloat(mass * ph);
+                    ph_d += ph_sum / total_mass;
+                    total_ph = parseFloat(ph_d / nums).toFixed(2);
 
-                $('#m_total_mass').val(total_mass);
-                $('#m_total_carbs').val(total_carbs);
-                $('#m_total_fat').val(total_fat);
-                $('#m_total_proteins').val(total_proteins);
-                $('#m_total_calories').val(total_calories);
-                $('#m_total_ph').val(total_ph);
-                $('#m_total_glycemic_load').val(total_glycemic_load);
+                    // total_glycemic_load calculate Average (Sum of (Food Item Mass * Glycemic Load) / total Mass)
+                    let gl = parseFloat($(this).find(".m_food_sel").find(":selected").data('glycemic_load'));
+                    gl_sum += parseFloat(mass * gl);
+                    gl_d += gl_sum / total_mass;
+                    total_glycemic_load = parseFloat(gl_d / nums).toFixed(2);
+
+                    $('#m_total_mass').val(roundNumberDecimal(total_mass));
+                    $('#m_total_carbs').val(roundNumberDecimal(total_carbs));
+                    $('#m_total_fat').val(roundNumberDecimal(total_fat));
+                    $('#m_total_proteins').val(roundNumberDecimal(total_proteins));
+                    $('#m_total_calories').val(roundNumberDecimal(total_calories));
+                    $('#m_total_ph').val(total_ph);
+                    $('#m_total_glycemic_load').val(total_glycemic_load);
+
+                    var tr = calculateCarbDigestion(total_glycemic_load, total_carbs, total_fat);
+                    $('#meal_carb_fat').html(tr);
+                }
             });
         }
-        
+
         // activity_from
         // activity_to
 
         $(document).on("click", ".edit-activity", function () {
             console.log('edit activity')
-            
+
             let from = $(this).find('div.activity_start').html()
             let to =   $(this).find('div.activity_end').html()
 
-            from = from.replace(/\s/g,''); 
-            to = to.replace(/\s/g,''); 
+            from = from.replace(/\s/g,'');
+            to = to.replace(/\s/g,'');
 
             $('.activity_from').clockpicker({
                 autoclose: true,
@@ -1511,7 +1761,7 @@
 {{--style in here--}}
 @push("header")
 <link href="{{asset('assets/plugins/clockpicker/dist/jquery-clockpicker.min.css')}}" rel="stylesheet">
-<link href="{{asset('assets/plugins/datepicker-new/css/bootstrap-datepicker.css')}}" rel="stylesheet">    
+<link href="{{asset('assets/plugins/datepicker-new/css/bootstrap-datepicker.css')}}" rel="stylesheet">
 <style>
 
     .position-relative {

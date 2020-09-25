@@ -50,7 +50,11 @@ class DayController extends Controller
         $data->to = $request->to;
         $data->save();
 
-        return response()->json(['success' => "Your activity has been saved."], 200);
+
+        $activity = DayActivity::with('getActivity')->where(["id" => $data->id])->get();
+
+
+        return response()->json(['success' => "Your activity has been saved.", 'activity'=>$activity], 200);
     }
 
     /**
@@ -101,7 +105,6 @@ class DayController extends Controller
         $dayMeal->personal_meal_id = $personal_meal->id;
         $dayMeal->date = $data['date'];
         $dayMeal->from = $data['from'];
-        $dayMeal->to = $data['to'];
         $dayMeal->save();
 
         DB::commit();
@@ -141,14 +144,38 @@ class DayController extends Controller
         $meal->glycemic_load = $data['total_glycemic_load'];
         $meal->save();
 
+
+        $personal_meal = new PersonalMeal;
+        $personal_meal->name = $meal->name;
+        $personal_meal->mass = $data['total_mass'];
+        $personal_meal->carbs = $data['total_carbs'];
+        $personal_meal->fat = $data['total_fat'];
+        $personal_meal->proteins = $data['total_proteins'];
+        $personal_meal->calories = $data['total_calories'];
+        $personal_meal->ph = $data['total_ph'];
+        $personal_meal->glycemic_load = $data['total_glycemic_load'];
+        $personal_meal->save();
+
         $arr = array();
+        $arrPerson = array();
         foreach ($data['food'] as $bin => $key) {
+            $arrPerson[$bin]['personal_meal_id'] = $personal_meal->id;
             $arr[$bin]['meal_id'] = $meal->id;
-            $arr[$bin]['food_id'] = $key;
-            $arr[$bin]['mass'] = $data['mass'][$bin];
+            $arr[$bin]['food_id'] = $arrPerson[$bin]['food_id'] = $key;
+            $arr[$bin]['mass'] = $arrPerson[$bin]['mass'] = $data['mass'][$bin];
         }
         $meal->attachedFoods()->createMany($arr);
+        $personal_meal->attachedFoods()->createMany($arrPerson);
+
+        $dayMeal = new DayMeal;
+        $dayMeal->user_id = $data['id'];
+        $dayMeal->personal_meal_id = $personal_meal->id;
+        $dayMeal->date = $data['date'];
+        $dayMeal->from = $data['from'];
+        $dayMeal->save();
+
         DB::commit();
+
         return response()->json(array('msg' => 'Successfully Form Submit', 'status' => true, 'meal' => $meal));
     }
 
