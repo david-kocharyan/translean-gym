@@ -178,13 +178,13 @@
                             v-for="(exp_info, l) in exp.arr" :key="l"
                             v-if="exp_info.show"
                         >
-                            <td><span v-if="exp_info.full" class="green"> @{{ exp_info.totalCal }} </span> </td>
+                            <td class="totalCal"><span v-if="exp_info.full" class="green"> @{{ exp_info.totalCal }} </span> </td>
                             <td v-if="energyExpendedMode"><span v-if="exp_info.full" :class="{ 'text-dark font-weight-bold' : l == 0 }">@{{ exp_info.fatPercentage }}</span></td>
                             <td v-if="energyExpendedMode"><span v-if="exp_info.full" :class="{ 'text-dark font-weight-bold' : l == 0 }">@{{ exp_info.fatCal }}</span></td>
-                            <td><span v-if="exp_info.full" :class="{ 'text-dark font-weight-bold' : l == 0 }">@{{ exp_info.fatGr }}</span></td>
+                            <td class="fatGr"><span v-if="exp_info.full" :class="{ 'text-dark font-weight-bold' : l == 0 }">@{{ exp_info.fatGr }}</span></td>
                             <td v-if="energyExpendedMode"><span v-if="exp_info.full" :class="{ 'text-dark font-weight-bold' : l == 0 }">@{{ exp_info.carbPercentage }}</span></td>
                             <td v-if="energyExpendedMode"><span v-if="exp_info.full" :class="{ 'text-dark font-weight-bold' : l == 0 }">@{{ exp_info.carbCal }}</span></td>
-                            <td><span v-if="exp_info.full" :class="{ 'text-dark font-weight-bold' : l == 0 }">@{{ exp_info.carbGr }}</span></td>
+                            <td class="carbGr"><span v-if="exp_info.full" :class="{ 'text-dark font-weight-bold' : l == 0 }">@{{ exp_info.carbGr }}</span></td>
                         </tr>
                     </tbody>
                     <tbody
@@ -1110,16 +1110,29 @@
         var carb = (glycemicLoad <= 40 ) ? carbs / 4 : (glycemicLoad > 40 && glycemicLoad <= 55) ? carbs / 3 : (glycemicLoad > 55 && glycemicLoad <= 70) ? carbs / 2 : carbs;
         var fourHourFat = fat / 4;
         var prevCarb = 0;
-        for (var i = 0; i < 4; i++) {
+
+        for (var i = 1; i < 5; i++) {
+
+            let fatGr = $('.energy-table tbody:nth-child('+(i+1)+')').find('tr:first').find('td.fatGr span').text();
+            let carbGr = $('.energy-table tbody:nth-child('+(i+1)+')').find('tr:first').find('td.fatGr span').text();
+
             prevCarb += carb;
             var currentCarb = (prevCarb != carbs) ? roundNumberDecimal(carb) : '-'
+
+            let carbStatus = (currentCarb != '-') ? currentCarb - carbGr : '-';
+            let carbStatusText = (carbStatus > 0 && carbStatus != '-') ? roundNumberDecimal(Math.abs(currentCarb - carbGr)) + " access" : roundNumberDecimal(Math.abs(currentCarb - carbGr)) + ' loss';
+
+            let fatStatus = fourHourFat - fatGr;
+            let fatStatusText = (fatStatus > 0) ? roundNumberDecimal(Math.abs(fourHourFat - fatGr)) + " access " : roundNumberDecimal(Math.abs(fourHourFat - fatGr)) + ' loss';
+
+
             tr += `<tr>
-                        <td></td>
-                        <td></td>
+                        <td>${carbGr}</td>
+                        <td>${fatGr}</td>
                         <td>${currentCarb}</td>
                         <td>${roundNumberDecimal(fourHourFat)}</td>
-                        <td></td>
-                        <td></td>
+                        <td>${carbStatusText}</td>
+                        <td>${fatStatusText}</td>
                     </tr>`;
         }
 
@@ -1266,14 +1279,24 @@
                         minutes: []
                     }
                     for(let j=0; j<6; j++) {
-                        let m = i + ':' + j + '0'
-                        let fm = i < 10 ? '0' + m : m
+                        let m = i + ':' + j + '0';
+                        let fm = i < 10 ? '0' + m : m;
+
+
                         let minObj = {
                             minute: fm,
                             show: j == 0 ? true : false,
                             font: j == 0 ? 'font-big' : 'font-sm'
-                        }
+                        };
+
                         timeObj.minutes.push(minObj)
+
+                        // if(!j)
+                        //     timeObj.minutes.push({
+                        //         minute: fm,
+                        //         show: false,
+                        //         font: 'font-sm'
+                        //     });
                     }
                     timeArr.push(timeObj)
                 }
