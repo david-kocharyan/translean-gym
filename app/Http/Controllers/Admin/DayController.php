@@ -50,7 +50,11 @@ class DayController extends Controller
         $data->to = $request->to;
         $data->save();
 
-        return response()->json(['success' => "Your activity has been saved."], 200);
+
+        $activity = DayActivity::with('getActivity')->where(["id" => $data->id])->get();
+
+
+        return response()->json(['success' => "Your activity has been saved.", 'activity'=>$activity], 200);
     }
 
     /**
