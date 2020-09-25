@@ -770,6 +770,9 @@
         $('.meal_from').clockpicker({
             autoclose: true,
             placement: 'top',
+        }).change(function(){
+            let roundedTime = roundTime($(this).val())
+            $(this).val(roundedTime)
         });
         // $('.meal_to').clockpicker({
         //     autoclose: true,
