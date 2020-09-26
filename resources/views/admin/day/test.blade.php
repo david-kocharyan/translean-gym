@@ -1146,7 +1146,7 @@
      */
     function roundNumberDecimal(number) {
         let floatNumber = parseFloat(number);
-        return Math.round((number + Number.EPSILON) * 100) / 100
+        return Math.round((floatNumber + Number.EPSILON) * 100) / 100
     }
 
     /**
