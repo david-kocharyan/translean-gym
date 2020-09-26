@@ -1547,7 +1547,8 @@
                 this.energyExpendedMode = !this.energyExpendedMode
             },
             roundNumberDecimal(number) {
-                return Math.round((number + Number.EPSILON) * 100) / 100
+                let floatNumber = parseFloat(number);
+                return Math.round((floatNumber + Number.EPSILON) * 100) / 100
             },
             minCountFromStartToEnd(start, end) {
                 //08:10 - 12:40 = 3:30
