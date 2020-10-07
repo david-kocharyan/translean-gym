@@ -42,6 +42,7 @@ class DayController extends Controller
      */
     public function addActivity(Request $request)
     {
+       // $activity = DayActivity::where(['date'=>$request->date,'from'=>$request->from])->get();
         $data = new DayActivity();
         $data->user_id = $request->id;
         $data->activity_id = $request->activity;

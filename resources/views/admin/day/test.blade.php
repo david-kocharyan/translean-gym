@@ -699,41 +699,35 @@
                     $('.protein_must').html(res.protein_must_eat);
 
                     let activities = res.activity
+                    let meals = res.meal
 
                     if(activities.length == 0) {
-                        days.clearActivity()
+                        days.clearActivity();
+                        days.clearMeals();
                     } else {
                         for(let i=0; i<activities.length; i++) {
+                            let diffBetweenStartToEnd = days.minCountFromStartToEnd(activities[i].from, activities[i].to);
                             let activityObj = {
                                 name: activities[i].get_activity.name,
                                 fatPercentage: activities[i].get_activity.fat_ratio,
                                 carbPercentage: activities[i].get_activity.carb_ratio,
                                 met: activities[i].get_activity.met,
                                 start: activities[i].from,
-                                end: activities[i].to
-                            }
+                                end: activities[i].to,
+                                totalCal: roundNumberDecimal(countTotalCalPerMin(activities[i].get_activity.met) * diffBetweenStartToEnd.minDiff * 10),
+                            };
                             days.addActivity(activityObj)
                         }
-                        days.activity();
-                    }
-
-                    let meals = res.meal
-                    let activityObjArr = [];
-                    if(meals.length == 0) {
-                        days.clearMeals()
-                    }else {
                         for(let i=0; i<meals.length; i++) {
-                            activityObjArr.push({
+                            let mealObj = {
                                 name: meals[i].get_meals.name,
                                 start: meals[i].from,
                                 meals: meals[i].get_meals
-                            });
+                            };
+                            days.addMeals(mealObj)
                         }
-                        days.addMeals(activityObjArr)
-                        days.meals();
+                        days.initDayViewData();
                     }
-
-
                 }
             })
         }
@@ -888,17 +882,19 @@
                         days.clearActivity()
                     } else {
                         for(let i=0; i<activities.length; i++) {
+                            let diffBetweenStartToEnd = days.minCountFromStartToEnd(activities[i].from, activities[i].to);
                             let activityObj = {
                                 name: activities[i].get_activity.name,
                                 fatPercentage: activities[i].get_activity.fat_ratio,
                                 carbPercentage: activities[i].get_activity.carb_ratio,
                                 met: activities[i].get_activity.met,
                                 start: activities[i].from,
-                                end: activities[i].to
-                            }
+                                end: activities[i].to,
+                                totalCal: roundNumberDecimal(countTotalCalPerMin(activities[i].get_activity.met) * diffBetweenStartToEnd.minDiff * diffBetweenStartToEnd.hourCount),
+                            };
                             days.addActivity(activityObj)
                         }
-                        days.activity();
+                        days.initDayViewData();
                     }
 
                     // days.closeALl()
@@ -1181,6 +1177,43 @@
         return met * 0.0035 * bodyWeight;
     }
 
+    function compareDates(compareDate,date1,date2) {
+        var date1Parts = date1.split(":");
+        var date1HourPart = parseInt(date1Parts[0]);
+        //var date1MinutePart = parseInt(date1Parts[1]);
+
+        var date2Parts = date2.split(":");
+        var date2HourPart = parseInt(date2Parts[0]);
+        //var date2MinutePart = parseInt(date2Parts[1]);
+
+        var compareParts = compareDate.split(":");
+        var compareHourPart = parseInt(compareParts[0]);
+        //var compairMinutePart = parseInt(compairParts[1]);
+
+        if(compareHourPart >= date1HourPart && compareHourPart <= date2HourPart) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     *
+     * @param activityArr
+     * @param startTime
+     * @param endTime
+     */
+    function getTotalCalInActivityArray(activityArr,startTime,endTime) {
+        let totalCalForEachActivity = 0;
+        for(let i = 0; i< activityArr.length; i++) {
+            if(compareDates(activityArr[i].start,startTime,endTime)) {
+                totalCalForEachActivity += activityArr[i].totalCal;
+            }
+        }
+
+        return totalCalForEachActivity;
+    }
+
     let days = new Vue({
         el: '#_days',
         data() {
@@ -1303,49 +1336,57 @@
                 }
                 this.staticTimes = timeArr
             },
-            activity() {
+            initDayViewData() {
                 let activitiesFinalArray = [];
+                let mealFinalArray = [];
                 let staicTimes = this.staticTimes;
                 let activities = this.activities;
+                let meals = this.meal
                 let end = null;
                 let color = this.returnRandomColor();
+
 
                 if(activities.length != 0) {
                     for(let i=0; i<staicTimes.length; i++) {
 
                     activitiesFinalArray.push( { arr: [] } );
 
-                    let minutes = staicTimes[i].minutes;
-                        for(let j=0; j<minutes.length; j++) {
+                        let minutes = staicTimes[i].minutes;
+                        for (let j = 0; j < minutes.length; j++) {
                             let minute = staicTimes[i].minutes[j].minute;
 
+                            //Activity part
                             for (let t = 0; t < activities.length; t++) {
 
                                 let activityObj = {
                                     time: minute,
                                     show: j == 0 ? true : false,
+                                };
+
+                                // let minCountFromStartToEnd = this.minCountFromStartToEnd(activities[t].start, activities[t].end);
+                                // let hourDiff = (minCountFromStartToEnd.hourCount >= 1) ? minCountFromStartToEnd.hourCount : 0;
+                                // let minDiff = (minCountFromStartToEnd.minDiff >= 1 && minCountFromStartToEnd.hourCount >= 1) ?
+                                //     minCountFromStartToEnd.minDiff + minCountFromStartToEnd.hourCount * 6 : minCountFromStartToEnd.minDiff;
+
+                                let totalCalPerMin = countTotalCalPerMin(activities[t].met);
+
+                                if(compareDates(minute,activities[t].start,activities[t].end)) {
+
                                 }
-
-                                let minCountFromStartToEnd = this.minCountFromStartToEnd(activities[t].start, activities[t].end);
-                                let hourDiff = (minCountFromStartToEnd.hourCount >= 1) ? minCountFromStartToEnd.hourCount : 0;
-                                let minDiff = (minCountFromStartToEnd.minDiff  >= 1 && minCountFromStartToEnd.hourCount >= 1 ) ?
-                                    minCountFromStartToEnd.minDiff + minCountFromStartToEnd.hourCount * 60
-                                    : (minCountFromStartToEnd.minDiff >= 1 ) ? minCountFromStartToEnd.minDiff : 0;
-
-                                let totalCalPerMin =  countTotalCalPerMin(activities[t].met);
 
                                 if (activities[t].start == minute) {
 
                                     activityObj.start = minute;
                                     activityObj.end = activities[t].end;
                                     activityObj.name = activities[t].name;
-                                    activityObj.totalCal = Math.round( (hourDiff >= 1) ? totalCalPerMin * 60 : totalCalPerMin * minDiff );
+
+                                    activityObj.totalCal = activities[t].totalCal;
                                     activityObj.fatPercentage = activities[t].fatPercentage;
                                     activityObj.carbPercentage = activities[t].carbPercentage;
-                                    var cc = activityObj.carbCal = Math.round(activityObj.totalCal  * activities[t].carbPercentage / 100);
-                                    var fc = activityObj.fatCal = Math.round(activityObj.totalCal * activities[t].fatPercentage / 100);
-                                    var fG = activityObj.fatGr = Math.round(fc / 9);
-                                    var cG = activityObj.carbGr = Math.round(cc / 4);
+                                    var cc = activityObj.carbCal = this.roundNumberDecimal(activityObj.totalCal * activities[t].carbPercentage / 100);
+                                    var fc = activityObj.fatCal = this.roundNumberDecimal(activityObj.totalCal * activities[t].fatPercentage / 100);
+                                    var fG = activityObj.fatGr = this.roundNumberDecimal(fc / 9);
+                                    var cG = activityObj.carbGr = this.roundNumberDecimal(cc / 4);
 
 
                                     activityObj.full = true;
@@ -1356,7 +1397,7 @@
                                     this.staticTimes[i].minutes[j].color = color;
                                     // color = this.returnRandomColor()
 
-                                    let status = this.calculateStatus(fG , cG);
+                                    let status = this.calculateStatus(fG, cG);
                                     activityObj.fatStatus = status.fatStatus;
                                     activityObj.fatStatusText = status.fatStatusText;
                                     activityObj.carbStatus = status.carbStatus;
@@ -1366,11 +1407,9 @@
                                     activitiesFinalArray[i].arr.push(activityObj);
 
 
-
-                                }
-                                else {
-                                    if(end != null) {
-                                        if(activityObj.time == end ) {
+                                } else {
+                                    if (end != null) {
+                                        if (activityObj.time == end) {
                                             activityObj.full = true;
                                             this.staticTimes[i].minutes[j].color = color;
                                             end = null;
@@ -1380,27 +1419,81 @@
                                             this.staticTimes[i].minutes[j].color = color;
                                         }
 
-                                        activityObj.totalCal = Math.round( (hourDiff >= 1) ? totalCalPerMin * (hourDiff  - 1) * 60  : countTotalCalPerMin(activities[t].activityMet) * minDiff );
-                                        activityObj.fatPercentage = activities[t].fatPercentage
-                                        activityObj.carbPercentage = activities[t].carbPercentage
-                                        var cc = activityObj.carbCal = activityObj.totalCal  * activities[t].carbPercentage / 100
-                                        var fc = activityObj.fatCal = activityObj.totalCal * activities[t].fatPercentage / 100
-                                        activityObj.fatGr = Math.round(fc / 9);
+                                        activityObj.totalCal = this.roundNumberDecimal(totalCalPerMin * 10);
+                                        activityObj.fatPercentage = activities[t].fatPercentage;
+                                        activityObj.carbPercentage = activities[t].carbPercentage;
+                                        var cc = activityObj.carbCal = this.roundNumberDecimal(activityObj.totalCal * activities[t].carbPercentage / 100);
+                                        var fc = activityObj.fatCal = this.roundNumberDecimal(activityObj.totalCal * activities[t].fatPercentage / 100);
+                                        activityObj.fatGr = this.roundNumberDecimal(fc / 9);
 
-                                        activityObj.carbGr = cc / 4
+                                        activityObj.carbGr = this.roundNumberDecimal(cc / 4);
 
                                     }
-
 
 
                                     let index = activitiesFinalArray[i].arr
                                         .findIndex(activity => activity.time === minute)
 
-                                    if(index === -1) {
+                                    if (index === -1) {
                                         activitiesFinalArray[i].arr.push(activityObj)
                                     }
                                 }
 
+                            }
+
+
+                            //Meal part
+                            if(meals.length) {
+                                mealFinalArray.push({arr: []});
+                                for (let t = 0; t < meals.length; t++) {
+
+                                    let activityObj = {
+                                        time: minute,
+                                        show: j == 0 ? true : false,
+                                    }
+
+                                    if (meals[t].start == minute) {
+
+                                        activityObj.start = meals[t].start
+                                        activityObj.end = getEndTime(meals[t].start)
+                                        activityObj.name = meals[t].name
+                                        activityObj.full = true
+                                        activityObj.head = true
+                                        activityObj.meals = meals[t].meals
+
+                                        end = getEndTime(activityObj.start)
+
+                                        this.staticTimes[i].minutes[j].color = color
+                                        // color = this.returnRandomColor()
+
+                                        mealFinalArray[i].arr = mealFinalArray[i].arr.filter(ac => ac.time !== minute)
+                                        mealFinalArray[i].arr.push(activityObj)
+
+
+                                    } else {
+                                        if (end != null) {
+                                            if (activityObj.time == end) {
+                                                activityObj.full = true
+                                                this.staticTimes[i].minutes[j].color = color
+                                                end = null
+                                                color = this.returnRandomColor()
+                                            } else {
+                                                activityObj.full = true
+                                                this.staticTimes[i].minutes[j].color = color
+                                            }
+
+                                        }
+
+                                        activityObj.meals = meals[t].meals
+
+                                        let index = mealFinalArray[i].arr
+                                            .findIndex(activity => activity.time === minute)
+
+                                        if (index === -1) {
+                                            mealFinalArray[i].arr.push(activityObj)
+                                        }
+                                    }
+                                }
                             }
                         }
                     }
@@ -1408,14 +1501,11 @@
 
                     for(let k=0; k<activitiesFinalArray.length; k++) {
                         this.circleCount = 0
-
                         for(let b=0;  b<activitiesFinalArray[k].arr.length;  b++) {
-
                             if(activitiesFinalArray[k].arr[b].full) {
                                 this.circleCount ++
                                 if(this.circleCount == 6) {
-                                    this.staticTimes[k].circle = false
-                                    console.log(activitiesFinalArray[k].arr[b])
+                                    this.staticTimes[k].circle = false;
                                 }
                             }
                             else {
@@ -1424,89 +1514,16 @@
                         }
                     }
 
-                    console.log('-----', this.staticTimes)
-                    this.finalActivityArray = activitiesFinalArray
-
+                    console.log('-----', this.staticTimes);
+                    this.finalActivityArray = activitiesFinalArray;
+                    this.finalMealArray = mealFinalArray
 
                 }else {
-                    this.finalActivityArray = []
+                    this.finalActivityArray = [];
+                    this.finalMealArray = [];
                 }
 
                 console.log('###### ACTIVITY -----------', this.finalActivityArray)
-            },
-            meals() {
-                console.log('meals --------')
-                let mealFinalArray = []
-                let staicTimes = this.staticTimes
-                let meals = this.meal
-                let end = null
-                let color = this.returnRandomColor()
-
-                if(meals.length != 0) {
-                    for(let i=0; i<staicTimes.length; i++) {
-
-                    mealFinalArray.push(    { arr: [] }     )
-                    let minutes = staicTimes[i].minutes
-                        for(let j=0; j<minutes.length; j++) {
-                            let minute = staicTimes[i].minutes[j].minute
-
-                            for(let t=0; t<meals.length; t++) {
-
-                                let activityObj = {
-                                    time: minute,
-                                    show: j == 0 ? true : false,
-                                }
-
-                                if(meals[t].start == minute) {
-
-                                    activityObj.start = meals[t].start
-                                    activityObj.end = getEndTime(meals[t].start)
-                                    activityObj.name = meals[t].name
-                                    activityObj.full = true
-                                    activityObj.head = true
-                                    activityObj.meals = meals[t].meals
-
-                                    end = getEndTime(activityObj.start)
-
-                                    this.staticTimes[i].minutes[j].color = color
-                                    // color = this.returnRandomColor()
-
-                                    mealFinalArray[i].arr = mealFinalArray[i].arr.filter(ac => ac.time !== minute)
-                                    mealFinalArray[i].arr.push(activityObj)
-
-
-                                }
-                                else {
-                                    if(end != null) {
-                                        if(activityObj.time == end ) {
-                                            activityObj.full = true
-                                            this.staticTimes[i].minutes[j].color = color
-                                            end = null
-                                            color = this.returnRandomColor()
-                                        } else {
-                                            activityObj.full = true
-                                            this.staticTimes[i].minutes[j].color = color
-                                        }
-
-                                    }
-
-                                    let index = mealFinalArray[i].arr
-                                        .findIndex(activity => activity.time === minute)
-
-                                    if(index === -1) {
-                                        mealFinalArray[i].arr.push(activityObj)
-                                    }
-                                    activityObj.meals = meals[t].meals
-
-
-                                }
-                            }
-                        }
-                    }
-                    this.finalMealArray = mealFinalArray
-                } else {
-                    this.finalMealArray = []
-                }
                 console.log('###### MEAL -----------', this.finalMealArray)
             },
             calculateStatus(fatGr, carbGr) {
@@ -1530,9 +1547,9 @@
                 this.activities.push(activityObj)
                 // this.activity();
             },
-            addMeals(activityObj){
+            addMeals(mealObj){
                 // this.meal = []
-                this.meal = activityObj;
+                this.meal.push(mealObj);
                 // this.meals();
             },
             clearActivity() {
