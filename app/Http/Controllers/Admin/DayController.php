@@ -42,7 +42,7 @@ class DayController extends Controller
      */
     public function addActivity(Request $request)
     {
-       // $activity = DayActivity::where(['date'=>$request->date,'from'=>$request->from])->get();
+        // $activity = DayActivity::where(['date'=>$request->date,'from'=>$request->from])->get();
         $data = new DayActivity();
         $data->user_id = $request->id;
         $data->activity_id = $request->activity;
@@ -54,7 +54,7 @@ class DayController extends Controller
 
         $activity = DayActivity::with('getActivity')->where(["id" => $data->id])->get();
 
-        return response()->json(['success' => "Your activity has been saved.", 'activity'=>$activity], 200);
+        return response()->json(['success' => "Your activity has been saved.", 'activity' => $activity], 200);
     }
 
     /**
@@ -108,7 +108,7 @@ class DayController extends Controller
         $dayMeal->save();
         DB::commit();
 
-        return response()->json(['success' => "Your meal has been saved.", 'activity'=>$dayMeal], 200);
+        return response()->json(['success' => "Your meal has been saved.", 'meal' => $dayMeal], 200);
     }
 
     /**
