@@ -108,7 +108,7 @@ class DayController extends Controller
         $dayMeal->save();
         DB::commit();
 
-        $meal = DayActivity::with('getMeals')->where(["id" => $dayMeal->id])->get();
+        $meal = DayMeal::with('getMeals')->where(["id" => $dayMeal->id])->get();
 
         return response()->json(['success' => "Your meal has been saved.", 'meal' => $meal], 200);
     }
