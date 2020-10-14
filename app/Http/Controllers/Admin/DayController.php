@@ -54,7 +54,6 @@ class DayController extends Controller
 
         $activity = DayActivity::with('getActivity')->where(["id" => $data->id])->get();
 
-
         return response()->json(['success' => "Your activity has been saved.", 'activity'=>$activity], 200);
     }
 
@@ -107,10 +106,9 @@ class DayController extends Controller
         $dayMeal->date = $data['date'];
         $dayMeal->from = $data['from'];
         $dayMeal->save();
-
         DB::commit();
 
-        return response()->json(['success' => "Your meal has been saved."], 200);
+        return response()->json(['success' => "Your meal has been saved.", 'activity'=>$dayMeal], 200);
     }
 
     /**
