@@ -35,10 +35,11 @@ table.energy-table.table.table-striped.border-green td {
 
 tr,
 .activity-td,
-tr th {
-  height: 50px !important;
-  min-height: 50px !important;
-  max-height: 50px !important;
+
+tr td {
+  height: 50px
+  /* min-height: 50px !important;
+  max-height: 50px !important; */
 }
 
 .table td, .table th {
@@ -254,4 +255,71 @@ tr {
 
 .activity-color {
   background-color: #b7b7b73d;
+}
+
+
+
+
+
+
+/* Tooltip */
+.tooltip {
+  position: relative;
+  opacity: 1;
+  cursor: default;
+}
+
+.tooltip .tooltiptext {
+  visibility: hidden;
+  width: 120px;
+  background-color: black;
+  color: #fff !important;
+  text-align: center;
+  border-radius: 6px;
+  padding: 10px 0;
+  position: absolute;
+  bottom: 150%;
+  left: 50%;
+  margin-left: -60px;
+  opacity: 0;
+  transition: .4s;
+}
+.tooltip .tooltiptext h5 {
+  color: #fff;
+}
+
+.tooltip .tooltiptext::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: black transparent transparent transparent;
+}
+
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+  opacity: 1;
+}
+
+.modal {
+  z-index: 9999 !important;
+}
+
+
+
+.w-100 {
+  width: 100%;
+}
+.parent-time {
+  background-color: #89bb83;
+  color: #fff;
+  text-align: center;
+}
+.child-time {
+  background-color: #a3c5a0d6;
+  color: #000;
+  text-align: center;
 }

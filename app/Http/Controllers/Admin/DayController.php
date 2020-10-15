@@ -237,6 +237,7 @@ class DayController extends Controller
         $foods = Food::all();
         $title = self::TITLE;
 
+
         return view(self::FOLDER . ".test", compact('user', 'title', 'activity', 'meals', 'foods'));
     }
 
