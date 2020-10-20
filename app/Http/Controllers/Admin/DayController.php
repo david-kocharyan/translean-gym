@@ -42,7 +42,6 @@ class DayController extends Controller
      */
     public function addActivity(Request $request)
     {
-        // $activity = DayActivity::where(['date'=>$request->date,'from'=>$request->from])->get();
         $data = new DayActivity();
         $data->user_id = $request->id;
         $data->activity_id = $request->activity;
@@ -51,8 +50,10 @@ class DayController extends Controller
         $data->to = $request->to;
         $data->save();
 
-
         $activity = DayActivity::with('getActivity')->where(["id" => $data->id])->get();
+
+        $body_weight = $this->getUserBodyWeight($request->id);
+        $activity[0]['body_weight'] = $body_weight;
 
         return response()->json(['success' => "Your activity has been saved.", 'activity' => $activity], 200);
     }
@@ -210,15 +211,22 @@ class DayController extends Controller
             $protein_must_eat = $met_variable->met_variable * $assessment->lean_mass;
         }
 
+        $body_weight = $this->getUserBodyWeight($user_id);
+
         $data = array(
             'activity' => $activity,
             'meal' => $meals,
             'protein_must_eat' => $protein_must_eat,
+            'body_weight' => $body_weight
         );
 
         return response()->json($data, 200);
     }
 
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function getMealAjax(Request $request)
     {
         $id = $request->id;
@@ -227,8 +235,26 @@ class DayController extends Controller
     }
 
 
-//    test part
+    /**
+     * @param $id
+     * @return int
+     */
+    private function getUserBodyWeight($id)
+    {
+        $body_weight = 0;
+        $projection = UserAssessments::where(array('user_id' => $id, 'type' => UserAssessments::TYPE[2]))->first();
+        if ($projection != null) {
+            $body_weight = $projection->weight;
+        } else {
+            $assessment = UserAssessments::where(array('user_id' => $id, 'type' => UserAssessments::TYPE[1]))->first();
+            if ($assessment != null) {
+                $body_weight = $assessment->weight;
+            }
+        }
+        return $body_weight;
+    }
 
+//    test part
     public function testIndex($id)
     {
         $user = User::find($id);
