@@ -10087,7 +10087,7 @@ ul.pro-amenities li span i {
         top: 0px
     }
     .sidebar {
-        z-index: 1001;
+        z-index: 9999;
         position: fixed;
         width: 60px;
         padding-top: 0px;

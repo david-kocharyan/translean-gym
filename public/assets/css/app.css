@@ -263,13 +263,13 @@ tr {
 
 
 /* Tooltip */
-.tooltip {
+.tooltipp {
   position: relative;
   opacity: 1;
   cursor: default;
 }
 
-.tooltip .tooltiptext {
+.tooltipp .tooltiptext {
   visibility: hidden;
   width: 120px;
   background-color: black;
@@ -284,11 +284,11 @@ tr {
   opacity: 0;
   transition: .4s;
 }
-.tooltip .tooltiptext h5 {
+.tooltipp .tooltiptext h5 {
   color: #fff;
 }
 
-.tooltip .tooltiptext::after {
+.tooltipp .tooltiptext::after {
   content: "";
   position: absolute;
   top: 100%;
@@ -299,7 +299,7 @@ tr {
   border-color: black transparent transparent transparent;
 }
 
-.tooltip:hover .tooltiptext {
+.tooltipp:hover .tooltiptext {
   visibility: visible;
   opacity: 1;
 }
@@ -317,6 +317,9 @@ tr {
   background-color: #89bb83;
   color: #fff;
   text-align: center;
+}
+th.parent-time {
+  position: relative;
 }
 .child-time {
   background-color: #a3c5a0d6;

@@ -102,7 +102,7 @@
                             <td class="d-flex align-items-center activity-color">   
                                 <span
                                     v-for="info in activity.activityPopover" 
-                                    class="mr-2 tooltip"
+                                    class="mr-2 tooltipp"
                                 >
                                     @{{ info.name }}
                                     <span class="tooltiptext">
@@ -160,25 +160,25 @@
                     </thead>
                     <tbody v-for="(time, i) in staticTimes" :key="time.time">
                         <tr>
-                            <td></td>
+                            <td><b>@{{ time.totals.totalCal }}</b></td>
                             <td v-if='energyExpendedMode'></td>
+                            <td v-if='energyExpendedMode'><b>@{{ time.totals.totalFatC }}</b></td>
+                            <td><b>@{{ time.totals.totalFatG }}</b></td>
                             <td v-if='energyExpendedMode'></td>
-                            <td></td>
-                            <td v-if='energyExpendedMode'></td>
-                            <td v-if='energyExpendedMode'></td>
-                            <td></td>
+                            <td v-if='energyExpendedMode'><b>@{{ time.totals.totalCarbC }}</b></td>
+                            <td><b>@{{ time.totals.totalCarbG }}</b></td>
                         </tr>
 
                         <tr v-for="(minute, j) in time.minutes" :key="j"
                             v-if="minute.show"
                         >
-                            <td><span class="green" v-if="minute.borderColor && minute.action == 1">@{{ minute.energyExpenditure.totalCal }}</span></td>
-                            <td v-if='energyExpendedMode'><span v-if="minute.borderColor && minute.action == 1">@{{ minute.energyExpenditure.fatPercentage }}</span></td>
-                            <td v-if='energyExpendedMode'><span class="green" v-if="minute.borderColor && minute.action == 1">@{{ minute.energyExpenditure.fatC }}</span></td>
-                            <td><span v-if="minute.borderColor && minute.actionType == 1">@{{ minute.energyExpenditure.fatG }}</span></td>
-                            <td v-if='energyExpendedMode'><span v-if="minute.borderColor && minute.action == 1">@{{ minute.energyExpenditure.carbPercentage }}</span></td>
-                            <td v-if='energyExpendedMode'><span v-if="minute.borderColor && minute.action == 1">@{{ minute.energyExpenditure.carbC }}</span></td>
-                            <td><span v-if="minute.borderColor && minute.actionType == 1">@{{ minute.energyExpenditure.carbG }}</span></td>
+                            <td><span class="green" v-if="minute.borderColor">@{{ minute.energyExpenditure.totalCal }}</span></td>
+                            <td v-if='energyExpendedMode'><span v-if="minute.borderColor">@{{ minute.energyExpenditure.fatPercentage }}</span></td>
+                            <td v-if='energyExpendedMode'><span class="green" v-if="minute.borderColor">@{{ minute.energyExpenditure.fatC }}</span></td>
+                            <td><span v-if="minute.borderColor">@{{ minute.energyExpenditure.fatG }}</span></td>
+                            <td v-if='energyExpendedMode'><span v-if="minute.borderColor">@{{ minute.energyExpenditure.carbPercentage }}</span></td>
+                            <td v-if='energyExpendedMode'><span v-if="minute.borderColor">@{{ minute.energyExpenditure.carbC }}</span></td>
+                            <td><span v-if="minute.borderColor">@{{ minute.energyExpenditure.carbG }}</span></td>
                         </tr>
                     </tbody>
                 </table>
@@ -202,33 +202,26 @@
                     </thead>
                     <tbody>                        
 
-                        <tr v-for="(activity, i) in staticTimes" :key="activity.time">
+                        <tr v-for="(meal, i) in mealGraphic" :key="meal.time">
 
                             <td class="d-flex align-items-center activity-color">
                                 <span
-                                    v-for="info in activity.mealPopover" 
+                                    v-for="info in meal.mealPopover" 
                                     class="mr-2 tooltip"
                                 >
                                     @{{ info.name }}
-                                    <span class="tooltiptext">
-                                        <h5>@{{ info.name }}</h5>
-                                        Start: @{{ info.start }} <br>
-                                        End: @{{ info.end }} <br>
-                                        
-                                    </span>
-                                    <!-- Total: @{{ info.total }} -->
                                 </span>
                             </td>
 
                             <td 
-                                v-for="(activity_info, j) in activity.minutes" 
-                                :key="activity_info.minute" 
+                                v-for="(meal_info, j) in meal.minutes" 
+                                :key="meal_info.minute" 
                                 class="d-flex justify-content-between align-items-center"
-                                v-if="activity_info.show"
+                                v-if="meal_info.show"
                             >
-                                <div v-if="activity_info.name && activity_info.mealType == 2 && activity_info.actionType != 1" 
+                                <div v-if="meal_info.name && meal_info.mealType == 2" 
                                     class="w-100 green d-flex justify-content-between align-items-center">
-                                    @{{ activity_info.name }}
+                                    @{{ meal_info.name }}
                                     <div> <i class="fas fa-edit"></i> </div>
                                 </div>
                             </td>
@@ -255,25 +248,25 @@
                             <td>Protein&nbsp;Dig.</td>
                         </tr>
                     </thead>
-                    <tbody v-for="(time, i) in staticTimes" :key="time.time">
+                    <tbody v-for="(meal, i) in mealGraphic" :key="meal.time">
                         <tr>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
+                            <td><b>@{{ meal.totals.totalFat }}</b></td>
+                            <td><b>@{{ meal.totals.totalFatD }}</b></td>
+                            <td><b>@{{ meal.totals.totalCarb }}</b></td>
+                            <td><b>@{{ meal.totals.totalCarbD }}</b></td>
+                            <td><b>@{{ meal.totals.totalProteinG }}</b></td>
+                            <td><b>@{{ meal.totals.totalProtein }}</b></td>
                         </tr>
 
-                        <tr v-for="(minute, j) in time.minutes" :key="j"
-                            v-if="minute.show"
+                        <tr v-for="(meal_info, j) in meal.minutes" :key="j"
+                            v-if="meal_info.show"
                         >
-                            <td><span class="green" v-if="minute.borderColor && minute.mealType == 2">@{{ minute.intake.fatG }}</span></td>
-                            <td><span v-if="minute.borderColor && minute.mealType == 2">@{{ minute.intake.fatD }}</span></td>
-                            <td><span class="green" v-if="minute.borderColor && minute.mealType == 2">@{{ minute.intake.carbG }}</span></td>
-                            <td><span v-if="minute.borderColor && minute.mealType == 2">@{{ minute.intake.carbD }}</span></td>
-                            <td><span v-if="minute.borderColor && minute.mealType == 2">@{{ minute.intake.proteinG }}</span></td>
-                            <td><span v-if="minute.borderColor && minute.mealType == 2">@{{ minute.intake.proteinD }}</span></td>
+                            <td><span class="green" v-if="meal_info.mealType == 2 && meal_info.name">@{{ meal_info.intake.fatG }}</span></td>
+                            <td><span v-if="meal_info.mealType == 2">@{{ meal_info.intake.fatD }}</span></td>
+                            <td><span class="green" v-if="meal_info.mealType == 2 && meal_info.name">@{{ meal_info.intake.carbG }}</span></td>
+                            <td><span v-if="meal_info.mealType == 2">@{{ meal_info.intake.carbD }}</span></td>
+                            <td><span v-if="meal_info.mealType == 2 && meal_info.name">@{{ meal_info.intake.proteinG }}</span></td>
+                            <td><span v-if="meal_info.mealType == 2">@{{ meal_info.intake.proteinD }}</span></td>
                         </tr>
                     </tbody>
                 </table>
@@ -291,27 +284,31 @@
                             <td class="text-center">Carb</td>
                         </tr>
                     </thead>
-                    <tbody
-                        v-for="(time, i) in staticTimes" :key="time.time"
-                    >
+                    <tbody v-for="(status, i) in mealGraphic" :key="status.time">
                         <tr>
                             <td></td>
                             <td></td>
                         </tr>
 
-                        <tr v-for="(minute, j) in time.minutes" :key="j"
-                            v-if="minute.show"
+                        <tr v-for="(status_info, j) in status.minutes" :key="j"
+                            v-if="status_info.show"
                         >
                             <td>
-                                <div v-if="minute.borderColor">
-                                    5.25
-                                    <span class="green">(loss)</span>
+                                <div>
+                                    @{{ status_info.statusObj.fat }}
+                                    <span v-if="status_info.statusObj.fat != 0">
+                                        <span class="green" v-if="status_info.statusObj.fat > 0">(loss)</span>
+                                        <span class="red" v-else>(access)</span>
+                                    </span>
                                 </div>
                             </td>
                             <td>
-                                <div v-if="minute.borderColor">
-                                    10
-                                    <span class="red">(access)</span>
+                                <div>
+                                    @{{ status_info.statusObj.carb }}
+                                    <span v-if="status_info.statusObj.carb != 0">
+                                        <span class="green" v-if="status_info.statusObj.carb > 0">(loss)</span>
+                                        <span class="red" v-else>(access)</span>
+                                    </span>
                                 </div>
                             </td>
                         </tr>
@@ -755,6 +752,8 @@
                         }
 
                         days.createTimeGraphic();
+                        days.createMealGraphic();
+                        days.createStatusGraphic();
                     }
                 }
             })
@@ -834,28 +833,40 @@
                 data: form.serialize(),
                 success: function (res) {
                     $('#meal').modal('toggle');
-                    let meal = res.meal
+                    let meals = res.meal
 
-                    for(let i=0; i<meal.length; i++) {
+                    for(let i=0; i<meals.length; i++) {
+
+                        let time = days.existMealTimeFormula( meals[i].get_meals.glycemic_load )
+                        let start = parseInt(meals[i].from.substring(0, 2))
+                        let startsEnd = meals[i].from.substring(3)
+                        let end = start + time + ":" + startsEnd
+
                         let mealObj = {
-                            name: meal[i].get_meals.name,
-                            start: meal[i].from,
-                            end: meal[i].to,
+                            meal: true,
+                            name: meals[i].get_meals.name,
+                            start: meals[i].from,
+                            end: end,
 
-                            calories: meal[i].get_meals.calories,
-                            carbs: meal[i].get_meals.carbs,
-                            fat: meal[i].get_meals.fat,
-                            glycemic_load: meal[i].get_meals.glycemic_load,
-                            mass:  meal[i].get_meals.mass,
-                            ph:  meal[i].get_meals.ph,
-                            proteins:  meal[i].get_meals.proteins
+                            fatG: meals[i].get_meals.fat,
+                            fatD: 0,	
 
+                            carbG: meals[i].get_meals.carbs,
+                            carbD: 0,	
+
+                            proteinG:  meals[i].get_meals.proteins,
+                            proteinD: 0,
+                            glycemicLoad: meals[i].get_meals.glycemic_load,
                         };
 
                         days.addMeals(mealObj)
+
                     }
 
                     days.createTimeGraphic();
+                    days.createMealGraphic();
+                    days.createStatusGraphic();
+
                 },
                 error: function (reject) {
                     $('.m_errors').empty()
@@ -927,11 +938,16 @@
 
                             days.addActivity(activityObj)
                         }
+
                         days.createTimeGraphic();
+                        days.createMealGraphic();
+                        days.createStatusGraphic();
+
                     }
                 }
             });
         });
+
     });
 </script>
 
@@ -1159,6 +1175,7 @@
             let self = this;
             return {
                 staticTimes: [],
+                mealGraphic: [],
                 actions: [],
                 meal: [],
                 color: 0,
@@ -1188,6 +1205,11 @@
                 for(let k=0; k < times.length; k++) {
                     times[k].show ? times[k].show = false : times[k].show = true
                 }
+
+                let meals = this.mealGraphic[i].minutes
+                for(let k=0; k < meals.length; k++) {
+                    meals[k].show ? meals[k].show = false : meals[k].show = true
+                }
             },
             totalCalFormula(mets, bodyWeight) {
                 return (mets * 3.5 * bodyWeight / 200) * 10
@@ -1201,7 +1223,6 @@
             carbGFormula(carbC) {
                 return (carbC / 4).toFixed(2)
             },
-            // Meal formula
             existMealTimeFormula(glycemicLoad) {
 
                 if(glycemicLoad < 40) {
@@ -1225,51 +1246,58 @@
 
                 if(glycemicLoad < 40) {
                     // digestion is divided on 4 hours
-                    return carb / 4
+                    return ((carb / 4) / 6).toFixed(2)
                 }
 
                 if(glycemicLoad > 40 && glycemicLoad < 55) {
                     // digestion is divided on 3 hours
-                    return carb / 3
+                    return ((carb / 3) / 6).toFixed(2)
                 }
 
                 if(glycemicLoad > 55 && glycemicLoad < 70) {
                     // digestion is divided on 2 hours
-                    return carb / 2
+                    return ((carb / 2) / 6).toFixed(2)
                 }
 
                 if(glycemicLoad > 70) {
                     // digestion is divided on 1 hours
-                    return carb / 1
+                    return ((carb / 1) / 6).toFixed(2)
                 }
 
             },
 
 
+
             createTimeGraphic() {
 
-                console.log('create time graphic..')
+                console.log('Create time graphic..')
 
                 let timeArr = [], 
                     end = null,
-                    color = this.returnRandomColor();
-                    
+                    color = this.returnRandomColor(),
+                    minuteExpenditure = {};
 
-                
                 for(let i=8; i<=20; i++) {
 
                     let timeObj = {
                         time: i < 10 ? '0' + i + ':00' : i + ':00',
                         minutes: [],
                         activityPopover: [],
-                        mealPopover: [],
+                        totals: {
+                            totalCal: null,
+                            totalFatC: null,
+                            totalFatG: null,
+                            totalCarbC: null,
+                            totalCarbG: null,
+                            totalFatG: null
+                        }
+                        // mealPopover: [],
                     }
                     
                     for(let j=0; j<6; j++) {
 
                         let m = i + ':' + j + '0';
                         let fm = i < 10 ? '0' + m : m;
-
                         
                         let minute = {
                             minute: fm,
@@ -1284,30 +1312,26 @@
                                 carbC = this.facCFormula(totalCal, this.actions[k].carbPercentage),
                                 carbG = this.carbGFormula(carbC);
 
-                            
-                            let energyExpenditure = {
+                            let expenditure = {
                                 totalCal: totalCal,
                                 fatPercentage: this.actions[k].fatPercentage,
                                 fatC: fatC,
                                 fatG: fatG,
                                 carbPercentage: this.actions[k].carbPercentage,
                                 carbC: carbC,
-                                carbG: carbG,
+                                carbG: carbG
                             }
 
-                            // Actions
                             if(fm == this.actions[k].start) {
                                 
                                 end = this.actions[k].end
-                                
                                 minute.borderColor = color
                                 minute.name = this.actions[k].name
-                                minute.energyExpenditure = energyExpenditure
-                                
-                               
                                 minute.actionType = 1
-                                minute.action = 1
+
                                 
+                                minute.energyExpenditure = expenditure
+                                minuteExpenditure = expenditure
 
                                 let popover = {
                                     name: this.actions[k].name,
@@ -1318,85 +1342,77 @@
 
                                 timeObj.activityPopover.push(popover)
 
-                            }else {
+                            } else {
 
                                 if(end == fm) {
                                     end = null
                                     color = this.returnRandomColor()
                                 }
 
-                                if(fm != this.actions[k].start && end != null) {
+                                else if(fm != this.actions[k].start && end != null) {
                                     minute.borderColor = color
-                                    minute.energyExpenditure = energyExpenditure
-                                    
-                                   
                                     minute.actionType = 1
-                                    minute.action = 1
                                     
-                                }
-
-                            }
-
-                        }
-                        
-                        for(let t=0; t<this.meal.length; t++) {
-                        
-                            let carbs = this.meal[t].carbG,
-                                load = this.meal[t].glycemicLoad,
-                                carbD = this.carbDigestFormula(carbs, load);
-                            
-                            let intake = {
-                                fatG: this.meal[t].fatG,
-                                fatD: this.meal[t].fatG / 4,	
-
-                                carbG: carbs,
-                                carbD: carbD,	
-
-                                proteinG: this.meal[t].proteinG,
-                                proteinD: this.meal[t].proteinG / 4,
-                            }
-
-                            // Meal / Water
-                            if(fm == this.meal[t].start) {
-                                    
-                                end = this.meal[t].end
-                                
-                                minute.borderColor = color
-                                minute.name = this.meal[t].name
-                                minute.intake = intake
-                                
-                                
-                                minute.mealType = 2
-                                
-
-                                let popover = {
-                                    name: this.meal[t].name,
-                                    start: this.meal[t].start,
-                                    end: this.meal[t].end
-                                }
-                                timeObj.mealPopover.push(popover)
-
-                            }else {
-
-                                if(end != null) {
-                                    if(end == fm) {
-                                        end = null
-                                        color = this.returnRandomColor()
+                                    if( !minute.energyExpenditure ) {
+                                        minute.energyExpenditure = minuteExpenditure
                                     }
                                 }
 
-                                if(fm != this.meal[t].start && end != null) {
-                                    minute.borderColor = color
-                                    minute.intake = intake
-                                    
-                                    
-                                    minute.mealType = 2
-                                    
-                                }
-
                             }
-
                         }
+                        
+                        // for(let t=0; t<this.meal.length; t++) {
+                        
+                        //     let carbs = this.meal[t].carbG,
+                        //         load = this.meal[t].glycemicLoad,
+                        //         carbD = this.carbDigestFormula(carbs, load);
+                            
+                        //     let intake = {
+                        //         fatG: this.meal[t].fatG,
+                        //         fatD: ((this.meal[t].fatG / 4) / 6).toFixed(2),
+
+                        //         carbG: carbs,
+                        //         carbD: carbD,	
+
+                        //         proteinG: this.meal[t].proteinG,
+                        //         proteinD: ((this.meal[t].proteinG / 4) / 6).toFixed(2)
+                        //     }
+
+                        //     // Meal / Water
+                        //     if(fm == this.meal[t].start) {
+                                    
+                        //         end = this.meal[t].end
+                             
+                        //         minute.name = this.meal[t].name
+                        //         minute.intake = intake
+                        //         minute.mealType = 2
+
+                        //         let popover = {
+                        //             name: this.meal[t].name,
+                        //             start: this.meal[t].start,
+                        //             end: this.meal[t].end
+                        //         }
+                        //         timeObj.mealPopover.push(popover)
+
+                        //     }
+                        //     // else {
+
+                        //     //     if(end != null) {
+                        //     //         if(end == fm) {
+                        //     //             end = null
+                        //     //             color = this.returnRandomColor()
+                        //     //         }
+                        //     //     }
+
+                        //     //     if(fm != this.meal[t].start && end != null) {
+                        //     //         minute.intake = intake
+                        //     //         minute.mealType = 2
+                                    
+                        //     //     }
+
+                        //     // }
+
+                        // }
 
                         // Red cyrcle
                         if(!minute.borderColor) {
@@ -1404,21 +1420,226 @@
                         }
 
                         timeObj.minutes.push(minute)
-                        
                     }
+                    
+                    let _totalCal = 0, 
+                        _totalFatC = 0, 
+                        _totalFatG = 0, 
+                        _totalCarbC = 0, 
+                        _totalCarbG = 0;
+
+                    for(let i=0; i<timeObj.minutes.length; i++) {
+                        if(timeObj.minutes[i].energyExpenditure) {
+                            _totalCal += parseFloat (timeObj.minutes[i].energyExpenditure.totalCal)
+                            _totalFatC += parseFloat (timeObj.minutes[i].energyExpenditure.fatC)
+                            _totalFatG += parseFloat (timeObj.minutes[i].energyExpenditure.fatG)
+                            _totalCarbC += parseFloat (timeObj.minutes[i].energyExpenditure.carbC)
+                            _totalCarbG += parseFloat (timeObj.minutes[i].energyExpenditure.carbG)
+                        }
+                    }
+
+                    timeObj.totals.totalCal = _totalCal != 0 ? _totalCal : ""
+                    timeObj.totals.totalFatC = _totalFatC != 0 ? _totalFatC : ""
+                    timeObj.totals.totalFatG = _totalFatG != 0 ? _totalFatG.toFixed(2) : ""
+                    timeObj.totals.totalCarbC = _totalCarbC != 0 ? _totalCarbC : ""
+                    timeObj.totals.totalCarbG = _totalCarbG != 0 ? _totalCarbG : ""
 
                     timeArr.push(timeObj)
                 }
 
-                console.log(timeArr)
-
                 this.staticTimes = timeArr
-
-                // setTimeout(() => {
-                //     console.log('Static Times : ', this.staticTimes)
-                // }, 2000);
+                console.log('Static Times : ', this.staticTimes)
 
             },
+            createMealGraphic() {
+                console.log('Create Meal graphic..')
+
+                let mealArr = [],
+                end = null,
+                minuteIntake = {},
+                sw = false;
+                let x = {}
+
+                for(let i=8; i<=20; i++) {
+
+                    let timeObj = {
+                        time: i < 10 ? '0' + i + ':00' : i + ':00',
+                        minutes: [],
+                        mealPopover: [],
+                        totals: {
+                            totalFat: null,
+                            totalFatD: null,
+                            totalCarb: null,	
+                            totalCarbD: null,	
+                            totalProteinG: null,
+                            totalProtein: null
+                        }
+                    }
+                    
+
+                    for(let j=0; j<6; j++) {
+
+                        let m = i + ':' + j + '0';
+                        let fm = i < 10 ? '0' + m : m;
+                        
+                        let minute = {
+                            minute: fm,
+                            show: false
+                        }
+
+                        for(let k=0; k<this.meal.length; k++) {
+
+                            let carbs = this.meal[k].carbG,
+                                load = this.meal[k].glycemicLoad,
+                                carbD = this.carbDigestFormula(carbs, load);
+                            
+                            let intake = {
+                                fatG: this.meal[k].fatG,
+                                fatD: ((this.meal[k].fatG / 4) / 6).toFixed(2),
+
+                                carbG: carbs,
+                                carbD: carbD,	
+
+                                proteinG: this.meal[k].proteinG,
+                                proteinD: ((this.meal[k].proteinG / 4) / 6).toFixed(2)
+                            }
+
+                            if(fm == this.meal[k].start) {
+
+                                end = this.meal[k].end
+                                minute.name = this.meal[k].name
+                                minute.mealType = 2
+
+                                minuteIntake = intake
+
+                                if( !minute.intake ) { 
+                                    minute.intake = intake
+                                } else {
+                                    sw = true
+                                    x = {
+                                        fatG: intake.fatG,
+                                        fatD: parseFloat(minute.intake.fatD) + parseFloat(minuteIntake.fatD),
+
+                                        carbG: intake.carbG,
+                                        carbD: parseFloat(minute.intake.carbD) + parseFloat(minuteIntake.carbD),
+
+                                        proteinG: intake.proteinG,
+                                        proteinD: parseFloat(minute.intake.proteinD) + parseFloat(minuteIntake.proteinD),
+                                    }
+                                    minute.intake = x
+                                }
+
+                                let popover = {
+                                    name: this.meal[k].name
+                                }
+
+                                timeObj.mealPopover.push(popover)
+
+                            } else {
+
+                                console.log('obj')
+                                console.log(x)
+
+                                if(end == fm) {
+                                    end = null
+                                }
+
+                                else if(fm != this.meal[k].start && end != null) {
+                                    minute.mealType = 2
+                                    
+                                    if( !minute.intake ) { 
+                                        minute.intake = minuteIntake
+                                    } 
+                                    
+                                    if(minute.intake && sw) {
+                                        minute.intake = x
+                                    }
+                                }
+                            }
+                        }
+
+                        timeObj.minutes.push(minute)
+                    }
+
+                    let _totalFat = 0,
+                        _totalFatD = 0,
+                        _totalCarb = 0,
+                        _totalCarbD = 0,
+                        _totalProteinG = 0,
+                        _totalProtein = 0;
+
+                    for(let i=0; i<timeObj.minutes.length; i++) {
+                        if(timeObj.minutes[i].intake) {
+                            if(timeObj.minutes[i].name) {
+                                _totalFat += parseFloat(timeObj.minutes[i].intake.fatG)
+                                _totalCarb += parseFloat(timeObj.minutes[i].intake.carbG)
+                                _totalProteinG += parseFloat(timeObj.minutes[i].intake.proteinG)
+                            }
+                           
+                            _totalFatD += parseFloat(timeObj.minutes[i].intake.fatD)
+                            _totalCarbD += parseFloat(timeObj.minutes[i].intake.carbD)
+                            _totalProtein += parseFloat(timeObj.minutes[i].intake.proteinD)
+                        }
+                    }
+
+                    timeObj.totals.totalFat = _totalFat != 0 ? _totalFat : ""
+                    timeObj.totals.totalFatD = _totalFatD != 0 ? _totalFatD.toFixed(2) : ""
+                    timeObj.totals.totalCarb = _totalCarb != 0 ? _totalCarb : ""
+                    timeObj.totals.totalCarbD = _totalCarbD != 0 ? _totalCarbD.toFixed(2) : ""
+                    timeObj.totals.totalProteinG = _totalProteinG != 0 ? _totalProteinG : ""
+                    timeObj.totals.totalProtein = _totalProtein != 0 ? _totalProtein.toFixed(2) : ""
+
+                    mealArr.push(timeObj)
+                }
+
+                this.mealGraphic = mealArr
+                console.log('Meal graphic : ', this.mealGraphic)
+            },
+            createStatusGraphic() {
+                for(let i=0; i<this.staticTimes.length; i++) {
+                    let minutes = this.staticTimes[i].minutes
+                    for(let j=0; j<minutes.length; j++) {
+
+                        let intake = this.mealGraphic[i].minutes[j].intake,
+                            fatG = 0, carbG = 0,
+                            fatD = 0, carbD = 0,
+                            fatStatus = 0,
+                            carbStatus = 0;
+
+                        
+                        if(minutes[j].energyExpenditure) {
+                            fatG = minutes[j].energyExpenditure.fatG
+                            carbG = minutes[j].energyExpenditure.carbG
+                            console.log(fatG)
+                            console.log(carbG)
+                        }
+                        
+                        if(intake) {
+                            fatD = parseFloat(intake.fatD)
+                            carbD = parseFloat(intake.carbD)
+                        }
+
+                        
+                        fatStatus = fatG - fatD;
+                        carbStatus = carbG - carbD;
+                        
+
+                        let statusObj = {
+                            fat: parseFloat(fatStatus.toFixed(2)),
+                            carb: parseFloat(carbStatus.toFixed(2))
+                        }
+
+                        this.mealGraphic[i].minutes[j].statusObj = statusObj
+
+                        // console.log( 'Status = ', fatStatus.toFixed(2), carbStatus.toFixed(2) )
+                    }
+                }
+                console.log('status = ',this.mealGraphic )
+            },
+
+
+
+
 
 
             initDayViewData() {
@@ -1669,9 +1890,13 @@
                 return {'hourCount': hourDiff, 'minDiff': diffPerTenMin}
             }
         },
-        // mounted() {
-        //     this.createTimeGraphic();
-        // }
+        mounted() {
+            this.createTimeGraphic();
+            this.createMealGraphic();
+            setTimeout(() => {
+                this.createStatusGraphic()
+            }, 1000);
+        }
     })
 </script>
 
@@ -1889,6 +2114,7 @@
 @push("header")
 <link href="{{asset('assets/plugins/clockpicker/dist/jquery-clockpicker.min.css')}}" rel="stylesheet">
 <link href="{{asset('assets/plugins/datepicker-new/css/bootstrap-datepicker.css')}}" rel="stylesheet">
+
 <style>
 
     .red-circle {
@@ -1897,7 +2123,8 @@
         height: 6px;
         background: #ff0057a6;
         border-radius: 50%;
-        left: 95px;
+        left: 49px;
+        bottom: 5px;
     }
 
     .position-relative {
