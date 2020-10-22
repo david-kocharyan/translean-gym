@@ -238,8 +238,9 @@ class DayController extends Controller
 
     public function clearMeal(Request $request)
     {
+        dd($request->all());
         $data = json_decode($request->getContent(), true);
-        dd($data);
+
         if (empty($data)){
             return response()->json(array('msg' => 'Please Send User ID or Date!'), 422);
         }
