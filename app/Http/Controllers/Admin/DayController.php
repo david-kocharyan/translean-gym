@@ -238,13 +238,10 @@ class DayController extends Controller
 
     public function clearMeal(Request $request)
     {
-        dd($request->all());
-        $data = json_decode($request->getContent(), true);
-
-        if (empty($data)){
+        if ($request->user_id == null OR $request->date == null){
             return response()->json(array('msg' => 'Please Send User ID or Date!'), 422);
         }
-        DayMeal::where('user_id', $data['user_id'])->where('date', $data['date'])->delete();
+        DayMeal::where(array('user_id' => $request->user_id, 'date'=>$request->date))->delete();
         return response()->json(array('msg' => 'Meal Clear Successfully!'), 200);
     }
 
