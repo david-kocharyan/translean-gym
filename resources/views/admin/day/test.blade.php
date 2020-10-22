@@ -189,7 +189,15 @@
                 <table class="medium-table table table-striped">
                     <thead>
                         <tr>
-                            <th scope="col">&nbsp;</th>
+                            <th colspan="1" class="position-relative">
+                                <span>&nbsp;</span>
+                                <button
+                                    class="mode-switcher-button"
+                                    data-toggle="modal"
+                                    data-target="#clearAllMealPopup">
+                                    <i class="fas fa-minus"></i>
+                                </button>
+                            </th>
                         </tr>
                         <tr>
                             <th class="d-flex align-items-center">
@@ -327,7 +335,6 @@
 
     <div id="activity" class="modal fade" role="dialog">
         <div class="modal-dialog">
-
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
@@ -359,7 +366,6 @@
                     <button type="button" class="btn btn-success activity_save">Save</button>
                 </div>
             </div>
-
         </div>
     </div>
 
@@ -629,6 +635,21 @@
                     </div>{{--end tab content--}}
                 </div>{{--end modal body--}}
             </div>{{--end modal content--}}
+        </div>
+    </div>
+
+    <div id="clearAllMealPopup" class="modal fade" role="dialog">
+        <div class="modal-dialog modal-sm" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Are you sure you want to clear all meals?</h4>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
+                    <button type="button" class="btn btn-danger clear-all-meal">Yes, clear</button>
+                </div>
+            </div>
         </div>
     </div>
 @endsection
@@ -947,6 +968,27 @@
                 }
             });
         });
+
+        $('.clear-all-meal').click(function() {
+
+            let data = {
+                user_id: $('.user_id').val(),
+                date: $('.date-show').html()
+            };
+
+            $.ajax({
+                type: "POST",
+                headers: {
+                    'X-CSRF-TOKEN': '{{csrf_token()}}'
+                },
+                url: '{{ url('/day/clear-all-meals') }}',
+                data: data,
+                success: function (res) {
+                    $('#clearAllMealPopup').modal('toggle');
+                    console.log('res', res)
+                }
+            });
+        })
 
     });
 </script>
@@ -1636,10 +1678,6 @@
                 }
                 console.log('status = ',this.mealGraphic )
             },
-
-
-
-
 
 
             initDayViewData() {
