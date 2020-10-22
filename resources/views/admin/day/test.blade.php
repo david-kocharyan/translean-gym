@@ -142,7 +142,7 @@
                             <th colspan="7" class="text-center position-relative">
                                 Energy Expenditure
                                 <button
-                                    class="mode-switcher-button"
+                                    class="mode-switcher-button mode-switcher-button-absolute"
                                     @click="energyExpendedModeSwitcher">
                                     <i class="fas fa-expand-alt"></i>
                                 </button>
@@ -189,13 +189,26 @@
                 <table class="medium-table table table-striped">
                     <thead>
                         <tr>
-                            <th colspan="1" class="position-relative">
+                            <th colspan="1" class="position-relative text-right">
                                 <span>&nbsp;</span>
                                 <button
                                     class="mode-switcher-button"
                                     data-toggle="modal"
                                     data-target="#clearAllMealPopup">
                                     <i class="fas fa-minus"></i>
+                                </button>
+                                <button
+                                    class="mode-switcher-button copyMeal"
+                                    data-toggle="modal"
+                                    data-target="">
+                                    <i class="fas fa-clone"></i>
+                                </button>
+                                <button
+                                    class="mode-switcher-button"
+                                    data-toggle="modal"
+                                    data-target="">
+                                    <i class="fas fa-cloud-download-alt"></i>
+                                    <input type="hidden" class="form-control">
                                 </button>
                             </th>
                         </tr>
@@ -215,7 +228,7 @@
                             <td class="d-flex align-items-center activity-color">
                                 <span
                                     v-for="info in meal.mealPopover" 
-                                    class="mr-2 tooltip"
+                                    class="mr-2 tooltipp"
                                 >
                                     @{{ info.name }}
                                 </span>
@@ -739,9 +752,7 @@
                                 carbPercentage: activities[i].get_activity.carb_ratio,
                                 met: activities[i].get_activity.met
                             };
-
                             days.addActivity(activityObj)
-
                         }
 
                         for(let i=0; i<meals.length; i++) {
@@ -769,7 +780,6 @@
                             };
 
                             days.addMeals(mealObj)
-
                         }
 
                         days.createTimeGraphic();
@@ -829,6 +839,48 @@
             $('.date-show').html(date);
             show_date(0, date);
         });
+
+        
+        
+        $('.copyMeal').datepicker({
+            multidate: true,
+            format: 'yyyy-mm-dd'
+        }).on('changeDate', function (e) {
+
+            let dates = e.dates, 
+                copyDatesArr = [];
+
+            for(let i=0; i<dates.length; i++) {
+                
+                let str = dates[i],
+                    mnth = ("0" + (str.getMonth() + 1)).slice(-2),
+                    day = ("0" + str.getDate()).slice(-2),
+                    date = [str.getFullYear(), mnth, day].join("-");
+
+                    copyDatesArr.push(date)
+            }
+
+            console.log(copyDatesArr)
+
+            let data = {
+                user_id: $('.user_id').val(),
+                date_from: $('.date-show').html(),
+                date_to: copyDatesArr
+            };
+
+            $.ajax({
+                type: "POST",
+                headers: {
+                    'X-CSRF-TOKEN': '{{csrf_token()}}'
+                },
+                url: '{{ url('/day/duplicate-meals') }}',
+                data: data,
+                success: function (res) {
+                    console.log('RESPONSE : ', res)
+                }
+            });
+
+        });;
 
         $('.date-plus').click(function () {
             let dateString = $('.date-show').html();
@@ -985,7 +1037,11 @@
                 data: data,
                 success: function (res) {
                     $('#clearAllMealPopup').modal('toggle');
-                    console.log('res', res)
+                    days.meal = []
+
+                    days.createTimeGraphic()
+                    days.createMealGraphic()
+                    days.createStatusGraphic()
                 }
             });
         })
@@ -1480,11 +1536,11 @@
                         }
                     }
 
-                    timeObj.totals.totalCal = _totalCal != 0 ? _totalCal : ""
-                    timeObj.totals.totalFatC = _totalFatC != 0 ? _totalFatC : ""
+                    timeObj.totals.totalCal = _totalCal != 0 ? _totalCal.toFixed(2) : ""
+                    timeObj.totals.totalFatC = _totalFatC != 0 ? _totalFatC.toFixed(2) : ""
                     timeObj.totals.totalFatG = _totalFatG != 0 ? _totalFatG.toFixed(2) : ""
-                    timeObj.totals.totalCarbC = _totalCarbC != 0 ? _totalCarbC : ""
-                    timeObj.totals.totalCarbG = _totalCarbG != 0 ? _totalCarbG : ""
+                    timeObj.totals.totalCarbC = _totalCarbC != 0 ? _totalCarbC.toFixed(2) : ""
+                    timeObj.totals.totalCarbG = _totalCarbG != 0 ? _totalCarbG.toFixed(2) : ""
 
                     timeArr.push(timeObj)
                 }
@@ -1552,6 +1608,11 @@
                                 minute.name = this.meal[k].name
                                 minute.mealType = 2
 
+                                let popover = {
+                                    name: this.meal[k].name
+                                }
+                                timeObj.mealPopover.push(popover)
+
                                 minuteIntake = intake
 
                                 if( !minute.intake ) { 
@@ -1571,11 +1632,7 @@
                                     minute.intake = x
                                 }
 
-                                let popover = {
-                                    name: this.meal[k].name
-                                }
-
-                                timeObj.mealPopover.push(popover)
+                                
 
                             } else {
 
@@ -1624,11 +1681,11 @@
                         }
                     }
 
-                    timeObj.totals.totalFat = _totalFat != 0 ? _totalFat : ""
+                    timeObj.totals.totalFat = _totalFat != 0 ? _totalFat.toFixed(2) : ""
                     timeObj.totals.totalFatD = _totalFatD != 0 ? _totalFatD.toFixed(2) : ""
-                    timeObj.totals.totalCarb = _totalCarb != 0 ? _totalCarb : ""
+                    timeObj.totals.totalCarb = _totalCarb != 0 ? _totalCarb.toFixed(2) : ""
                     timeObj.totals.totalCarbD = _totalCarbD != 0 ? _totalCarbD.toFixed(2) : ""
-                    timeObj.totals.totalProteinG = _totalProteinG != 0 ? _totalProteinG : ""
+                    timeObj.totals.totalProteinG = _totalProteinG != 0 ? _totalProteinG.toFixed(2) : ""
                     timeObj.totals.totalProtein = _totalProtein != 0 ? _totalProtein.toFixed(2) : ""
 
                     mealArr.push(timeObj)
@@ -1929,13 +1986,16 @@
             }
         },
         mounted() {
+            
             this.createTimeGraphic();
             this.createMealGraphic();
+
             setTimeout(() => {
                 this.createStatusGraphic()
             }, 1000);
         }
     })
+
 </script>
 
 <script !src="">
@@ -2186,12 +2246,15 @@
     }
 
     .mode-switcher-button {
-        position: absolute;
-        right: 0;
+
         margin-left: 10px;
         background: transparent;
         border: 1px solid #d4d4d4;
         border-radius: 5px;
+    }
+    .mode-switcher-button-absolute {
+        position: absolute;
+        right: 0;
     }
 
     .mode-switcher-button:hover {
@@ -2212,6 +2275,9 @@
     }
     .font-big {
         border-right: none;
+    }
+    .datepicker {
+        z-index: 9999 !important;
     }
 
 </style>
