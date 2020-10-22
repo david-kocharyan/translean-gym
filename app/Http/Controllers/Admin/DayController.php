@@ -242,7 +242,7 @@ class DayController extends Controller
         if (empty($data)){
             return response()->json(array('msg' => 'Please Send User ID or Date!'), 422);
         }
-        DayMeal::where('user_id', $data['user_id'])->whereIn('date', $data['date'])->delete();
+        DayMeal::where('user_id', $data['user_id'])->where('date', $data['date'])->delete();
         return response()->json(array('msg' => 'Meal Clear Successfully!'), 200);
     }
 
