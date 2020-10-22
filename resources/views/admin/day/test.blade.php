@@ -26,6 +26,16 @@
                                     <i class="glyphicon glyphicon-th"></i>
                                 </span>
                             </div>
+                            <div>
+                                <button
+                                    class="mode-switcher-button"
+                                    data-toggle="modal"
+                                    data-target="">
+                                    <i class="fas fa-cloud-download-alt"></i>
+                                    <input type="hidden" class="form-control">
+                                </button>
+                            </div>
+
                         </div>
                         <div style="position:absolute; right: 0%;">
                             <h5>Protein` </h5>
@@ -99,7 +109,8 @@
                     <tbody class="font-sm">
                         <tr v-for="(activity, i) in staticTimes" :key="activity.time">
                             
-                            <td class="d-flex align-items-center activity-color">   
+                            <td class="d-flex align-items-center activity-color"
+                            @click="toggleTimes(i)" >   
                                 <span
                                     v-for="info in activity.activityPopover" 
                                     class="mr-2 tooltipp"
@@ -159,7 +170,7 @@
                         </tr>
                     </thead>
                     <tbody v-for="(time, i) in staticTimes" :key="time.time">
-                        <tr>
+                        <tr  @click="toggleTimes(i)" >
                             <td><b>@{{ time.totals.totalCal }}</b></td>
                             <td v-if='energyExpendedMode'></td>
                             <td v-if='energyExpendedMode'><b>@{{ time.totals.totalFatC }}</b></td>
@@ -203,13 +214,6 @@
                                     data-target="">
                                     <i class="fas fa-clone"></i>
                                 </button>
-                                <button
-                                    class="mode-switcher-button"
-                                    data-toggle="modal"
-                                    data-target="">
-                                    <i class="fas fa-cloud-download-alt"></i>
-                                    <input type="hidden" class="form-control">
-                                </button>
                             </th>
                         </tr>
                         <tr>
@@ -225,7 +229,8 @@
 
                         <tr v-for="(meal, i) in mealGraphic" :key="meal.time">
 
-                            <td class="d-flex align-items-center activity-color">
+                            <td class="d-flex align-items-center activity-color"
+                            @click="toggleTimes(i)" >
                                 <span
                                     v-for="info in meal.mealPopover" 
                                     class="mr-2 tooltipp"
@@ -270,7 +275,7 @@
                         </tr>
                     </thead>
                     <tbody v-for="(meal, i) in mealGraphic" :key="meal.time">
-                        <tr>
+                        <tr  @click="toggleTimes(i)" >
                             <td><b>@{{ meal.totals.totalFat }}</b></td>
                             <td><b>@{{ meal.totals.totalFatD }}</b></td>
                             <td><b>@{{ meal.totals.totalCarb }}</b></td>
@@ -306,7 +311,7 @@
                         </tr>
                     </thead>
                     <tbody v-for="(status, i) in mealGraphic" :key="status.time">
-                        <tr>
+                        <tr  @click="toggleTimes(i)" >
                             <td></td>
                             <td></td>
                         </tr>
@@ -1373,6 +1378,7 @@
                 let timeArr = [], 
                     end = null,
                     color = this.returnRandomColor(),
+                    // totalCount = 0,
                     minuteExpenditure = {};
 
                 for(let i=8; i<=20; i++) {
@@ -1401,7 +1407,7 @@
                             minute: fm,
                             show: false
                         }
-                    
+                        
                         for(let k=0; k<this.actions.length; k++) {
 
                             let totalCal = this.totalCalFormula(this.actions[k].met, 80),
@@ -1423,10 +1429,22 @@
                             if(fm == this.actions[k].start) {
                                 
                                 end = this.actions[k].end
+
+                                // ################### Hashvark te qani hat 10 rope ka ###################
+                                let t1 = parseInt(this.actions[k].start.substring(0,2)),
+                                    t11 = parseInt(this.actions[k].start.substring(3,5));
+
+                                let t2 = parseInt(end.substring(0,2)),
+                                    t22 = parseInt(end.substring(3,5));
+
+                                let result1 = t2 -t1,
+                                    result2 = t22 - t11;
+
+                                let finalResult = parseInt((result1 * 60) + result2);
+                                // #########################################################################
+
                                 minute.borderColor = color
                                 minute.name = this.actions[k].name
-                                minute.actionType = 1
-
                                 
                                 minute.energyExpenditure = expenditure
                                 minuteExpenditure = expenditure
@@ -1435,7 +1453,7 @@
                                     name: this.actions[k].name,
                                     start: this.actions[k].start,
                                     end: this.actions[k].end,
-                                    total: totalCal
+                                    total: (finalResult / 10) * totalCal,
                                 }
 
                                 timeObj.activityPopover.push(popover)
@@ -1445,72 +1463,24 @@
                                 if(end == fm) {
                                     end = null
                                     color = this.returnRandomColor()
+                                    // totalCount = 0;
                                 }
 
                                 else if(fm != this.actions[k].start && end != null) {
+                            
                                     minute.borderColor = color
                                     minute.actionType = 1
                                     
                                     if( !minute.energyExpenditure ) {
+                                        // totalCount++;
                                         minute.energyExpenditure = minuteExpenditure
                                     }
                                 }
 
                             }
-                        }
-                        
-                        // for(let t=0; t<this.meal.length; t++) {
-                        
-                        //     let carbs = this.meal[t].carbG,
-                        //         load = this.meal[t].glycemicLoad,
-                        //         carbD = this.carbDigestFormula(carbs, load);
                             
-                        //     let intake = {
-                        //         fatG: this.meal[t].fatG,
-                        //         fatD: ((this.meal[t].fatG / 4) / 6).toFixed(2),
-
-                        //         carbG: carbs,
-                        //         carbD: carbD,	
-
-                        //         proteinG: this.meal[t].proteinG,
-                        //         proteinD: ((this.meal[t].proteinG / 4) / 6).toFixed(2)
-                        //     }
-
-                        //     // Meal / Water
-                        //     if(fm == this.meal[t].start) {
-                                    
-                        //         end = this.meal[t].end
-                             
-                        //         minute.name = this.meal[t].name
-                        //         minute.intake = intake
-                        //         minute.mealType = 2
-
-                        //         let popover = {
-                        //             name: this.meal[t].name,
-                        //             start: this.meal[t].start,
-                        //             end: this.meal[t].end
-                        //         }
-                        //         timeObj.mealPopover.push(popover)
-
-                        //     }
-                        //     // else {
-
-                        //     //     if(end != null) {
-                        //     //         if(end == fm) {
-                        //     //             end = null
-                        //     //             color = this.returnRandomColor()
-                        //     //         }
-                        //     //     }
-
-                        //     //     if(fm != this.meal[t].start && end != null) {
-                        //     //         minute.intake = intake
-                        //     //         minute.mealType = 2
-                                    
-                        //     //     }
-
-                        //     // }
-
-                        // }
+                        }
+                  
 
                         // Red cyrcle
                         if(!minute.borderColor) {
@@ -2278,6 +2248,10 @@
     }
     .datepicker {
         z-index: 9999 !important;
+    }
+
+    .text-right {
+        text-align: right !important;
     }
 
 </style>
