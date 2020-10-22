@@ -236,13 +236,56 @@ class DayController extends Controller
     }
 
 
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function clearMeal(Request $request)
     {
-        if ($request->user_id == null OR $request->date == null){
+        if ($request->user_id == null OR $request->date == null) {
             return response()->json(array('msg' => 'Please Send User ID or Date!'), 422);
         }
-        DayMeal::where(array('user_id' => $request->user_id, 'date'=>$request->date))->delete();
+        DayMeal::where(array('user_id' => $request->user_id, 'date' => $request->date))->delete();
         return response()->json(array('msg' => 'Meal Clear Successfully!'), 200);
+    }
+
+
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function duplicateMeal(Request $request)
+    {
+        if ($request->user_id == null OR $request->date_from == null OR $request->date_to == null) {
+            return response()->json(array('msg' => 'Please Send User ID or Date From or Date To!'), 422);
+        } elseif (!is_array($request->date_to)) {
+            return response()->json(array('msg' => 'Date To must be array!'), 422);
+        }
+
+        $meal = DayMeal::where(array('user_id' => $request->user_id, 'date' => $request->date_from))->get();
+
+        $arr = array();
+        foreach ($request->date_to as $k => $v) {
+            foreach ($meal as $key => $val) {
+                $arr[] = [
+                    'user_id' => $val->user_id,
+                    'personal_meal_id' => $val->personal_meal_id,
+                    'date' => $v,
+                    'from' => $val->from,
+                    'created_at' => Carbon::now()->toDateTimeString(),
+                    'updated_at' => Carbon::now()->toDateTimeString(),
+                ];
+            }
+        }
+
+        DB::beginTransaction();
+
+        DayMeal::where('user_id', $request->user_id)->whereIn('date', $request->date_to)->delete();
+        DayMeal::insert($arr);
+
+        DB::commit();
+
+        return response()->json(array('msg' => 'Meal Duplicate Successfully!'), 200);
     }
 
     /**

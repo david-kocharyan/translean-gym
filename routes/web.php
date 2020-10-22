@@ -39,6 +39,7 @@ Route::group(['namespace' => 'Admin', 'middleware' => 'auth:admin'], function ()
     Route::resource('/foods', 'FoodController');
     Route::resource('/meals', 'MealController');
 
+//    assessments part
     Route::get('/assessments/{id}', 'UserAssessmentsController@index');
     Route::post('/assessments/{id}', 'UserAssessmentsController@store');
     Route::post('/summary/assessments', 'UserAssessmentsController@summary');
@@ -48,8 +49,7 @@ Route::group(['namespace' => 'Admin', 'middleware' => 'auth:admin'], function ()
     Route::put('/assessments/update/{id}', 'UserAssessmentsController@update');
     Route::get('/assessments/show/{id}', 'UserAssessmentsController@show');
 
-
-
+//    day view part
     Route::get('/day/{id}', 'DayController@testIndex');
     Route::post('/day/add-activity', 'DayController@addActivity');
     Route::post('/day/add-meals', 'DayController@addMeal');
@@ -57,12 +57,9 @@ Route::group(['namespace' => 'Admin', 'middleware' => 'auth:admin'], function ()
     Route::post('/day/get-meal-ajax', 'DayController@getMealAjax');
     Route::post('/day/get-all-data', 'DayController@getAllData');
     Route::post('/day/clear-all-meals', 'DayController@clearMeal');
+    Route::post('/day/duplicate-meals', 'DayController@duplicateMeal');
 
 
     Route::get('/day-test/{id}', 'DayController@testIndex');
-
-
-
     Route::resource('/met-range', 'MetRangeController');
-
 });
