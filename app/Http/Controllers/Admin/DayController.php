@@ -15,6 +15,7 @@ use App\Model\UserAssessments;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Response;
 
 class DayController extends Controller
 {
@@ -185,6 +186,17 @@ class DayController extends Controller
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
+    public function getMealAjax(Request $request)
+    {
+        $id = $request->id;
+        $meal = Meal::with('attachedFoods', 'foods')->where('id', $id)->first();
+        return response()->json($meal);
+    }
+
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function getAllData(Request $request)
     {
         $user_id = $request->id;
@@ -223,17 +235,16 @@ class DayController extends Controller
         return response()->json($data, 200);
     }
 
-    /**
-     * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function getMealAjax(Request $request)
-    {
-        $id = $request->id;
-        $meal = Meal::with('attachedFoods', 'foods')->where('id', $id)->first();
-        return response()->json($meal);
-    }
 
+    public function clearMeal(Request $request)
+    {
+        $data = json_decode($request->getContent(), true);
+        if (empty($data)){
+            return response()->json(array('msg' => 'Please Send User ID or Date!'), 422);
+        }
+        DayMeal::where($data['user_id'])->whereIn('date', $data['date'])->delete();
+        return response()->json(array('msg' => 'Meal Clear Successfully!'), 200);
+    }
 
     /**
      * @param $id
