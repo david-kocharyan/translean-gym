@@ -297,8 +297,8 @@ class DayController extends Controller
     {
         $request->validate($request->all(), [
             "user_id" => "required",
-            "date" => "required|",
-            "from" => "required|",
+            "date" => "required",
+            "from" => "required",
             "quantity" => "required",
         ]);
 
