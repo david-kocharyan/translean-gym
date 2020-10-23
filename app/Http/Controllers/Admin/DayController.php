@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Model\Activity;
 use App\Model\DayActivity;
 use App\Model\DayMeal;
+use App\Model\DayWater;
 use App\Model\Food;
 use App\Model\Meal;
 use App\Model\MetRange;
@@ -35,6 +36,50 @@ class DayController extends Controller
         $title = self::TITLE;
 
         return view(self::FOLDER . ".index", compact('user', 'title', 'activity', 'meals', 'foods'));
+    }
+
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getAllData(Request $request)
+    {
+        $user_id = $request->id;
+        $date = $request->date;
+
+        $activity = DayActivity::with('getActivity')->where(["user_id" => $user_id, "date" => $date])->get();
+        $meals = DayMeal::with('getMeals')->where(["user_id" => $user_id, "date" => $date])->get();
+        $water = DayWater::where(["user_id" => $user_id, "date" => $date])->get();
+
+        $total_prot_met = 0;
+        foreach ($activity as $key => $val) {
+            $from = Carbon::createFromFormat('H:i', $val->from);
+            $to = Carbon::createFromFormat('H:i', $val->to);
+            $diff_in_minutes = $to->diffInMinutes($from);
+            $total_prot_met += ($diff_in_minutes * $val->getActivity->met);
+        }
+
+        $met_variable = MetRange::where('lower_limit', '<=', $total_prot_met)
+            ->where('upper_limit', '>=', $total_prot_met)->first();
+
+        $assessment = UserAssessments::where(["user_id" => $user_id, "type" => 1])->first();
+
+        $protein_must_eat = 0;
+        if ($assessment != null and $met_variable != null) {
+            $protein_must_eat = $met_variable->met_variable * $assessment->lean_mass;
+        }
+
+        $body_weight = $this->getUserBodyWeight($user_id);
+
+        $data = array(
+            'activity' => $activity,
+            'meal' => $meals,
+            'water' => $water,
+            'protein_must_eat' => $protein_must_eat,
+            'body_weight' => $body_weight
+        );
+
+        return response()->json($data, 200);
     }
 
     /**
@@ -197,49 +242,6 @@ class DayController extends Controller
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getAllData(Request $request)
-    {
-        $user_id = $request->id;
-        $date = $request->date;
-
-        $activity = DayActivity::with('getActivity')->where(["user_id" => $user_id, "date" => $date])->get();
-        $meals = DayMeal::with('getMeals')->where(["user_id" => $user_id, "date" => $date])->get();
-
-        $total_prot_met = 0;
-        foreach ($activity as $key => $val) {
-            $from = Carbon::createFromFormat('H:i', $val->from);
-            $to = Carbon::createFromFormat('H:i', $val->to);
-            $diff_in_minutes = $to->diffInMinutes($from);
-            $total_prot_met += ($diff_in_minutes * $val->getActivity->met);
-        }
-
-        $met_variable = MetRange::where('lower_limit', '<=', $total_prot_met)
-            ->where('upper_limit', '>=', $total_prot_met)->first();
-
-        $assessment = UserAssessments::where(["user_id" => $user_id, "type" => 1])->first();
-
-        $protein_must_eat = 0;
-        if ($assessment != null and $met_variable != null) {
-            $protein_must_eat = $met_variable->met_variable * $assessment->lean_mass;
-        }
-
-        $body_weight = $this->getUserBodyWeight($user_id);
-
-        $data = array(
-            'activity' => $activity,
-            'meal' => $meals,
-            'protein_must_eat' => $protein_must_eat,
-            'body_weight' => $body_weight
-        );
-
-        return response()->json($data, 200);
-    }
-
-
-    /**
-     * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
-     */
     public function clearMeal(Request $request)
     {
         if ($request->user_id == null OR $request->date == null) {
@@ -248,7 +250,6 @@ class DayController extends Controller
         DayMeal::where(array('user_id' => $request->user_id, 'date' => $request->date))->delete();
         return response()->json(array('msg' => 'Meal Clear Successfully!'), 200);
     }
-
 
     /**
      * @param Request $request
@@ -287,6 +288,30 @@ class DayController extends Controller
 
         return response()->json(array('msg' => 'Meal Duplicate Successfully!'), 200);
     }
+
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function addWater(Request $request)
+    {
+        $request->validate($request->all(), [
+            "user_id" => "required",
+            "date" => "required|",
+            "from" => "required|",
+            "quantity" => "required",
+        ]);
+
+        $water = new DayWater;
+        $water->user_id = $request->user_id;
+        $water->quantity = $request->quantity;
+        $water->date = $request->date;
+        $water->from = $request->from;
+        $water->save();
+
+        return response()->json(array('msg' => 'Water Save Successfully!', 'water' => $water), 200);
+    }
+
 
     /**
      * @param $id
