@@ -370,7 +370,7 @@ class DayController extends Controller
         $water->from = $request->from;
         $water->save();
 
-        return response()->json(array('msg' => 'Water Save Successfully!', 'water' => $water), 200);
+        return response()->json(array('msg' => 'Water Edit Successfully!', 'water' => $water), 200);
     }
 
     /**
