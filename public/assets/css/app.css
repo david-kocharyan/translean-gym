@@ -271,21 +271,34 @@ tr {
 
 .tooltipp .tooltiptext {
   visibility: hidden;
-  width: 120px;
-  background-color: black;
-  color: #fff !important;
+  width: 155px;
+  height: 150px;
+  background-color: white;
+  color: #000 !important;
   text-align: center;
   border-radius: 6px;
   padding: 10px 0;
   position: absolute;
   bottom: 150%;
   left: 50%;
+  font-weight: 400;
   margin-left: -60px;
   opacity: 0;
   transition: .4s;
+  box-shadow: 1px 2px 6px -2px black;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
+
+.tooltipp .tooltiptext h3 {
+  margin-top: 0;
+}
+
+.tooltipp .tooltiptext h3,
 .tooltipp .tooltiptext h5 {
-  color: #fff;
+  color: rgb(0, 0, 0);
+  font-weight: 600;
 }
 
 .tooltipp .tooltiptext::after {
@@ -296,7 +309,7 @@ tr {
   margin-left: -5px;
   border-width: 5px;
   border-style: solid;
-  border-color: black transparent transparent transparent;
+  border-color: rgb(255, 255, 255) transparent transparent transparent;
 }
 
 .tooltipp:hover .tooltiptext {
@@ -325,4 +338,7 @@ th.parent-time {
   background-color: #a3c5a0d6;
   color: #000;
   text-align: center;
+}
+.mb-0 {
+  margin-bottom: 0 !important;
 }

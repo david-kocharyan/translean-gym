@@ -117,10 +117,12 @@
                                 >
                                     @{{ info.name }}
                                     <span class="tooltiptext">
-                                        <h5>@{{ info.name }}</h5>
-                                        Start: @{{ info.start }} <br>
-                                        End: @{{ info.end }} <br>
-                                        Total: @{{ info.total }}
+                                        <div>
+                                            <h3>@{{ info.name }}</h3>
+                                            Start: @{{ info.start }} <br>
+                                            End: @{{ info.end }} <br>
+                                            <h5>Total: @{{ info.total }}</h5>
+                                        </div>
                                     </span>
                                 </span>
                             </td>
@@ -132,9 +134,19 @@
                                 v-if="activity_info.show"
                             >
                                     <div 
-                                        v-if="activity_info.name && activity_info.actionType == 1"
+                                        v-if="activity_info.name"
                                         class="w-100 green d-flex justify-content-between align-items-center">
-                                        @{{ activity_info.name }}
+                                        <div class="tooltipp">
+                                            @{{ activity_info.name }}
+                                            <span class="tooltiptext">
+                                                <div>
+                                                    <h3> @{{ activity_info.minuteActivityPopover.name }}</h3>
+                                                    Start: @{{ activity_info.minuteActivityPopover.start }} <br>
+                                                    End: @{{ activity_info.minuteActivityPopover.end }} <br>
+                                                    <h5>Total: @{{ activity_info.minuteActivityPopover.total }}</h5>
+                                                </div>
+                                            </span>
+                                        </div>
                                         <div> <i class="fas fa-edit"></i> </div>
                                     </div>
                             </td>
@@ -218,8 +230,13 @@
                         </tr>
                         <tr>
                             <th class="d-flex align-items-center">
-                                Meal / Water
+                                Meal 
                                 <button class="add-btn red" data-toggle="modal" data-target="#meal">
+                                    <i class="fas fa-plus-circle"></i>
+                                </button>
+                                / 
+                                Water
+                                <button class="add-btn red" data-toggle="modal" data-target="#water">
                                     <i class="fas fa-plus-circle"></i>
                                 </button>
                             </th>
@@ -670,6 +687,39 @@
             </div>
         </div>
     </div>
+
+    <div id="water" class="modal fade" role="dialog">
+        <div class="modal-dialog modal-sm" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Add Water</h4>
+                </div>
+                <div class="modal-body">
+
+                    <div class="row">
+                        <form>
+                            <div class="form-row">
+                                <div class="form-group col-md-12">
+                                    <label for=""> Quantity (ml) </label>
+                                    <input type="text" name="waterQuantity" class="form-control">
+                                </div>
+                                <div class="form-group col-md-12 mb-0">
+                                    <label for="" class="mb-2">Time</label>
+                                    <input type="text" name="waterTime" class="clockpicker meal_from form-control">
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success">Add</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 @endsection
 
 {{--script in here --}}
@@ -864,8 +914,6 @@
 
                     copyDatesArr.push(date)
             }
-
-            console.log(copyDatesArr)
 
             let data = {
                 user_id: $('.user_id').val(),
@@ -1431,6 +1479,7 @@
                                 end = this.actions[k].end
 
                                 // ################### Hashvark te qani hat 10 rope ka ###################
+
                                 let t1 = parseInt(this.actions[k].start.substring(0,2)),
                                     t11 = parseInt(this.actions[k].start.substring(3,5));
 
@@ -1457,6 +1506,7 @@
                                 }
 
                                 timeObj.activityPopover.push(popover)
+                                minute.minuteActivityPopover = popover
 
                             } else {
 
@@ -1606,9 +1656,6 @@
 
                             } else {
 
-                                console.log('obj')
-                                console.log(x)
-
                                 if(end == fm) {
                                     end = null
                                 }
@@ -1679,8 +1726,6 @@
                         if(minutes[j].energyExpenditure) {
                             fatG = minutes[j].energyExpenditure.fatG
                             carbG = minutes[j].energyExpenditure.carbG
-                            console.log(fatG)
-                            console.log(carbG)
                         }
                         
                         if(intake) {
