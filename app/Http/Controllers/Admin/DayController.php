@@ -295,7 +295,7 @@ class DayController extends Controller
      */
     public function addWater(Request $request)
     {
-        $request->validate($request->all(), [
+        $request->validate([
             "user_id" => "required",
             "date" => "required",
             "from" => "required",
