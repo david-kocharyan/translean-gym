@@ -136,22 +136,22 @@
                                 class="d-flex justify-content-between align-items-center"
                                 v-if="activity_info.show"
                             >
-                                    <div 
-                                        v-if="activity_info.name"
-                                        class="w-100 green d-flex justify-content-between align-items-center">
-                                        <div class="tooltipp">
-                                            @{{ activity_info.name }}
-                                            <span class="tooltiptext">
-                                                <div>
-                                                    <h3> @{{ activity_info.minuteActivityPopover.name }}</h3>
-                                                    Start: @{{ activity_info.minuteActivityPopover.start }} <br>
-                                                    End: @{{ activity_info.minuteActivityPopover.end }} <br>
-                                                    <h5>Total: @{{ activity_info.minuteActivityPopover.total }}</h5>
-                                                </div>
-                                            </span>
-                                        </div>
-                                        <div> <i class="fas fa-edit"></i> </div>
+                                <div 
+                                    v-if="activity_info.name"
+                                    class="w-100 green d-flex justify-content-between align-items-center">
+                                    <div class="tooltipp">
+                                        @{{ activity_info.name }}
+                                        <span class="tooltiptext">
+                                            <div>
+                                                <h3> @{{ activity_info.minuteActivityPopover.name }}</h3>
+                                                Start: @{{ activity_info.minuteActivityPopover.start }} <br>
+                                                End: @{{ activity_info.minuteActivityPopover.end }} <br>
+                                                <h5>Total: @{{ activity_info.minuteActivityPopover.total }}</h5>
+                                            </div>
+                                        </span>
                                     </div>
+                                    <div class="edit-activity" data-toggle="modal" data-target="#activity"> <i class="fas fa-edit"></i> </div>
+                                </div>
                             </td>
 
                         </tr>
@@ -265,10 +265,13 @@
                                 class="d-flex justify-content-between align-items-center"
                                 v-if="meal_info.show"
                             >
-                                <div v-if="meal_info.name && meal_info.mealType == 2" 
+                                <div v-if="meal_info.name" 
                                     class="w-100 green d-flex justify-content-between align-items-center">
                                     @{{ meal_info.name }}
-                                    <div> <i class="fas fa-edit"></i> </div>
+
+                                    <div class="edit-meal" data-toggle="modal" data-target="#meal" v-if="!meal_info.water"> <i class="fas fa-edit"></i> </div>
+                                    <div class="edit-meal" data-toggle="modal" data-target="#water" v-else> <i class="fas fa-edit"></i> </div>
+                                    
                                 </div>
                             </td>
                             
@@ -307,11 +310,11 @@
                         <tr v-for="(meal_info, j) in meal.minutes" :key="j"
                             v-if="meal_info.show"
                         >
-                            <td><span class="green" v-if="meal_info.mealType == 2 && meal_info.name">@{{ meal_info.intake.fatG }}</span></td>
+                            <td><span class="green" v-if="meal_info.mealType == 2 && meal_info.name && !meal_info.water">@{{ meal_info.intake.fatG }}</span></td>
                             <td><span v-if="meal_info.mealType == 2">@{{ meal_info.intake.fatD }}</span></td>
-                            <td><span class="green" v-if="meal_info.mealType == 2 && meal_info.name">@{{ meal_info.intake.carbG }}</span></td>
+                            <td><span class="green" v-if="meal_info.mealType == 2 && meal_info.name && !meal_info.water">@{{ meal_info.intake.carbG }}</span></td>
                             <td><span v-if="meal_info.mealType == 2">@{{ meal_info.intake.carbD }}</span></td>
-                            <td><span v-if="meal_info.mealType == 2 && meal_info.name">@{{ meal_info.intake.proteinG }}</span></td>
+                            <td><span v-if="meal_info.mealType == 2 && meal_info.name && !meal_info.water">@{{ meal_info.intake.proteinG }}</span></td>
                             <td><span v-if="meal_info.mealType == 2">@{{ meal_info.intake.proteinD }}</span></td>
                         </tr>
                     </tbody>
@@ -705,11 +708,11 @@
                             <div class="form-row">
                                 <div class="form-group col-md-12">
                                     <label for=""> Quantity (ml) </label>
-                                    <input type="text" name="waterQuantity" class="form-control">
+                                    <input type="text" name="waterQuantity" id="quantity" class="form-control quantity">
                                 </div>
                                 <div class="form-group col-md-12 mb-0">
                                     <label for="" class="mb-2">Time</label>
-                                    <input type="text" name="waterTime" class="clockpicker meal_from form-control">
+                                    <input type="text" name="waterTime" class="clockpicker water_time form-control">
                                 </div>
                             </div>
                         </form>
@@ -717,7 +720,7 @@
 
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-success">Add</button>
+                    <button type="button" class="btn btn-success add-water">Add</button>
                 </div>
             </div>
         </div>
@@ -793,8 +796,9 @@
                     $('.protein_eat').html(p_met);
                     $('.protein_must').html(res.protein_must_eat);
 
-                    let activities = res.activity
-                    let meals = res.meal
+                    let activities = res.activity,
+                        meals = res.meal,
+                        water = res.water;
 
 
                     for(let i=0; i<activities.length; i++) {
@@ -839,6 +843,16 @@
                         days.addMeals(mealObj)
                     }
 
+                    for(let i=0; i<water.length; i++) {
+                        let waterObj = {
+                            name: water[i].quantity + ' ml',
+                            start: water[i].from,
+                            type: 'water'
+                        };
+
+                        days.addMeals(waterObj)
+                    }
+
                     days.createTimeGraphic();
                     days.createMealGraphic();
                     days.createStatusGraphic();
@@ -876,6 +890,7 @@
             let roundedTime = roundTime($(this).val())
             $(this).val(roundedTime)
         });
+
         $('.meal_from').clockpicker({
             autoclose: true,
             placement: 'top',
@@ -883,6 +898,17 @@
             let roundedTime = roundTime($(this).val())
             $(this).val(roundedTime)
         });
+
+        $('.water_time').clockpicker({
+            autoclose: true,
+            placement: 'top',
+        }).change(function(){
+            let roundedTime = roundTime($(this).val())
+            $(this).val(roundedTime)
+        });
+
+
+
         $('.create_meal_time').clockpicker({
             autoclose: true,
             placement: 'top',
@@ -1097,6 +1123,44 @@
                     days.createTimeGraphic()
                     days.createMealGraphic()
                     days.createStatusGraphic()
+                }
+            });
+        })
+
+        $('.add-water').click(function() {
+
+            let data = {
+                user_id: $('.user_id').val(),
+                date: $('.date-show').html(),
+
+                quantity: parseFloat($('.quantity').val()),
+                from: $('.water_time').val()
+            };
+
+            $.ajax({
+                type: "POST",
+                headers: {
+                    'X-CSRF-TOKEN': '{{csrf_token()}}'
+                },
+                url: '{{ url('/day/add-water') }}',
+                data: data,
+                success: function (res) {
+                    $('#water').modal('toggle');
+
+                    let waterObj = {
+                        name: res.water.quantity + ' ml',
+                        start: res.water.from,
+                        type: 'water'
+                    };
+                    console.log(waterObj)
+
+                    days.addMeals(waterObj)
+
+
+                    days.createTimeGraphic();
+                    days.createMealGraphic();
+                    days.createStatusGraphic();
+
                 }
             });
         })
@@ -1595,7 +1659,6 @@
                             totalProtein: null
                         }
                     }
-                    
 
                     for(let j=0; j<6; j++) {
 
@@ -1609,71 +1672,87 @@
 
                         for(let k=0; k<this.meal.length; k++) {
 
-                            let carbs = this.meal[k].carbG,
-                                load = this.meal[k].glycemicLoad,
-                                carbD = this.carbDigestFormula(carbs, load);
-                            
-                            let intake = {
-                                fatG: this.meal[k].fatG,
-                                fatD: ((this.meal[k].fatG / 4) / 6).toFixed(2),
+                            if(this.meal[k].type) {
 
-                                carbG: carbs,
-                                carbD: carbD,	
+                                if(fm == this.meal[k].start) {
+                                    minute.name = this.meal[k].name
+                                    minute.water = true
+                                    let popover = {
+                                        name: this.meal[k].name
+                                    }
+                                    timeObj.mealPopover.push(popover)
+                                }
 
-                                proteinG: this.meal[k].proteinG,
-                                proteinD: ((this.meal[k].proteinG / 4) / 6).toFixed(2)
                             }
 
-                            if(fm == this.meal[k].start) {
+                            else {
 
-                                end = this.meal[k].end
-                                minute.name = this.meal[k].name
-                                minute.mealType = 2
-
-                                let popover = {
-                                    name: this.meal[k].name
-                                }
-                                timeObj.mealPopover.push(popover)
-
-                                minuteIntake = intake
-
-                                if( !minute.intake ) { 
-                                    minute.intake = intake
-                                } else {
-                                    sw = true
-                                    x = {
-                                        fatG: intake.fatG,
-                                        fatD: parseFloat(minute.intake.fatD) + parseFloat(minuteIntake.fatD),
-
-                                        carbG: intake.carbG,
-                                        carbD: parseFloat(minute.intake.carbD) + parseFloat(minuteIntake.carbD),
-
-                                        proteinG: intake.proteinG,
-                                        proteinD: parseFloat(minute.intake.proteinD) + parseFloat(minuteIntake.proteinD),
-                                    }
-                                    minute.intake = x
-                                }
-
+                                let carbs = this.meal[k].carbG,
+                                    load = this.meal[k].glycemicLoad,
+                                    carbD = this.carbDigestFormula(carbs, load);
                                 
+                                let intake = {
+                                    fatG: this.meal[k].fatG,
+                                    fatD: ((this.meal[k].fatG / 4) / 6).toFixed(2),
 
-                            } else {
+                                    carbG: carbs,
+                                    carbD: carbD,	
 
-                                if(end == fm) {
-                                    end = null
+                                    proteinG: this.meal[k].proteinG,
+                                    proteinD: ((this.meal[k].proteinG / 4) / 6).toFixed(2)
                                 }
 
-                                else if(fm != this.meal[k].start && end != null) {
+                                if(fm == this.meal[k].start) {
+
+                                    end = this.meal[k].end
+                                    minute.name = this.meal[k].name
                                     minute.mealType = 2
-                                    
+
+                                    let popover = {
+                                        name: this.meal[k].name
+                                    }
+                                    timeObj.mealPopover.push(popover)
+
+                                    minuteIntake = intake
+
                                     if( !minute.intake ) { 
-                                        minute.intake = minuteIntake
-                                    } 
-                                    
-                                    if(minute.intake && sw) {
+                                        minute.intake = intake
+                                    } else {
+                                        sw = true
+                                        x = {
+                                            fatG: intake.fatG,
+                                            fatD: parseFloat(minute.intake.fatD) + parseFloat(minuteIntake.fatD),
+
+                                            carbG: intake.carbG,
+                                            carbD: parseFloat(minute.intake.carbD) + parseFloat(minuteIntake.carbD),
+
+                                            proteinG: intake.proteinG,
+                                            proteinD: parseFloat(minute.intake.proteinD) + parseFloat(minuteIntake.proteinD),
+                                        }
                                         minute.intake = x
+                                    }   
+
+                                } else {
+
+                                    if(end == fm) {
+                                        end = null
+                                    }
+
+                                    else if(fm != this.meal[k].start && end != null) {
+                                        minute.mealType = 2
+                                        
+                                        if( !minute.intake ) { 
+                                            minute.intake = minuteIntake
+                                        } 
+                                        
+                                        if(minute.intake && sw) {
+                                            minute.intake = x
+                                        }
                                     }
                                 }
+
                             }
+
                         }
 
                         timeObj.minutes.push(minute)
@@ -1688,7 +1767,7 @@
 
                     for(let i=0; i<timeObj.minutes.length; i++) {
                         if(timeObj.minutes[i].intake) {
-                            if(timeObj.minutes[i].name) {
+                            if(timeObj.minutes[i].name && !timeObj.minutes[i].water) {
                                 _totalFat += parseFloat(timeObj.minutes[i].intake.fatG)
                                 _totalCarb += parseFloat(timeObj.minutes[i].intake.carbG)
                                 _totalProteinG += parseFloat(timeObj.minutes[i].intake.proteinG)
@@ -2213,22 +2292,27 @@
         // activity_to
 
         $(document).on("click", ".edit-activity", function () {
-            console.log('edit activity')
-
             let from = $(this).find('div.activity_start').html()
             let to =   $(this).find('div.activity_end').html()
 
-            from = from.replace(/\s/g,'');
-            to = to.replace(/\s/g,'');
+            // from = from.replace(/\s/g,'');
+            // to = to.replace(/\s/g,'');
+
+            console.log(from, to)
 
             $('.activity_from').clockpicker({
                 autoclose: true,
                 placement: 'bottom',
             }).val(from);
+
             $('.activity_to').clockpicker({
                 autoclose: true,
                 placement: 'bottom',
             }).val(to);
+
+        });
+        $(document).on("click", ".edit-meal", function () {
+            console.log('edit-meal')
         });
 
 
