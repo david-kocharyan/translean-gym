@@ -125,6 +125,11 @@ class DayController extends Controller
         ]);
         $meal_name = Meal::where('id', $request->meal)->first()->name;
 
+        $check_from = DayMeal::where(array('user_id' => $data['id'], 'date' => $data['date'], 'from' => $data['from']))->first();
+        if ($check_from != null) {
+            return response()->json(array('msg' => 'This Time Is Busy!'), 422);
+        }
+
         DB::beginTransaction();
 
         $personal_meal = new PersonalMeal;
@@ -180,6 +185,11 @@ class DayController extends Controller
             "total_glycemic_load" => "required|numeric",
         ]);
 
+        $check_from = DayMeal::where(array('user_id' => $data['id'], 'date' => $data['date'], 'from' => $data['from']))->first();
+        if ($check_from != null) {
+            return response()->json(array('msg' => 'This Time Is Busy!'), 422);
+        }
+
         DB::beginTransaction();
         $meal = new Meal;
         $meal->name = $data['name'];
@@ -191,7 +201,6 @@ class DayController extends Controller
         $meal->ph = $data['total_ph'];
         $meal->glycemic_load = $data['total_glycemic_load'];
         $meal->save();
-
 
         $personal_meal = new PersonalMeal;
         $personal_meal->name = $meal->name;
@@ -264,13 +273,26 @@ class DayController extends Controller
         }
 
         $meal = DayMeal::where(array('user_id' => $request->user_id, 'date' => $request->date_from))->get();
+        $water = DayWater::where(array('user_id' => $request->user_id, 'date' => $request->date_from))->get();
 
-        $arr = array();
+        $arr_meal = array();
+        $arr_water = array();
         foreach ($request->date_to as $k => $v) {
             foreach ($meal as $key => $val) {
-                $arr[] = [
+                $arr_meal[] = [
                     'user_id' => $val->user_id,
                     'personal_meal_id' => $val->personal_meal_id,
+                    'date' => $v,
+                    'from' => $val->from,
+                    'created_at' => Carbon::now()->toDateTimeString(),
+                    'updated_at' => Carbon::now()->toDateTimeString(),
+                ];
+            }
+
+            foreach ($water as $key => $val) {
+                $arr_water[] = [
+                    'user_id' => $val->user_id,
+                    'quantity' => $val->quantity,
                     'date' => $v,
                     'from' => $val->from,
                     'created_at' => Carbon::now()->toDateTimeString(),
@@ -282,7 +304,10 @@ class DayController extends Controller
         DB::beginTransaction();
 
         DayMeal::where('user_id', $request->user_id)->whereIn('date', $request->date_to)->delete();
-        DayMeal::insert($arr);
+        DayMeal::insert($arr_meal);
+
+        DayWater::where('user_id', $request->user_id)->whereIn('date', $request->date_to)->delete();
+        DayWater::insert($arr_water);
 
         DB::commit();
 
@@ -302,6 +327,11 @@ class DayController extends Controller
             "quantity" => "required",
         ]);
 
+        $check_from = DayWater::where(array('user_id' => $request->user_id, 'date' => $request->date, 'from' => $request->from))->first();
+        if ($check_from != null) {
+            return response()->json(array('msg' => 'This Time Is Busy!'), 422);
+        }
+
         $water = new DayWater;
         $water->user_id = $request->user_id;
         $water->quantity = $request->quantity;
@@ -311,7 +341,6 @@ class DayController extends Controller
 
         return response()->json(array('msg' => 'Water Save Successfully!', 'water' => $water), 200);
     }
-
 
     /**
      * @param $id
