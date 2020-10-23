@@ -15,6 +15,7 @@
                                 <i class="fas fa-angle-left"></i>
                             </div>
                             <div class="m-r-10 m-l-10 date-show"></div>
+                            
                             <div style="cursor: pointer" class="date-plus">
                                 <i class="fas fa-angle-right"></i>
                             </div>
@@ -67,6 +68,7 @@
                             </th>
                         </tr>
                     </thead>
+
                     <tbody v-for="(time, i) in staticTimes" :key="time.time">
                         <tr>
                             <th class="parent-time"
@@ -87,6 +89,7 @@
                             </th>
                         </tr>
                     </tbody>
+
                 </table>
             </div>
 
@@ -756,7 +759,10 @@
             let dateShow = date.getFullYear() + "-" + (month) + "-" + (day);
 
             $('.date-show').html(dateShow);
-            getActivities()
+
+            days.clearState();
+            getActivities();
+
         }
 
         function getActivities() {
@@ -790,57 +796,53 @@
                     let activities = res.activity
                     let meals = res.meal
 
-                    if(activities.length == 0) {
-                        days.clearActivity();
-                        days.clearMeals();
-                    } else {
 
-                        for(let i=0; i<activities.length; i++) {
-                            
-                            let activityObj = {
-                                activity: true,
-                                name: activities[i].get_activity.name,
-                                start: activities[i].from,
-                                end: activities[i].to,
+                    for(let i=0; i<activities.length; i++) {
+                        
+                        let activityObj = {
+                            activity: true,
+                            name: activities[i].get_activity.name,
+                            start: activities[i].from,
+                            end: activities[i].to,
 
-                                fatPercentage: activities[i].get_activity.fat_ratio,
-                                carbPercentage: activities[i].get_activity.carb_ratio,
-                                met: activities[i].get_activity.met
-                            };
-                            days.addActivity(activityObj)
-                        }
-
-                        for(let i=0; i<meals.length; i++) {
-
-                            let time = days.existMealTimeFormula( meals[i].get_meals.glycemic_load )
-                            let start = parseInt(meals[i].from.substring(0, 2))
-                            let startsEnd = meals[i].from.substring(3)
-                            let end = start + time + ":" + startsEnd
-
-                            let mealObj = {
-                                meal: true,
-                                name: meals[i].get_meals.name,
-                                start: meals[i].from,
-                                end: end,
-
-                                fatG: meals[i].get_meals.fat,
-                                fatD: 0,	
-
-                                carbG: meals[i].get_meals.carbs,
-                                carbD: 0,	
-
-                                proteinG:  meals[i].get_meals.proteins,
-                                proteinD: 0,
-                                glycemicLoad: meals[i].get_meals.glycemic_load,
-                            };
-
-                            days.addMeals(mealObj)
-                        }
-
-                        days.createTimeGraphic();
-                        days.createMealGraphic();
-                        days.createStatusGraphic();
+                            fatPercentage: activities[i].get_activity.fat_ratio,
+                            carbPercentage: activities[i].get_activity.carb_ratio,
+                            met: activities[i].get_activity.met
+                        };
+                        days.addActivity(activityObj)
                     }
+
+                    for(let i=0; i<meals.length; i++) {
+
+                        let time = days.existMealTimeFormula( meals[i].get_meals.glycemic_load )
+                        let start = parseInt(meals[i].from.substring(0, 2))
+                        let startsEnd = meals[i].from.substring(3)
+                        let end = start + time + ":" + startsEnd
+
+                        let mealObj = {
+                            meal: true,
+                            name: meals[i].get_meals.name,
+                            start: meals[i].from,
+                            end: end,
+
+                            fatG: meals[i].get_meals.fat,
+                            fatD: 0,	
+
+                            carbG: meals[i].get_meals.carbs,
+                            carbD: 0,	
+
+                            proteinG:  meals[i].get_meals.proteins,
+                            proteinD: 0,
+                            glycemicLoad: meals[i].get_meals.glycemic_load,
+                        };
+
+                        days.addMeals(mealObj)
+                    }
+
+                    days.createTimeGraphic();
+                    days.createMealGraphic();
+                    days.createStatusGraphic();
+                  
                 }
             })
         }
@@ -1530,7 +1532,7 @@
                             }
                             
                         }
-                  
+                        
 
                         // Red cyrcle
                         if(!minute.borderColor) {
@@ -1967,6 +1969,13 @@
             addMeals(mealObj){
                 this.meal.push(mealObj);
             },
+            clearState() {
+                this.staticTimes = []
+                this.mealGraphic = []
+                this.actions = []
+                this.meal = []
+            },
+            
 
             clearActivity() {
                 this.activities = []
@@ -2008,6 +2017,11 @@
             setTimeout(() => {
                 this.createStatusGraphic()
             }, 1000);
+
+            setTimeout(() => {
+                console.log('staticTimes = ', this.staticTimes)
+                console.log('mealGraphic = ', this.mealGraphic)
+            }, 8000);
         }
     })
 
