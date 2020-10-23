@@ -343,6 +343,37 @@ class DayController extends Controller
     }
 
     /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function editWater(Request $request)
+    {
+        $request->validate([
+            "user_id" => "required",
+            "date" => "required",
+            "from" => "required",
+            "quantity" => "required",
+            "id" => "required"
+        ]);
+
+        $check_from = DayWater::where(array('user_id' => $request->user_id, 'date' => $request->date, 'from' => $request->from))->first();
+        if ($check_from != null) {
+            if ($check_from->id != $request->id){
+                return response()->json(array('msg' => 'This Time Is Busy!'), 422);
+            }
+        }
+
+        $water = DayWater::find($request->id);
+        $water->user_id = $request->user_id;
+        $water->quantity = $request->quantity;
+        $water->date = $request->date;
+        $water->from = $request->from;
+        $water->save();
+
+        return response()->json(array('msg' => 'Water Save Successfully!', 'water' => $water), 200);
+    }
+
+    /**
      * @param $id
      * @return int
      */
