@@ -18,6 +18,9 @@
                         <tr>
                             <th>Id</th>
                             <th>Name</th>
+                            <th>Username</th>
+                            <th>Phone</th>
+                            <th>Email</th>
                             <th>Date of Birth</th>
                             <th>Gender</th>
                             <th>Height (sm) </th>
@@ -32,6 +35,9 @@
                             <tr>
                                 <td>{{$key + 1}}</td>
                                 <td>{{$val->name}}</td>
+                                <td>{{$val->username}}</td>
+                                <td>{{$val->phone}}</td>
+                                <td>{{$val->email ?? "Empty"}}</td>
                                 <td>{{$val->dob}}</td>
                                 <td>
                                     {{App\Model\User::GENDER[$val->gender]}}

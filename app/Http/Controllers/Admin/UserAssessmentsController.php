@@ -24,8 +24,9 @@ class UserAssessmentsController extends Controller
         $user = User::find($id);
         $assessments = UserAssessments::where('user_id', $id)->orderBy('type', 'ASC')->get();
         $title = self::TITLE;
+        $user_name = $user->name;
 
-        return view(self::FOLDER . ".index", compact('user', 'assessments', 'title'));
+        return view(self::FOLDER . ".index", compact('user', 'assessments', 'title', 'user_name'));
     }
 
     /**

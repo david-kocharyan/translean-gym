@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\MOdel\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
@@ -46,6 +47,9 @@ class UserController extends Controller
     {
         $request->validate([
             "name" => "required",
+            "username" => "required|unique:users,username",
+            "email" => "unique:users,email",
+            "password" => "required|min:6",
             "dob" => "required",
             "gender" => "required|numeric",
             "height" => "required|numeric",
@@ -55,6 +59,10 @@ class UserController extends Controller
 
         $user = new User;
         $user->name = $request->name;
+        $user->username = $request->username;
+        $user->email = $request->email;
+        $user->password = Hash::make($request->password);
+        $user->phone = $request->phone;
         $user->dob = $request->dob;
         $user->gender = $request->gender;
         $user->height = $request->height;
@@ -98,6 +106,8 @@ class UserController extends Controller
     {
         $request->validate([
             "name" => "required",
+            "username" => "required|unique:users,username,". $user->id,
+            "email" => "unique:users,email,". $user->id,
             "dob" => "required",
             "gender" => "required|numeric",
             "height" => "required|numeric",
@@ -106,6 +116,9 @@ class UserController extends Controller
         ]);
 
         $user->name = $request->name;
+        $user->username = $request->username;
+        $user->email = $request->email;
+        $user->phone = $request->phone;
         $user->dob = $request->dob;
         $user->gender = $request->gender;
         $user->height = $request->height;

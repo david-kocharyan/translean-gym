@@ -34,8 +34,9 @@ class DayController extends Controller
         $activity = Activity::all();
         $foods = Food::all();
         $title = self::TITLE;
+        $user_name = $user->name;
 
-        return view(self::FOLDER . ".index", compact('user', 'title', 'activity', 'meals', 'foods'));
+        return view(self::FOLDER . ".index", compact('user', 'title', 'user_name', 'activity', 'meals', 'foods'));
     }
 
     /**
@@ -400,9 +401,9 @@ class DayController extends Controller
         $activity = Activity::all();
         $foods = Food::all();
         $title = self::TITLE;
+        $user_name = $user->name;
 
-
-        return view(self::FOLDER . ".test", compact('user', 'title', 'activity', 'meals', 'foods'));
+        return view(self::FOLDER . ".test", compact('user', 'title', 'user_name', 'activity', 'meals', 'foods'));
     }
 
 

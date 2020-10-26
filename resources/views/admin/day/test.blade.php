@@ -15,7 +15,7 @@
                             <i class="fas fa-angle-left"></i>
                         </div>
                         <div class="m-r-10 m-l-10 date-show"></div>
-                        
+
                         <div style="cursor: pointer" class="date-plus">
                             <i class="fas fa-angle-right"></i>
                         </div>
@@ -72,7 +72,7 @@
                 <tbody v-for="(time, i) in staticTimes" :key="time.time">
                     <tr>
                         <th class="parent-time"
-                            @click="toggleTimes(i)" 
+                            @click="toggleTimes(i)"
                         >
                             @{{ time.time }}
                             <div v-if="time.circle" class="red-circle"></div>
@@ -84,8 +84,8 @@
                     >
                         <th
                             class="child-time"
-                        > 
-                            @{{ minute.minute  }} 
+                        >
+                            @{{ minute.minute  }}
                         </th>
                     </tr>
                 </tbody>
@@ -111,11 +111,11 @@
                 </thead>
                 <tbody class="font-sm">
                     <tr v-for="(activity, i) in staticTimes" :key="activity.time">
-                        
+
                         <td class="d-flex align-items-center activity-color"
-                        @click="toggleTimes(i)" >   
+                        @click="toggleTimes(i)" >
                             <span
-                                v-for="info in activity.activityPopover" 
+                                v-for="info in activity.activityPopover"
                                 class="mr-2 tooltipp"
                             >
                                 @{{ info.name }}
@@ -130,13 +130,13 @@
                             </span>
                         </td>
 
-                        <td 
-                            v-for="(activity_info, j) in activity.minutes" 
-                            :key="activity_info.minute" 
+                        <td
+                            v-for="(activity_info, j) in activity.minutes"
+                            :key="activity_info.minute"
                             class="d-flex justify-content-between align-items-center"
                             v-if="activity_info.show"
                         >
-                            <div 
+                            <div
                                 v-if="activity_info.name"
                                 class="w-100 green d-flex justify-content-between align-items-center">
                                 <div class="tooltipp">
@@ -233,11 +233,11 @@
                     </tr>
                     <tr>
                         <th class="d-flex align-items-center">
-                            Meal 
+                            Meal
                             <button class="add-btn red" data-toggle="modal" data-target="#meal">
                                 <i class="fas fa-plus-circle"></i>
                             </button>
-                            / 
+                            /
                             Water
                             <button class="add-btn red" data-toggle="modal" data-target="#water">
                                 <i class="fas fa-plus-circle"></i>
@@ -245,39 +245,39 @@
                         </th>
                     </tr>
                 </thead>
-                <tbody>                        
+                <tbody>
 
                     <tr v-for="(meal, i) in mealGraphic" :key="meal.time">
 
                         <td class="d-flex align-items-center activity-color"
                         @click="toggleTimes(i)" >
                             <span
-                                v-for="info in meal.mealPopover" 
+                                v-for="info in meal.mealPopover"
                                 class="mr-2 tooltipp"
                             >
                                 @{{ info.name }}
                             </span>
                         </td>
 
-                        <td 
-                            v-for="(meal_info, j) in meal.minutes" 
-                            :key="meal_info.minute" 
+                        <td
+                            v-for="(meal_info, j) in meal.minutes"
+                            :key="meal_info.minute"
                             class="d-flex justify-content-between align-items-center"
                             v-if="meal_info.show"
                         >
-                            <div v-if="meal_info.name" 
+                            <div v-if="meal_info.name"
                                 class="w-100 green d-flex justify-content-between align-items-center">
                                 @{{ meal_info.name }}
 
                                 <div class="edit-meal" data-toggle="modal" data-target="#meal" v-if="!meal_info.water"> <i class="fas fa-edit"></i> </div>
-                                <div class="edit-meal" data-toggle="modal" data-target="#water" 
-                                    @click="openEditWaterPopup( meal_info.quantity, meal_info.minute, meal_info.id )" v-else> 
-                                    <i class="fas fa-edit"></i> 
+                                <div class="edit-meal" data-toggle="modal" data-target="#water"
+                                    @click="openEditWaterPopup( meal_info.quantity, meal_info.minute, meal_info.id )" v-else>
+                                    <i class="fas fa-edit"></i>
                                 </div>
-                                
+
                             </div>
                         </td>
-                        
+
                     </tr>
 
                 </tbody>
@@ -810,7 +810,7 @@
 
 
                     for(let i=0; i<activities.length; i++) {
-                        
+
                         let activityObj = {
                             activity: true,
                             name: activities[i].get_activity.name,
@@ -838,10 +838,10 @@
                             end: end,
 
                             fatG: meals[i].get_meals.fat,
-                            fatD: 0,	
+                            fatD: 0,
 
                             carbG: meals[i].get_meals.carbs,
-                            carbD: 0,	
+                            carbD: 0,
 
                             proteinG:  meals[i].get_meals.proteins,
                             proteinD: 0,
@@ -866,7 +866,7 @@
                     days.createTimeGraphic();
                     days.createMealGraphic();
                     days.createStatusGraphic();
-                  
+
                 }
             })
         }
@@ -933,18 +933,18 @@
             show_date(0, date);
         });
 
-        
-        
+
+
         $('.copyMeal').datepicker({
             multidate: true,
             format: 'yyyy-mm-dd'
         }).on('changeDate', function (e) {
 
-            let dates = e.dates, 
+            let dates = e.dates,
                 copyDatesArr = [];
 
             for(let i=0; i<dates.length; i++) {
-                
+
                 let str = dates[i],
                     mnth = ("0" + (str.getMonth() + 1)).slice(-2),
                     day = ("0" + str.getDate()).slice(-2),
@@ -1013,10 +1013,10 @@
                             end: end,
 
                             fatG: meals[i].get_meals.fat,
-                            fatD: 0,	
+                            fatD: 0,
 
                             carbG: meals[i].get_meals.carbs,
-                            carbD: 0,	
+                            carbD: 0,
 
                             proteinG:  meals[i].get_meals.proteins,
                             proteinD: 0,
@@ -1089,7 +1089,7 @@
                         for(let i=0; i<activities.length; i++) {
 
                             // let diffBetweenStartToEnd = days.minCountFromStartToEnd(activities[i].from, activities[i].to);
-                            
+
                             let activityObj = {
                                 name: activities[i].get_activity.name,
                                 start: activities[i].from,
@@ -1176,7 +1176,7 @@
         })
 
         $('.edit-water').click(function() {
-            
+
             let data = {
                 user_id: $('.user_id').val(),
                 date: $('.date-show').html(),
@@ -1214,7 +1214,7 @@
                 }
             });
         })
-        
+
 
     });
 </script>
@@ -1450,7 +1450,7 @@
 
                 editWater: false,
                 id: 0,
-        
+
                 energyExpendedMode: true,
                 circleCount: 0,
             }
@@ -1541,7 +1541,7 @@
 
                 console.log('Create time graphic..')
 
-                let timeArr = [], 
+                let timeArr = [],
                     end = null,
                     color = this.returnRandomColor(),
                     // totalCount = 0,
@@ -1563,17 +1563,17 @@
                         }
                         // mealPopover: [],
                     }
-                    
+
                     for(let j=0; j<6; j++) {
 
                         let m = i + ':' + j + '0';
                         let fm = i < 10 ? '0' + m : m;
-                        
+
                         let minute = {
                             minute: fm,
                             show: false
                         }
-                        
+
                         for(let k=0; k<this.actions.length; k++) {
 
                             let totalCal = this.totalCalFormula(this.actions[k].met, 80),
@@ -1593,7 +1593,7 @@
                             }
 
                             if(fm == this.actions[k].start) {
-                                
+
                                 end = this.actions[k].end
 
                                 // ################### Hashvark te qani hat 10 rope ka ###################
@@ -1612,7 +1612,7 @@
 
                                 minute.borderColor = color
                                 minute.name = this.actions[k].name
-                                
+
                                 minute.energyExpenditure = expenditure
                                 minuteExpenditure = expenditure
 
@@ -1620,7 +1620,7 @@
                                     name: this.actions[k].name,
                                     start: this.actions[k].start,
                                     end: this.actions[k].end,
-                                    total: (finalResult / 10) * totalCal,
+                                    total: ((finalResult / 10) * totalCal).toFixed(2),
                                 }
 
                                 timeObj.activityPopover.push(popover)
@@ -1635,10 +1635,10 @@
                                 }
 
                                 else if(fm != this.actions[k].start && end != null) {
-                            
+
                                     minute.borderColor = color
                                     minute.actionType = 1
-                                    
+
                                     if( !minute.energyExpenditure ) {
                                         // totalCount++;
                                         minute.energyExpenditure = minuteExpenditure
@@ -1646,9 +1646,9 @@
                                 }
 
                             }
-                            
+
                         }
-                        
+
 
                         // Red cyrcle
                         if(!minute.borderColor) {
@@ -1657,11 +1657,11 @@
 
                         timeObj.minutes.push(minute)
                     }
-                    
-                    let _totalCal = 0, 
-                        _totalFatC = 0, 
-                        _totalFatG = 0, 
-                        _totalCarbC = 0, 
+
+                    let _totalCal = 0,
+                        _totalFatC = 0,
+                        _totalFatG = 0,
+                        _totalCarbC = 0,
                         _totalCarbG = 0;
 
                     for(let i=0; i<timeObj.minutes.length; i++) {
@@ -1705,8 +1705,8 @@
                         totals: {
                             totalFat: null,
                             totalFatD: null,
-                            totalCarb: null,	
-                            totalCarbD: null,	
+                            totalCarb: null,
+                            totalCarbD: null,
                             totalProteinG: null,
                             totalProtein: null
                         }
@@ -1716,7 +1716,7 @@
 
                         let m = i + ':' + j + '0';
                         let fm = i < 10 ? '0' + m : m;
-                        
+
                         let minute = {
                             minute: fm,
                             show: false
@@ -1744,13 +1744,13 @@
                                 let carbs = this.meal[k].carbG,
                                     load = this.meal[k].glycemicLoad,
                                     carbD = this.carbDigestFormula(carbs, load);
-                                
+
                                 let intake = {
                                     fatG: this.meal[k].fatG,
                                     fatD: ((this.meal[k].fatG / 4) / 6).toFixed(2),
 
                                     carbG: carbs,
-                                    carbD: carbD,	
+                                    carbD: carbD,
 
                                     proteinG: this.meal[k].proteinG,
                                     proteinD: ((this.meal[k].proteinG / 4) / 6).toFixed(2)
@@ -1769,7 +1769,7 @@
 
                                     minuteIntake = intake
 
-                                    if( !minute.intake ) { 
+                                    if( !minute.intake ) {
                                         minute.intake = intake
                                     } else {
                                         sw = true
@@ -1784,7 +1784,7 @@
                                             proteinD: parseFloat(minute.intake.proteinD) + parseFloat(minuteIntake.proteinD),
                                         }
                                         minute.intake = x
-                                    }   
+                                    }
 
                                 } else {
 
@@ -1794,11 +1794,11 @@
 
                                     else if(fm != this.meal[k].start && end != null) {
                                         minute.mealType = 2
-                                        
-                                        if( !minute.intake ) { 
+
+                                        if( !minute.intake ) {
                                             minute.intake = minuteIntake
-                                        } 
-                                        
+                                        }
+
                                         if(minute.intake && sw) {
                                             minute.intake = x
                                         }
@@ -1826,7 +1826,7 @@
                                 _totalCarb += parseFloat(timeObj.minutes[i].intake.carbG)
                                 _totalProteinG += parseFloat(timeObj.minutes[i].intake.proteinG)
                             }
-                           
+
                             _totalFatD += parseFloat(timeObj.minutes[i].intake.fatD)
                             _totalCarbD += parseFloat(timeObj.minutes[i].intake.carbD)
                             _totalProtein += parseFloat(timeObj.minutes[i].intake.proteinD)
@@ -1857,21 +1857,21 @@
                             fatStatus = 0,
                             carbStatus = 0;
 
-                        
+
                         if(minutes[j].energyExpenditure) {
                             fatG = minutes[j].energyExpenditure.fatG
                             carbG = minutes[j].energyExpenditure.carbG
                         }
-                        
+
                         if(intake) {
                             fatD = parseFloat(intake.fatD)
                             carbD = parseFloat(intake.carbD)
                         }
 
-                        
+
                         fatStatus = fatG - fatD;
                         carbStatus = carbG - carbD;
-                        
+
 
                         let statusObj = {
                             fat: parseFloat(fatStatus.toFixed(2)),
@@ -2076,7 +2076,7 @@
                 }
 
 
-                
+
             },
 
             calculateStatus(fatGr, carbGr) {
@@ -2119,7 +2119,7 @@
                 }).val(time);
 
             },
-            
+
 
             clearActivity() {
                 this.activities = []
@@ -2154,7 +2154,7 @@
             }
         },
         mounted() {
-            
+
             this.createTimeGraphic();
             this.createMealGraphic();
 
@@ -2194,7 +2194,7 @@
                 data: {id},
                 success: function (data) {
                     console.log('data meal : ', data)
-                    
+
                     $('#m_total_mass').val(roundNumberDecimal(data.mass));
                     $('#m_total_carbs').val(roundNumberDecimal(data.carbs));
                     $('#m_total_fat').val(roundNumberDecimal(data.fat));
@@ -2363,7 +2363,7 @@
         // activity_to
 
         $(document).on("click", ".edit-activity", function () {
-            
+
             let from = $(this).find('div.activity_start').html()
             let to =   $(this).find('div.activity_end').html()
 

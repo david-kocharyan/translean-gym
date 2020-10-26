@@ -20,6 +20,43 @@
                             </div>
 
                             <div class="form-group">
+                                <label for="username">Username (Unique)</label>
+                                @error('username')
+                                <p class="invalid-feedback text-danger" role="alert"><strong>{{ $message }}</strong></p>
+                                @enderror
+                                <input type="text" class="form-control" id="username"
+                                       placeholder="Username" name="username" value="{{old('username')}}">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="email">Email (Unique, Optional)</label>
+                                @error('email')
+                                <p class="invalid-feedback text-danger" role="alert"><strong>{{ $message }}</strong></p>
+                                @enderror
+                                <input type="email" class="form-control" id="email"
+                                       placeholder="Email" name="email" value="{{old('email')}}">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="phone">Phone Number</label>
+                                @error('phone')
+                                <p class="invalid-feedback text-danger" role="alert"><strong>{{ $message }}</strong></p>
+                                @enderror
+                                <input type="text" class="form-control" id="phone"
+                                       placeholder="Phone Number" name="phone" value="{{old('phone')}}">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="password">Password</label>
+                                @error('password')
+                                <p class="invalid-feedback text-danger" role="alert"><strong>{{ $message }}</strong></p>
+                                @enderror
+                                <input type="text" class="form-control" id="password"
+                                       placeholder="Password" name="password">
+                            </div>
+
+
+                            <div class="form-group">
                                 <label for="dob">Date of Birth</label>
                                 @error('dob')
                                 <p class="invalid-feedback text-danger" role="alert"><strong>{{ $message }}</strong></p>

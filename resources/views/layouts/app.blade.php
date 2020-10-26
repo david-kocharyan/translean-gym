@@ -9,7 +9,9 @@
     <link rel="icon" type="image/png" sizes="96x96" href="{{ URL::asset('assets/images//favicon-96x96.png') }}">
     <link rel="icon" type="image/png" sizes="16x16" href="{{ URL::asset('assets/images//favicon-16x16.png') }}">
 
-    <title>{{$title}}</title>
+    <title>
+        {{$title}}
+    </title>
 
     <!-- jQuery -->
     <script src="{{asset('assets/js/jquery/dist/jquery.min.js')}}"></script>
@@ -52,7 +54,8 @@
                     </a>
                     <ul class="dropdown-menu dropdown-user animated flipInY">
                         <li>
-                            <a href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                            <a href="#"
+                               onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                                 <i class="fa fa-power-off"></i>Logout
                             </a>
                         </li>
@@ -107,7 +110,7 @@
                 <li>
                     <a href="javascript:void(0);" class="waves-effect">
                         <i class="mdi mdi-settings fa-fw"></i>
-                            <span class="hide-menu">
+                        <span class="hide-menu">
                                 Settings
                                 <span class="fa arrow"></span>
                             </span>
@@ -127,7 +130,12 @@
         <div class="container-fluid">
             <div class="row bg-title">
                 <div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">
-                    <h4 class="page-title">{{$title}}</h4>
+                    <h4 class="page-title">
+                        @isset($user_name)
+                            <span style="color: #3b8e34;">{{$user_name}}</span>`
+                        @endisset
+                        {{$title}}
+                    </h4>
                 </div>
             </div>
 
