@@ -3,376 +3,379 @@
 {{--html in here--}}
 @section('content')
 
-    <div class="row">
-        <div class="col-md-12">
-            <div class="white-box" style="overflow-y: auto;">
-            <input type="hidden" class="user_id" name="id" value="{{$user->id}}">
-            <div class="container m-t-10 m-b-20">
-                <div class="row">
-                    <div class="col-md-12" style="display: flex; justify-content: center; align-items: center">
-                        <div class="day-parent" style="display: flex; justify-content: center; align-items: center">
-                            <div style="cursor: pointer" class="date-minus">
-                                <i class="fas fa-angle-left"></i>
-                            </div>
-                            <div class="m-r-10 m-l-10 date-show"></div>
-                            
-                            <div style="cursor: pointer" class="date-plus">
-                                <i class="fas fa-angle-right"></i>
-                            </div>
-
-                            <div class="date" style="margin-left: 30px;">
-                                <input type="hidden" class="form-control">
-                                <span class="input-group-addon"
-                                        style="background: none; border: none; cursor: pointer;">
-                                    <i class="glyphicon glyphicon-th"></i>
-                                </span>
-                            </div>
-                            <div>
-                                <button
-                                    class="mode-switcher-button"
-                                    data-toggle="modal"
-                                    data-target="">
-                                    <i class="fas fa-cloud-download-alt"></i>
-                                    <input type="hidden" class="form-control">
-                                </button>
-                            </div>
-
+<div class="row"  id="_days">
+    <div class="col-md-12">
+        <div class="white-box" style="overflow-y: auto;">
+        <input type="hidden" class="user_id" name="id" value="{{$user->id}}">
+        <div class="container m-t-10 m-b-20">
+            <div class="row">
+                <div class="col-md-12" style="display: flex; justify-content: center; align-items: center">
+                    <div class="day-parent" style="display: flex; justify-content: center; align-items: center">
+                        <div style="cursor: pointer" class="date-minus">
+                            <i class="fas fa-angle-left"></i>
                         </div>
-                        <div style="position:absolute; right: 0%;">
-                            <h5>Protein` </h5>
-                            <div>
-                                <span class="protein_eat">0</span>
-                                /
-                                <span class="protein_must">0</span>
-                            </div>
+                        <div class="m-r-10 m-l-10 date-show"></div>
+                        
+                        <div style="cursor: pointer" class="date-plus">
+                            <i class="fas fa-angle-right"></i>
+                        </div>
+
+                        <div class="date" style="margin-left: 30px;">
+                            <input type="hidden" class="form-control">
+                            <span class="input-group-addon"
+                                    style="background: none; border: none; cursor: pointer;">
+                                <i class="glyphicon glyphicon-th"></i>
+                            </span>
+                        </div>
+                        <div>
+                            <button
+                                class="mode-switcher-button"
+                                data-toggle="modal"
+                                data-target="">
+                                <i class="fas fa-cloud-download-alt"></i>
+                                <input type="hidden" class="form-control">
+                            </button>
+                        </div>
+
+                    </div>
+                    <div style="position:absolute; right: 0%;">
+                        <h5>Protein` </h5>
+                        <div>
+                            <span class="protein_eat">0</span>
+                            /
+                            <span class="protein_must">0</span>
                         </div>
                     </div>
                 </div>
             </div>
+        </div>
 
-            <!-- ################# -->
-            <!-- ################# -->
-            <!-- ################# -->
-            <div class="table-parent" id="_days">
+        <!-- ################# -->
+        <!-- ################# -->
+        <!-- ################# -->
+        <div class="table-parent">
 
-            <!-- 1 -->
-            <div class="col-small mr-2 ml-2">
-                <table class="firs-table table table-striped">
-                    <thead>
-                        <tr>
-                            <th colspan="1">&nbsp;</th>
-                        </tr>
-                        <tr>
-                            <th colspan="1">
-                                <a href="javascript:void(0)" @click.prevent="closeAll">Close</a>
-                            </th>
-                        </tr>
-                    </thead>
+        <!-- 1 -->
+        <div class="col-small mr-2 ml-2">
+            <table class="firs-table table table-striped">
+                <thead>
+                    <tr>
+                        <th colspan="1">&nbsp;</th>
+                    </tr>
+                    <tr>
+                        <th colspan="1">
+                            <a href="javascript:void(0)" @click.prevent="closeAll">Close</a>
+                        </th>
+                    </tr>
+                </thead>
 
-                    <tbody v-for="(time, i) in staticTimes" :key="time.time">
-                        <tr>
-                            <th class="parent-time"
-                                @click="toggleTimes(i)" 
-                            >
-                                @{{ time.time }}
-                                <div v-if="time.circle" class="red-circle"></div>
-                            </th>
-                        </tr>
-                        <tr v-for="(minute, j) in time.minutes" :key="j"
-                            :style="{ borderColor: minute.borderColor }"
-                            v-if="minute.show"
+                <tbody v-for="(time, i) in staticTimes" :key="time.time">
+                    <tr>
+                        <th class="parent-time"
+                            @click="toggleTimes(i)" 
                         >
-                            <th
-                                class="child-time"
-                            > 
-                                @{{ minute.minute  }} 
-                            </th>
-                        </tr>
-                    </tbody>
+                            @{{ time.time }}
+                            <div v-if="time.circle" class="red-circle"></div>
+                        </th>
+                    </tr>
+                    <tr v-for="(minute, j) in time.minutes" :key="j"
+                        :style="{ borderColor: minute.borderColor }"
+                        v-if="minute.show"
+                    >
+                        <th
+                            class="child-time"
+                        > 
+                            @{{ minute.minute  }} 
+                        </th>
+                    </tr>
+                </tbody>
 
-                </table>
-            </div>
+            </table>
+        </div>
 
-            <!-- 2 -->
-            <div class="col-medium mr-2">
-                <table class="medium-table table table-striped">
-                    <thead>
-                        <tr>
-                            <th scope="col">&nbsp;</th>
-                        </tr>
-                        <tr>
-                            <th class="d-flex justify-content-between align-items-center">
-                                Activity
-                                <button class="add-btn green" data-toggle="modal" data-target="#activity">
-                                    <i class="fas fa-plus-circle"></i>
-                                </button>
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody class="font-sm">
-                        <tr v-for="(activity, i) in staticTimes" :key="activity.time">
-                            
-                            <td class="d-flex align-items-center activity-color"
-                            @click="toggleTimes(i)" >   
-                                <span
-                                    v-for="info in activity.activityPopover" 
-                                    class="mr-2 tooltipp"
-                                >
-                                    @{{ info.name }}
+        <!-- 2 -->
+        <div class="col-medium mr-2">
+            <table class="medium-table table table-striped">
+                <thead>
+                    <tr>
+                        <th scope="col">&nbsp;</th>
+                    </tr>
+                    <tr>
+                        <th class="d-flex justify-content-between align-items-center">
+                            Activity
+                            <button class="add-btn green" data-toggle="modal" data-target="#activity">
+                                <i class="fas fa-plus-circle"></i>
+                            </button>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody class="font-sm">
+                    <tr v-for="(activity, i) in staticTimes" :key="activity.time">
+                        
+                        <td class="d-flex align-items-center activity-color"
+                        @click="toggleTimes(i)" >   
+                            <span
+                                v-for="info in activity.activityPopover" 
+                                class="mr-2 tooltipp"
+                            >
+                                @{{ info.name }}
+                                <span class="tooltiptext">
+                                    <div>
+                                        <h3>@{{ info.name }}</h3>
+                                        Start: @{{ info.start }} <br>
+                                        End: @{{ info.end }} <br>
+                                        <h5>Total: @{{ info.total }}</h5>
+                                    </div>
+                                </span>
+                            </span>
+                        </td>
+
+                        <td 
+                            v-for="(activity_info, j) in activity.minutes" 
+                            :key="activity_info.minute" 
+                            class="d-flex justify-content-between align-items-center"
+                            v-if="activity_info.show"
+                        >
+                            <div 
+                                v-if="activity_info.name"
+                                class="w-100 green d-flex justify-content-between align-items-center">
+                                <div class="tooltipp">
+                                    @{{ activity_info.name }}
                                     <span class="tooltiptext">
                                         <div>
-                                            <h3>@{{ info.name }}</h3>
-                                            Start: @{{ info.start }} <br>
-                                            End: @{{ info.end }} <br>
-                                            <h5>Total: @{{ info.total }}</h5>
+                                            <h3> @{{ activity_info.minuteActivityPopover.name }}</h3>
+                                            Start: @{{ activity_info.minuteActivityPopover.start }} <br>
+                                            End: @{{ activity_info.minuteActivityPopover.end }} <br>
+                                            <h5>Total: @{{ activity_info.minuteActivityPopover.total }}</h5>
                                         </div>
                                     </span>
-                                </span>
-                            </td>
-
-                            <td 
-                                v-for="(activity_info, j) in activity.minutes" 
-                                :key="activity_info.minute" 
-                                class="d-flex justify-content-between align-items-center"
-                                v-if="activity_info.show"
-                            >
-                                <div 
-                                    v-if="activity_info.name"
-                                    class="w-100 green d-flex justify-content-between align-items-center">
-                                    <div class="tooltipp">
-                                        @{{ activity_info.name }}
-                                        <span class="tooltiptext">
-                                            <div>
-                                                <h3> @{{ activity_info.minuteActivityPopover.name }}</h3>
-                                                Start: @{{ activity_info.minuteActivityPopover.start }} <br>
-                                                End: @{{ activity_info.minuteActivityPopover.end }} <br>
-                                                <h5>Total: @{{ activity_info.minuteActivityPopover.total }}</h5>
-                                            </div>
-                                        </span>
-                                    </div>
-                                    <div class="edit-activity" data-toggle="modal" data-target="#activity"> <i class="fas fa-edit"></i> </div>
                                 </div>
-                            </td>
+                                <div class="edit-activity" data-toggle="modal" data-target="#activity"> <i class="fas fa-edit"></i> </div>
+                            </div>
+                        </td>
 
-                        </tr>
+                    </tr>
 
-                    </tbody>
-                </table>
-            </div>
+                </tbody>
+            </table>
+        </div>
 
-            <!-- 3 -->
-            <div class="col-big mr-2">
-                <table class="energy-table table table-striped border-green">
-                    <thead>
-                        <tr>
-                            <th colspan="7" class="text-center position-relative">
-                                Energy Expenditure
-                                <button
-                                    class="mode-switcher-button mode-switcher-button-absolute"
-                                    @click="energyExpendedModeSwitcher">
-                                    <i class="fas fa-expand-alt"></i>
-                                </button>
-                            </th>
-                        </tr>
-                        <tr>
-                            <td>Total&nbsp;cal</td>
-                            <td v-if='energyExpendedMode'>Fat&nbsp;%</td>
-                            <td v-if='energyExpendedMode'>Fat&nbsp;(c)</td>
-                            <td>Fat&nbsp;(g)</td>
-                            <td v-if='energyExpendedMode'>Carb&nbsp;%</td>
-                            <td v-if='energyExpendedMode'>Carb&nbsp;(c)</td>
-                            <td>Carb&nbsp;(g)</td>
-                        </tr>
-                    </thead>
-                    <tbody v-for="(time, i) in staticTimes" :key="time.time">
-                        <tr  @click="toggleTimes(i)" >
-                            <td><b>@{{ time.totals.totalCal }}</b></td>
-                            <td v-if='energyExpendedMode'></td>
-                            <td v-if='energyExpendedMode'><b>@{{ time.totals.totalFatC }}</b></td>
-                            <td><b>@{{ time.totals.totalFatG }}</b></td>
-                            <td v-if='energyExpendedMode'></td>
-                            <td v-if='energyExpendedMode'><b>@{{ time.totals.totalCarbC }}</b></td>
-                            <td><b>@{{ time.totals.totalCarbG }}</b></td>
-                        </tr>
+        <!-- 3 -->
+        <div class="col-big mr-2">
+            <table class="energy-table table table-striped border-green">
+                <thead>
+                    <tr>
+                        <th colspan="7" class="text-center position-relative">
+                            Energy Expenditure
+                            <button
+                                class="mode-switcher-button mode-switcher-button-absolute"
+                                @click="energyExpendedModeSwitcher">
+                                <i class="fas fa-expand-alt"></i>
+                            </button>
+                        </th>
+                    </tr>
+                    <tr>
+                        <td>Total&nbsp;cal</td>
+                        <td v-if='energyExpendedMode'>Fat&nbsp;%</td>
+                        <td v-if='energyExpendedMode'>Fat&nbsp;(c)</td>
+                        <td>Fat&nbsp;(g)</td>
+                        <td v-if='energyExpendedMode'>Carb&nbsp;%</td>
+                        <td v-if='energyExpendedMode'>Carb&nbsp;(c)</td>
+                        <td>Carb&nbsp;(g)</td>
+                    </tr>
+                </thead>
+                <tbody v-for="(time, i) in staticTimes" :key="time.time">
+                    <tr  @click="toggleTimes(i)" >
+                        <td><b>@{{ time.totals.totalCal }}</b></td>
+                        <td v-if='energyExpendedMode'></td>
+                        <td v-if='energyExpendedMode'><b>@{{ time.totals.totalFatC }}</b></td>
+                        <td><b>@{{ time.totals.totalFatG }}</b></td>
+                        <td v-if='energyExpendedMode'></td>
+                        <td v-if='energyExpendedMode'><b>@{{ time.totals.totalCarbC }}</b></td>
+                        <td><b>@{{ time.totals.totalCarbG }}</b></td>
+                    </tr>
 
-                        <tr v-for="(minute, j) in time.minutes" :key="j"
-                            v-if="minute.show"
-                        >
-                            <td><span class="green" v-if="minute.borderColor">@{{ minute.energyExpenditure.totalCal }}</span></td>
-                            <td v-if='energyExpendedMode'><span v-if="minute.borderColor">@{{ minute.energyExpenditure.fatPercentage }}</span></td>
-                            <td v-if='energyExpendedMode'><span class="green" v-if="minute.borderColor">@{{ minute.energyExpenditure.fatC }}</span></td>
-                            <td><span v-if="minute.borderColor">@{{ minute.energyExpenditure.fatG }}</span></td>
-                            <td v-if='energyExpendedMode'><span v-if="minute.borderColor">@{{ minute.energyExpenditure.carbPercentage }}</span></td>
-                            <td v-if='energyExpendedMode'><span v-if="minute.borderColor">@{{ minute.energyExpenditure.carbC }}</span></td>
-                            <td><span v-if="minute.borderColor">@{{ minute.energyExpenditure.carbG }}</span></td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
+                    <tr v-for="(minute, j) in time.minutes" :key="j"
+                        v-if="minute.show"
+                    >
+                        <td><span class="green" v-if="minute.borderColor">@{{ minute.energyExpenditure.totalCal }}</span></td>
+                        <td v-if='energyExpendedMode'><span v-if="minute.borderColor">@{{ minute.energyExpenditure.fatPercentage }}</span></td>
+                        <td v-if='energyExpendedMode'><span class="green" v-if="minute.borderColor">@{{ minute.energyExpenditure.fatC }}</span></td>
+                        <td><span v-if="minute.borderColor">@{{ minute.energyExpenditure.fatG }}</span></td>
+                        <td v-if='energyExpendedMode'><span v-if="minute.borderColor">@{{ minute.energyExpenditure.carbPercentage }}</span></td>
+                        <td v-if='energyExpendedMode'><span v-if="minute.borderColor">@{{ minute.energyExpenditure.carbC }}</span></td>
+                        <td><span v-if="minute.borderColor">@{{ minute.energyExpenditure.carbG }}</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
 
-            <!-- 4 -->
-            <div class="col-medium mr-2">
-                <table class="medium-table table table-striped">
-                    <thead>
-                        <tr>
-                            <th colspan="1" class="position-relative text-right">
-                                <span>&nbsp;</span>
-                                <button
-                                    class="mode-switcher-button"
-                                    data-toggle="modal"
-                                    data-target="#clearAllMealPopup">
-                                    <i class="fas fa-minus"></i>
-                                </button>
-                                <button
-                                    class="mode-switcher-button copyMeal"
-                                    data-toggle="modal"
-                                    data-target="">
-                                    <i class="fas fa-clone"></i>
-                                </button>
-                            </th>
-                        </tr>
-                        <tr>
-                            <th class="d-flex align-items-center">
-                                Meal 
-                                <button class="add-btn red" data-toggle="modal" data-target="#meal">
-                                    <i class="fas fa-plus-circle"></i>
-                                </button>
-                                / 
-                                Water
-                                <button class="add-btn red" data-toggle="modal" data-target="#water">
-                                    <i class="fas fa-plus-circle"></i>
-                                </button>
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>                        
+        <!-- 4 -->
+        <div class="col-medium mr-2">
+            <table class="medium-table table table-striped">
+                <thead>
+                    <tr>
+                        <th colspan="1" class="position-relative text-right">
+                            <span>&nbsp;</span>
+                            <button
+                                class="mode-switcher-button"
+                                data-toggle="modal"
+                                data-target="#clearAllMealPopup">
+                                <i class="fas fa-minus"></i>
+                            </button>
+                            <button
+                                class="mode-switcher-button copyMeal"
+                                data-toggle="modal"
+                                data-target="">
+                                <i class="fas fa-clone"></i>
+                            </button>
+                        </th>
+                    </tr>
+                    <tr>
+                        <th class="d-flex align-items-center">
+                            Meal 
+                            <button class="add-btn red" data-toggle="modal" data-target="#meal">
+                                <i class="fas fa-plus-circle"></i>
+                            </button>
+                            / 
+                            Water
+                            <button class="add-btn red" data-toggle="modal" data-target="#water">
+                                <i class="fas fa-plus-circle"></i>
+                            </button>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>                        
 
-                        <tr v-for="(meal, i) in mealGraphic" :key="meal.time">
+                    <tr v-for="(meal, i) in mealGraphic" :key="meal.time">
 
-                            <td class="d-flex align-items-center activity-color"
-                            @click="toggleTimes(i)" >
-                                <span
-                                    v-for="info in meal.mealPopover" 
-                                    class="mr-2 tooltipp"
-                                >
-                                    @{{ info.name }}
-                                </span>
-                            </td>
-
-                            <td 
-                                v-for="(meal_info, j) in meal.minutes" 
-                                :key="meal_info.minute" 
-                                class="d-flex justify-content-between align-items-center"
-                                v-if="meal_info.show"
+                        <td class="d-flex align-items-center activity-color"
+                        @click="toggleTimes(i)" >
+                            <span
+                                v-for="info in meal.mealPopover" 
+                                class="mr-2 tooltipp"
                             >
-                                <div v-if="meal_info.name" 
-                                    class="w-100 green d-flex justify-content-between align-items-center">
-                                    @{{ meal_info.name }}
+                                @{{ info.name }}
+                            </span>
+                        </td>
 
-                                    <div class="edit-meal" data-toggle="modal" data-target="#meal" v-if="!meal_info.water"> <i class="fas fa-edit"></i> </div>
-                                    <div class="edit-meal" data-toggle="modal" data-target="#water" v-else> <i class="fas fa-edit"></i> </div>
-                                    
-                                </div>
-                            </td>
-                            
-                        </tr>
-
-                    </tbody>
-                </table>
-            </div>
-
-            <!-- 5 -->
-            <div class="col-big mr-2 ">
-                <table class="intake-table border-green table table-striped">
-                    <thead>
-                        <tr>
-                            <th colspan="6" class="text-center">Intake</th>
-                        </tr>
-                        <tr>
-                            <td>Fat&nbsp;(g)</td>
-                            <td>Fat&nbsp;Diges.</td>
-                            <td>Carb&nbsp;(g)</td>
-                            <td>Carb&nbsp;Dig.</td>
-                            <td>Protein&nbsp;(g)</td>
-                            <td>Protein&nbsp;Dig.</td>
-                        </tr>
-                    </thead>
-                    <tbody v-for="(meal, i) in mealGraphic" :key="meal.time">
-                        <tr  @click="toggleTimes(i)" >
-                            <td><b>@{{ meal.totals.totalFat }}</b></td>
-                            <td><b>@{{ meal.totals.totalFatD }}</b></td>
-                            <td><b>@{{ meal.totals.totalCarb }}</b></td>
-                            <td><b>@{{ meal.totals.totalCarbD }}</b></td>
-                            <td><b>@{{ meal.totals.totalProteinG }}</b></td>
-                            <td><b>@{{ meal.totals.totalProtein }}</b></td>
-                        </tr>
-
-                        <tr v-for="(meal_info, j) in meal.minutes" :key="j"
+                        <td 
+                            v-for="(meal_info, j) in meal.minutes" 
+                            :key="meal_info.minute" 
+                            class="d-flex justify-content-between align-items-center"
                             v-if="meal_info.show"
                         >
-                            <td><span class="green" v-if="meal_info.mealType == 2 && meal_info.name && !meal_info.water">@{{ meal_info.intake.fatG }}</span></td>
-                            <td><span v-if="meal_info.mealType == 2">@{{ meal_info.intake.fatD }}</span></td>
-                            <td><span class="green" v-if="meal_info.mealType == 2 && meal_info.name && !meal_info.water">@{{ meal_info.intake.carbG }}</span></td>
-                            <td><span v-if="meal_info.mealType == 2">@{{ meal_info.intake.carbD }}</span></td>
-                            <td><span v-if="meal_info.mealType == 2 && meal_info.name && !meal_info.water">@{{ meal_info.intake.proteinG }}</span></td>
-                            <td><span v-if="meal_info.mealType == 2">@{{ meal_info.intake.proteinD }}</span></td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
+                            <div v-if="meal_info.name" 
+                                class="w-100 green d-flex justify-content-between align-items-center">
+                                @{{ meal_info.name }}
 
-            <!-- 6 -->
-            <div class="col-medium-two">
-                <table class="last-table table table-striped">
-                    <thead>
-                        <tr>
-                            <th colspan="2" class="text-center red">Status</th>
-                        </tr>
-                        <tr class="bg-white">
-                            <td class="text-center">Fat</td>
-                            <td class="text-center">Carb</td>
-                        </tr>
-                    </thead>
-                    <tbody v-for="(status, i) in mealGraphic" :key="status.time">
-                        <tr  @click="toggleTimes(i)" >
-                            <td></td>
-                            <td></td>
-                        </tr>
-
-                        <tr v-for="(status_info, j) in status.minutes" :key="j"
-                            v-if="status_info.show"
-                        >
-                            <td>
-                                <div>
-                                    @{{ status_info.statusObj.fat }}
-                                    <span v-if="status_info.statusObj.fat != 0">
-                                        <span class="green" v-if="status_info.statusObj.fat > 0">(loss)</span>
-                                        <span class="red" v-else>(access)</span>
-                                    </span>
+                                <div class="edit-meal" data-toggle="modal" data-target="#meal" v-if="!meal_info.water"> <i class="fas fa-edit"></i> </div>
+                                <div class="edit-meal" data-toggle="modal" data-target="#water" 
+                                    @click="openEditWaterPopup( meal_info.quantity, meal_info.minute, meal_info.id )" v-else> 
+                                    <i class="fas fa-edit"></i> 
                                 </div>
-                            </td>
-                            <td>
-                                <div>
-                                    @{{ status_info.statusObj.carb }}
-                                    <span v-if="status_info.statusObj.carb != 0">
-                                        <span class="green" v-if="status_info.statusObj.carb > 0">(loss)</span>
-                                        <span class="red" v-else>(access)</span>
-                                    </span>
-                                </div>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
+                                
+                            </div>
+                        </td>
+                        
+                    </tr>
 
-            </div>
-            <!-- ################# -->
-            <!-- ################# -->
-            <!-- ################# -->
+                </tbody>
+            </table>
+        </div>
 
-            </div>
+        <!-- 5 -->
+        <div class="col-big mr-2 ">
+            <table class="intake-table border-green table table-striped">
+                <thead>
+                    <tr>
+                        <th colspan="6" class="text-center">Intake</th>
+                    </tr>
+                    <tr>
+                        <td>Fat&nbsp;(g)</td>
+                        <td>Fat&nbsp;Diges.</td>
+                        <td>Carb&nbsp;(g)</td>
+                        <td>Carb&nbsp;Dig.</td>
+                        <td>Protein&nbsp;(g)</td>
+                        <td>Protein&nbsp;Dig.</td>
+                    </tr>
+                </thead>
+                <tbody v-for="(meal, i) in mealGraphic" :key="meal.time">
+                    <tr  @click="toggleTimes(i)" >
+                        <td><b>@{{ meal.totals.totalFat }}</b></td>
+                        <td><b>@{{ meal.totals.totalFatD }}</b></td>
+                        <td><b>@{{ meal.totals.totalCarb }}</b></td>
+                        <td><b>@{{ meal.totals.totalCarbD }}</b></td>
+                        <td><b>@{{ meal.totals.totalProteinG }}</b></td>
+                        <td><b>@{{ meal.totals.totalProtein }}</b></td>
+                    </tr>
+
+                    <tr v-for="(meal_info, j) in meal.minutes" :key="j"
+                        v-if="meal_info.show"
+                    >
+                        <td><span class="green" v-if="meal_info.mealType == 2 && meal_info.name && !meal_info.water">@{{ meal_info.intake.fatG }}</span></td>
+                        <td><span v-if="meal_info.mealType == 2">@{{ meal_info.intake.fatD }}</span></td>
+                        <td><span class="green" v-if="meal_info.mealType == 2 && meal_info.name && !meal_info.water">@{{ meal_info.intake.carbG }}</span></td>
+                        <td><span v-if="meal_info.mealType == 2">@{{ meal_info.intake.carbD }}</span></td>
+                        <td><span v-if="meal_info.mealType == 2 && meal_info.name && !meal_info.water">@{{ meal_info.intake.proteinG }}</span></td>
+                        <td><span v-if="meal_info.mealType == 2">@{{ meal_info.intake.proteinD }}</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- 6 -->
+        <div class="col-medium-two">
+            <table class="last-table table table-striped">
+                <thead>
+                    <tr>
+                        <th colspan="2" class="text-center red">Status</th>
+                    </tr>
+                    <tr class="bg-white">
+                        <td class="text-center">Fat</td>
+                        <td class="text-center">Carb</td>
+                    </tr>
+                </thead>
+                <tbody v-for="(status, i) in mealGraphic" :key="status.time">
+                    <tr  @click="toggleTimes(i)" >
+                        <td></td>
+                        <td></td>
+                    </tr>
+
+                    <tr v-for="(status_info, j) in status.minutes" :key="j"
+                        v-if="status_info.show"
+                    >
+                        <td>
+                            <div>
+                                @{{ status_info.statusObj.fat }}
+                                <span v-if="status_info.statusObj.fat != 0">
+                                    <span class="green" v-if="status_info.statusObj.fat > 0">(loss)</span>
+                                    <span class="red" v-else>(access)</span>
+                                </span>
+                            </div>
+                        </td>
+                        <td>
+                            <div>
+                                @{{ status_info.statusObj.carb }}
+                                <span v-if="status_info.statusObj.carb != 0">
+                                    <span class="green" v-if="status_info.statusObj.carb > 0">(loss)</span>
+                                    <span class="red" v-else>(access)</span>
+                                </span>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        </div>
+        <!-- ################# -->
+        <!-- ################# -->
+        <!-- ################# -->
+
         </div>
     </div>
+
 
     <div id="activity" class="modal fade" role="dialog">
         <div class="modal-dialog">
@@ -462,49 +465,49 @@
                                     <div class="form-group col-md-1">
                                         <label for="total_mass">Total Mass</label>
                                         <input type="number" class="form-control" id="m_total_mass"
-                                               placeholder="Total Mass"
-                                               name="total_mass" readonly required value="">
+                                                placeholder="Total Mass"
+                                                name="total_mass" readonly required value="">
                                     </div>
 
                                     <div class="form-group col-md-1">
                                         <label for="total_carbs">Total Carbs</label>
                                         <input type="number" class="form-control" id="m_total_carbs"
-                                               placeholder="Total Carbs"
-                                               name="total_carbs" readonly required value="">
+                                                placeholder="Total Carbs"
+                                                name="total_carbs" readonly required value="">
                                     </div>
 
                                     <div class="form-group col-md-1">
                                         <label for="total_fat">Total Fat</label>
                                         <input type="number" class="form-control" id="m_total_fat"
-                                               placeholder="Total Fat"
-                                               name="total_fat" readonly required value="">
+                                                placeholder="Total Fat"
+                                                name="total_fat" readonly required value="">
                                     </div>
 
                                     <div class="form-group col-md-1">
                                         <label for="total_proteins">Total Proteins</label>
                                         <input type="number" class="form-control" id="m_total_proteins"
-                                               placeholder="Total Proteins" name="total_proteins" readonly required
-                                               value="">
+                                                placeholder="Total Proteins" name="total_proteins" readonly required
+                                                value="">
                                     </div>
 
                                     <div class="form-group col-md-1">
                                         <label for="total_calories">Total Calories</label>
                                         <input type="number" class="form-control" id="m_total_calories"
-                                               placeholder="Total Calories" name="total_calories" readonly required
-                                               value="">
+                                                placeholder="Total Calories" name="total_calories" readonly required
+                                                value="">
                                     </div>
 
                                     <div class="form-group col-md-1">
                                         <label for="total_ph">Total PH</label>
                                         <input type="number" class="form-control" id="m_total_ph" placeholder="Total PH"
-                                               name="total_ph" readonly required value="">
+                                                name="total_ph" readonly required value="">
                                     </div>
 
                                     <div class="form-group col-md-2">
                                         <label for="total_glycemic_load">Total Glycemic Load</label>
                                         <input type="number" class="form-control" id="m_total_glycemic_load"
-                                               placeholder="Total Glycemic Load" name="total_glycemic_load" readonly
-                                               required value="">
+                                                placeholder="Total Glycemic Load" name="total_glycemic_load" readonly
+                                                required value="">
                                     </div>
                                 </div>
 
@@ -569,7 +572,7 @@
                                 <div class="form-group">
                                     <label for="name">Name</label>
                                     <input type="text" class="form-control" id="name"
-                                           placeholder="Name" name="name" value="">
+                                            placeholder="Name" name="name" value="">
                                 </div>
 
                                 <div class="form-row">
@@ -577,46 +580,46 @@
                                     <div class="form-group col-md-1">
                                         <label for="total_mass">Total Mass</label>
                                         <input type="number" class="form-control" id="total_mass"
-                                               placeholder="Total Mass"
-                                               name="total_mass" readonly required>
+                                                placeholder="Total Mass"
+                                                name="total_mass" readonly required>
                                     </div>
 
                                     <div class="form-group col-md-1">
                                         <label for="total_carbs">Total Carbs</label>
                                         <input type="number" class="form-control" id="total_carbs"
-                                               placeholder="Total Carbs"
-                                               name="total_carbs" readonly required>
+                                                placeholder="Total Carbs"
+                                                name="total_carbs" readonly required>
                                     </div>
 
                                     <div class="form-group col-md-1">
                                         <label for="total_fat">Total Fat</label>
                                         <input type="number" class="form-control" id="total_fat" placeholder="Total Fat"
-                                               name="total_fat" readonly required>
+                                                name="total_fat" readonly required>
                                     </div>
 
                                     <div class="form-group col-md-1">
                                         <label for="total_proteins">Total Proteins</label>
                                         <input type="number" class="form-control" id="total_proteins"
-                                               placeholder="Total Proteins" name="total_proteins" readonly required>
+                                                placeholder="Total Proteins" name="total_proteins" readonly required>
                                     </div>
 
                                     <div class="form-group col-md-1">
                                         <label for="total_calories">Total Calories</label>
                                         <input type="number" class="form-control" id="total_calories"
-                                               placeholder="Total Calories" name="total_calories" readonly required>
+                                                placeholder="Total Calories" name="total_calories" readonly required>
                                     </div>
 
                                     <div class="form-group col-md-1">
                                         <label for="total_ph">Total PH</label>
                                         <input type="number" class="form-control" id="total_ph" placeholder="Total PH"
-                                               name="total_ph" readonly required>
+                                                name="total_ph" readonly required>
                                     </div>
 
                                     <div class="form-group col-md-2">
                                         <label for="total_glycemic_load">Total Glycemic Load</label>
                                         <input type="number" class="form-control" id="total_glycemic_load"
-                                               placeholder="Total Glycemic Load" name="total_glycemic_load" readonly
-                                               required>
+                                                placeholder="Total Glycemic Load" name="total_glycemic_load" readonly
+                                                required>
                                     </div>
                                 </div>
 
@@ -635,7 +638,7 @@
                                         <div class="form-group col-md-3">
                                             <label for="meal_from">Time</label>
                                             <input type="text" name="from"
-                                                   class="clockpicker create_meal_time form-control">
+                                                    class="clockpicker create_meal_time form-control">
                                         </div>
                                         <div class="col-md-9 table-of-carb-fat">
                                             <table class="intake-table border-green table table-striped">
@@ -720,11 +723,16 @@
 
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-success add-water">Add</button>
+                    <button  class="btn btn-success add-water" v-show="!editWater">Add</button>
+                    <button  class="btn btn-success edit-water" v-show="editWater">Edit</button>
                 </div>
             </div>
         </div>
     </div>
+
+</div>
+
+
 
 @endsection
 
@@ -845,7 +853,9 @@
 
                     for(let i=0; i<water.length; i++) {
                         let waterObj = {
+                            id: water[i].id,
                             name: water[i].quantity + ' ml',
+                            quantity:  water[i].quantity,
                             start: water[i].from,
                             type: 'water'
                         };
@@ -1128,7 +1138,6 @@
         })
 
         $('.add-water').click(function() {
-
             let data = {
                 user_id: $('.user_id').val(),
                 date: $('.date-show').html(),
@@ -1148,11 +1157,12 @@
                     $('#water').modal('toggle');
 
                     let waterObj = {
+                        id: res.water.id,
                         name: res.water.quantity + ' ml',
+                        quantity: res.water.quantity,
                         start: res.water.from,
                         type: 'water'
                     };
-                    console.log(waterObj)
 
                     days.addMeals(waterObj)
 
@@ -1164,6 +1174,47 @@
                 }
             });
         })
+
+        $('.edit-water').click(function() {
+            
+            let data = {
+                user_id: $('.user_id').val(),
+                date: $('.date-show').html(),
+
+                quantity: parseFloat($('.quantity').val()),
+                from: $('.water_time').val(),
+                id: days.id
+            };
+
+            $.ajax({
+                type: "POST",
+                headers: {
+                    'X-CSRF-TOKEN': '{{csrf_token()}}'
+                },
+                url: '{{ url('/day/edit-water') }}',
+                data: data,
+                success: function (res) {
+                    console.log('res ===============', res)
+                    // $('#water').modal('toggle');
+
+                    // let waterObj = {
+                    //     name: res.water.quantity + ' ml',
+                    //     start: res.water.from,
+                    //     type: 'water'
+                    // };
+                    // console.log(waterObj)
+
+                    // days.addMeals(waterObj)
+
+
+                    // days.createTimeGraphic();
+                    // days.createMealGraphic();
+                    // days.createStatusGraphic();
+
+                }
+            });
+        })
+        
 
     });
 </script>
@@ -1396,6 +1447,9 @@
                 actions: [],
                 meal: [],
                 color: 0,
+
+                editWater: false,
+                id: 0,
         
                 energyExpendedMode: true,
                 circleCount: 0,
@@ -1482,8 +1536,6 @@
                 }
 
             },
-
-
 
             createTimeGraphic() {
 
@@ -1676,7 +1728,9 @@
 
                                 if(fm == this.meal[k].start) {
                                     minute.name = this.meal[k].name
+                                    minute.quantity = this.meal[k].quantity
                                     minute.water = true
+                                    minute.id = this.meal[k].id
                                     let popover = {
                                         name: this.meal[k].name
                                     }
@@ -2054,6 +2108,17 @@
                 this.actions = []
                 this.meal = []
             },
+            openEditWaterPopup(quantity, time, id) {
+                this.editWater = true
+                this.id = id
+
+                $('#quantity').val(quantity)
+                $('.water_time').clockpicker({
+                    autoclose: true,
+                    placement: 'bottom'
+                }).val(time);
+
+            },
             
 
             clearActivity() {
@@ -2108,6 +2173,12 @@
 
 <script !src="">
     $(document).ready(function () {
+
+        // detect when water popup closed
+        $('#water').on('hidden.bs.modal', function () {
+            days.editWater = false
+        });
+
         let foods = '<?php echo $foods ?>';
         foods = JSON.parse(foods);
         let row = 0;
@@ -2292,6 +2363,7 @@
         // activity_to
 
         $(document).on("click", ".edit-activity", function () {
+            
             let from = $(this).find('div.activity_start').html()
             let to =   $(this).find('div.activity_end').html()
 
@@ -2303,18 +2375,18 @@
             $('.activity_from').clockpicker({
                 autoclose: true,
                 placement: 'bottom',
-            }).val(from);
+            }).val("08:00");
 
             $('.activity_to').clockpicker({
                 autoclose: true,
                 placement: 'bottom',
-            }).val(to);
+            }).val("08:50");
 
         });
+
         $(document).on("click", ".edit-meal", function () {
             console.log('edit-meal')
         });
-
 
     })
 </script>
