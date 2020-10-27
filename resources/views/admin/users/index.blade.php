@@ -2,15 +2,26 @@
 
 @section('content')
     <div class="row">
-        <div class="col-md-12 text-right">
-            <a href="{{$route."/create"}}" class="btn btn-success m-b-30"><i class="fas fa-plus"></i> Add {{$title}}</a>
+        <div class="col-md-6 col-xs-12">
+            <div class="row d-flex align-items-center justify-content-center">
+                <div class="col-md-6">
+                    <input type="text" class="form-control" placeholder="Enter Username or Name">
+                </div>
+                <div class="col-md-2">
+                    <button type="button" class="btn btn-danger">Search</button>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 col-xs-12 text-right">
+            <a href="{{$route."/create"}}" class="btn btn-success m-b-30"><i class="fas fa-plus"></i>
+                Add {{$title}}</a>
         </div>
     </div>
 
     <div class="row">
         <div class="col-md-12">
             @foreach($data as $key=>$val)
-                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+                <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
                     <div class="panel panel-default">
                         <div class="panel-heading">
                             {{$val->name}} ({{$val->username}})
@@ -44,7 +55,8 @@
                                 </a>
 
                                 <a href="{{$route."/".$val->id."/edit"}}" data-toggle="tooltip"
-                                   data-placement="top" title="Edit" class="btn btn-info btn-circle tooltip-info">
+                                   data-placement="top" title="Edit"
+                                   class="btn btn-info btn-circle tooltip-info">
                                     <i class="fas fa-edit"></i>
                                 </a>
 

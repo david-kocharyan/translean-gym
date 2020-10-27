@@ -14,6 +14,7 @@ use App\Model\PersonalMeal;
 use App\Model\User;
 use App\Model\UserAssessments;
 use Carbon\Carbon;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Response;
@@ -118,9 +119,14 @@ class DayController extends Controller
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function deleteActivity(Request $request){
-        DayActivity::where('id', $request->activity_id)->delete();
-        return response()->json(['success' => "Your activity has been deleted."], 200);
+    public function deleteActivity(Request $request)
+    {
+        $res = DayActivity::where('id', $request->activity_id)->first()->delete();
+        if ($res) {
+            return response()->json(['success' => "Your activity has been deleted."], 200);
+        } else {
+            return response()->json(['success' => "Fail."], 422);
+        }
     }
 
     /**
