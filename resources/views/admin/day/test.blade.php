@@ -4,6 +4,7 @@
 @section('content')
 
 <div class="row"  id="_days">
+
     <div class="col-md-12">
         <div class="white-box" style="overflow-y: auto;">
         <input type="hidden" class="user_id" name="id" value="{{$user->id}}">
@@ -161,7 +162,7 @@
         </div>
 
         <!-- 3 -->
-        <div class="col-big mr-2">
+        <div class="col-big mr-2" :class="{ 'expended-mode-on' : !energyExpendedMode}">
             <table class="energy-table table table-striped border-green">
                 <thead>
                     <tr>
@@ -224,9 +225,10 @@
                                 <i class="fas fa-minus"></i>
                             </button>
                             <button
-                                class="mode-switcher-button copyMeal"
-                                data-toggle="modal"
-                                data-target="">
+                                class="mode-switcher-button "
+                                data-toggle="modal" 
+                                data-target="#duplicateMeal"
+                            >
                                 <i class="fas fa-clone"></i>
                             </button>
                         </th>
@@ -394,16 +396,22 @@
                             @endforeach
                         </select>
                     </div>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="activity_from">From</label>
-                            <input type="text" class="activity_from clockpicker form-control">
+                    <div class="row">
+
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="activity_from">From</label>
+                                <input type="text" readonly class="activity_from clockpicker form-control bg-white">
+                            </div>
                         </div>
 
-                        <div class="form-group">
-                            <label for="activity_to">To</label>
-                            <input type="text" class="clockpicker activity_to form-control">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="activity_to">To</label>
+                                <input type="text" readonly class="clockpicker activity_to form-control bg-white">
+                            </div>
                         </div>
+
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -730,7 +738,29 @@
         </div>
     </div>
 
+    <div id="duplicateMeal" class="modal fade" role="dialog">
+        <div class="modal-dialog modal-sm" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Duplicate meal</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="copyMeal">&nbsp;</div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" 
+                    class="btn btn-success duplicate-meal">Duplicate</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
 </div>
+
+<div id="alerts" style="position: absolute; bottom: 32%; left: 75%; width: 100%; z-index: 99999; text-align: center;"></div>
 
 
 
@@ -872,17 +902,36 @@
         }
 
         function roundTime(time) {
+
             let timePart = time.split(':');
+
             let minPart = parseInt(timePart[1]);
+
             let newTime = '';
+
             if (minPart % 10) {
-                let afterTimeRounded = (minPart % 10 > 5) ? Math.ceil(minPart / 10) * 10 : Math.floor(minPart / 10) * 10;
+
+                let afterTimeRounded = (minPart % 10 > 5) ? 
+                    Math.ceil(minPart / 10) * 10 
+                    : Math.floor(minPart / 10) * 10;
+
                 if (!afterTimeRounded) {
                     afterTimeRounded = '00';
                 }
+
+                if(afterTimeRounded == '60') {
+                    let newTimepart = parseInt(timePart[0]) + 1
+                    if(newTimepart < 10) {
+                        newTimepart = '0'+newTimepart
+                        timePart[0] = newTimepart
+                    }
+                    afterTimeRounded = '00'
+                }
+
                 newTime += timePart[0] + ':' + afterTimeRounded;
                 return newTime;
             }
+
             return time;
         }
 
@@ -893,9 +942,10 @@
             let roundedTime = roundTime($(this).val())
             $(this).val(roundedTime)
         });
+        
         $('.activity_to').clockpicker({
             autoclose: true,
-            placement: 'top',
+            placement: 'bottom',
         }).change(function(){
             let roundedTime = roundTime($(this).val())
             $(this).val(roundedTime)
@@ -935,28 +985,39 @@
 
 
 
+        
+        let finalDatesArr = []
+
         $('.copyMeal').datepicker({
             multidate: true,
-            format: 'yyyy-mm-dd'
+            format: 'yyyy-mm-dd',
+            inline: true
         }).on('changeDate', function (e) {
 
-            let dates = e.dates,
-                copyDatesArr = [];
+            finalDatesArr = []
+
+            let dates = e.dates, 
+                copyDatesArr = []
 
             for(let i=0; i<dates.length; i++) {
-
                 let str = dates[i],
                     mnth = ("0" + (str.getMonth() + 1)).slice(-2),
                     day = ("0" + str.getDate()).slice(-2),
                     date = [str.getFullYear(), mnth, day].join("-");
-
-                    copyDatesArr.push(date)
+                    copyDatesArr.push(date);
             }
+            
+            finalDatesArr = copyDatesArr
+
+        });
+
+        
+        $('.duplicate-meal').click(function () {
 
             let data = {
                 user_id: $('.user_id').val(),
                 date_from: $('.date-show').html(),
-                date_to: copyDatesArr
+                date_to: finalDatesArr
             };
 
             $.ajax({
@@ -967,11 +1028,19 @@
                 url: '{{ url('/day/duplicate-meals') }}',
                 data: data,
                 success: function (res) {
-                    console.log('RESPONSE : ', res)
+                    let alert = 
+                        $('<div class="alert alert-success alert-dismissable" style="width: 25%;">' +
+                        '<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>' +
+                        res.msg + '</div>');
+                    alert.appendTo("#alerts");
+                    alert.slideDown("slow").delay(3000).fadeOut(2000, function(){
+                        $(this).remove();    
+                    });
                 }
             });
 
-        });;
+        });
+
 
         $('.date-plus').click(function () {
             let dateString = $('.date-show').html();

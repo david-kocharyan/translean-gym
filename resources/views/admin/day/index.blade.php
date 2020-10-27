@@ -1297,6 +1297,10 @@
             flex: 5;
         }
 
+        .expended-mode-on {
+            flex: 3 !important;
+        }
+
         /*# sourceMappingURL=style.css.map */
     </style>
 @endpush
