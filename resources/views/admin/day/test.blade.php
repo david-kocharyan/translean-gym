@@ -427,7 +427,7 @@
                 </div>
                 <div class="modal-footer">
                     <div class="d-flex justify-content-between" v-if="editActivityPopup">
-                        <button class="btn btn-danger activity_delete">Delete Activity</button>
+                        <button class="btn btn-danger activity_delete" @click="deleteActivity">Delete Activity</button>
 
                         <button class="btn btn-success activity_edit">Edit</button>
                     </div>
@@ -822,102 +822,7 @@
 
         }
 
-        function getActivities() {
 
-            console.log('Get activities')
-
-            let data = {
-                date: $('.date-show').html(),
-                id: $('.user_id').val(),
-            };
-
-            $.ajax({
-                type: "POST",
-                headers: {
-                    'X-CSRF-TOKEN': '{{csrf_token()}}'
-                },
-                url: '{{ url('/day/get-all-data') }}',
-                data: data,
-                success: function (res) {
-
-                    console.log('Data = ', res)
-                    days.assassmentAlert = res.assessment_status;
-
-                    let p_met = 0;
-                    for (var z = 0; z < res.meal.length; z++){
-                        p_met += parseFloat(res.meal[z].get_meals.proteins)
-                    }
-
-                    $('.protein_eat').html(p_met);
-                    $('.protein_must').html(res.protein_must_eat);
-
-                    let activities = res.activity,
-                        meals = res.meal,
-                        water = res.water;
-
-
-                    for(let i=0; i<activities.length; i++) {
-
-                        let activityObj = {
-                            id: activities[i].activity_id,
-                            activity: true,
-                            name: activities[i].get_activity.name,
-                            start: activities[i].from,
-                            end: activities[i].to,
-
-                            fatPercentage: activities[i].get_activity.fat_ratio,
-                            carbPercentage: activities[i].get_activity.carb_ratio,
-                            met: activities[i].get_activity.met
-                        };
-                        days.addActivity(activityObj)
-                    }
-
-                    for(let i=0; i<meals.length; i++) {
-
-                        let time = days.existMealTimeFormula( meals[i].get_meals.glycemic_load )
-                        let start = parseInt(meals[i].from.substring(0, 2))
-                        let startsEnd = meals[i].from.substring(3)
-                        let end = start + time + ":" + startsEnd
-
-                        let mealObj = {
-                            meal: true,
-                            name: meals[i].get_meals.name,
-                            start: meals[i].from,
-                            end: end,
-
-                            fatG: meals[i].get_meals.fat,
-                            fatD: 0,
-
-                            carbG: meals[i].get_meals.carbs,
-                            carbD: 0,
-
-                            proteinG:  meals[i].get_meals.proteins,
-                            proteinD: 0,
-                            glycemicLoad: meals[i].get_meals.glycemic_load,
-                        };
-
-                        days.addMeals(mealObj)
-                    }
-
-                    for(let i=0; i<water.length; i++) {
-                        let waterObj = {
-                            id: water[i].id,
-                            name: water[i].quantity + ' ml',
-                            quantity:  water[i].quantity,
-                            start: water[i].from,
-                            type: 'water'
-                        };
-
-                        days.addMeals(waterObj)
-                    }
-
-                    days.createTimeGraphic();
-                    days.createMealGraphic();
-                    days.createStatusGraphic();
-
-                }
-            })
-        }
 
         function roundTime(time) {
 
@@ -986,7 +891,6 @@
         });
 
 
-
         $('.create_meal_time').clockpicker({
             autoclose: true,
             placement: 'top',
@@ -1000,9 +904,6 @@
             $('.date-show').html(date);
             show_date(0, date);
         });
-
-
-
 
         let finalDatesArr = []
 
@@ -1028,7 +929,6 @@
             finalDatesArr = copyDatesArr
 
         });
-
 
         $('.duplicate-meal').click(function () {
 
@@ -1058,7 +958,6 @@
             });
 
         });
-
 
         $('.date-plus').click(function () {
             let dateString = $('.date-show').html();
@@ -1199,9 +1098,14 @@
             });
         });
 
-        $('.activity_delete').click(function () {
-            alert('HELLO HELLO')
-        });
+        
+        // $('.activity_delete').click(function () {
+
+        //     alert()
+
+
+
+        // });
 
         $('.clear-all-meal').click(function() {
 
@@ -1296,7 +1200,6 @@
                 }
             });
         })
-
 
     });
 </script>
@@ -1517,6 +1420,103 @@
                     </tr>`;
         }
         return tr;
+    }
+
+    function getActivities() {
+
+        console.log('Get activities')
+
+        let data = {
+            date: $('.date-show').html(),
+            id: $('.user_id').val(),
+        };
+
+        $.ajax({
+            type: "POST",
+            headers: {
+                'X-CSRF-TOKEN': '{{csrf_token()}}'
+            },
+            url: '{{ url('/day/get-all-data') }}',
+            data: data,
+            success: function (res) {
+
+                console.log('Data = ', res)
+                days.assassmentAlert = res.assessment_status;
+
+                let p_met = 0;
+                for (var z = 0; z < res.meal.length; z++){
+                    p_met += parseFloat(res.meal[z].get_meals.proteins)
+                }
+
+                $('.protein_eat').html(p_met);
+                $('.protein_must').html(res.protein_must_eat);
+
+                let activities = res.activity,
+                    meals = res.meal,
+                    water = res.water;
+
+
+                for(let i=0; i<activities.length; i++) {
+
+                    let activityObj = {
+                        id: activities[i].activity_id,
+                        activity: true,
+                        name: activities[i].get_activity.name,
+                        start: activities[i].from,
+                        end: activities[i].to,
+
+                        fatPercentage: activities[i].get_activity.fat_ratio,
+                        carbPercentage: activities[i].get_activity.carb_ratio,
+                        met: activities[i].get_activity.met
+                    };
+                    days.addActivity(activityObj)
+                }
+
+                for(let i=0; i<meals.length; i++) {
+
+                    let time = days.existMealTimeFormula( meals[i].get_meals.glycemic_load )
+                    let start = parseInt(meals[i].from.substring(0, 2))
+                    let startsEnd = meals[i].from.substring(3)
+                    let end = start + time + ":" + startsEnd
+
+                    let mealObj = {
+                        meal: true,
+                        name: meals[i].get_meals.name,
+                        start: meals[i].from,
+                        end: end,
+
+                        fatG: meals[i].get_meals.fat,
+                        fatD: 0,
+
+                        carbG: meals[i].get_meals.carbs,
+                        carbD: 0,
+
+                        proteinG:  meals[i].get_meals.proteins,
+                        proteinD: 0,
+                        glycemicLoad: meals[i].get_meals.glycemic_load,
+                    };
+
+                    days.addMeals(mealObj)
+                }
+
+                for(let i=0; i<water.length; i++) {
+                    let waterObj = {
+                        id: water[i].id,
+                        name: water[i].quantity + ' ml',
+                        quantity:  water[i].quantity,
+                        start: water[i].from,
+                        type: 'water'
+                    };
+
+                    days.addMeals(waterObj)
+                }
+
+                days.createTimeGraphic();
+                days.createMealGraphic();
+                days.createStatusGraphic();
+
+            }
+        })
     }
 
     let days = new Vue({
@@ -2014,6 +2014,27 @@
             },
             openEditActionPopup(id) {
                 this.id = id
+            },
+
+            deleteActivity() {
+
+                let data = {
+                    activity_id: days.id
+                };
+
+                $.ajax({
+                    type: "POST",
+                    headers: {
+                        'X-CSRF-TOKEN': '{{csrf_token()}}'
+                    },
+                    url: '{{ url('/day/delete-activity') }}',
+                    data: data,
+                    success: function (res) {
+                        $('#activity').modal('toggle');
+                        getActivities()
+                    }
+                });
+
             },
 
 
