@@ -1459,7 +1459,7 @@
                 for(let i=0; i<activities.length; i++) {
 
                     let activityObj = {
-                        id: activities[i].activity_id,
+                        id: activities[i].id,
                         activity: true,
                         name: activities[i].get_activity.name,
                         start: activities[i].from,
