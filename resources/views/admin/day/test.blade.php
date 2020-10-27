@@ -2482,12 +2482,12 @@
 
     .red-circle {
         position: absolute;
-        width: 6px;
-        height: 6px;
-        background: #ff0057a6;
-        border-radius: 50%;
-        left: 49px;
-        bottom: 5px;
+        width: 8px;
+        height: 8px;
+        background: #F44336;
+        border-radius: 0;
+        right: -1px;
+        bottom: 1px;
     }
 
     .position-relative {
