@@ -396,16 +396,22 @@
                             @endforeach
                         </select>
                     </div>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="activity_from">From</label>
-                            <input type="text" class="activity_from clockpicker form-control">
+                    <div class="row">
+
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="activity_from">From</label>
+                                <input type="text" readonly class="activity_from clockpicker form-control bg-white">
+                            </div>
                         </div>
 
-                        <div class="form-group">
-                            <label for="activity_to">To</label>
-                            <input type="text" class="clockpicker activity_to form-control">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="activity_to">To</label>
+                                <input type="text" readonly class="clockpicker activity_to form-control bg-white">
+                            </div>
                         </div>
+
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -896,17 +902,36 @@
         }
 
         function roundTime(time) {
+
             let timePart = time.split(':');
+
             let minPart = parseInt(timePart[1]);
+
             let newTime = '';
+
             if (minPart % 10) {
-                let afterTimeRounded = (minPart % 10 > 5) ? Math.ceil(minPart / 10) * 10 : Math.floor(minPart / 10) * 10;
+
+                let afterTimeRounded = (minPart % 10 > 5) ? 
+                    Math.ceil(minPart / 10) * 10 
+                    : Math.floor(minPart / 10) * 10;
+
                 if (!afterTimeRounded) {
                     afterTimeRounded = '00';
                 }
+
+                if(afterTimeRounded == '60') {
+                    let newTimepart = parseInt(timePart[0]) + 1
+                    if(newTimepart < 10) {
+                        newTimepart = '0'+newTimepart
+                        timePart[0] = newTimepart
+                    }
+                    afterTimeRounded = '00'
+                }
+
                 newTime += timePart[0] + ':' + afterTimeRounded;
                 return newTime;
             }
+
             return time;
         }
 
@@ -920,7 +945,7 @@
         
         $('.activity_to').clockpicker({
             autoclose: true,
-            placement: 'top',
+            placement: 'bottom',
         }).change(function(){
             let roundedTime = roundTime($(this).val())
             $(this).val(roundedTime)
