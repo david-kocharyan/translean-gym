@@ -159,9 +159,9 @@
                                         </div>
                                     </span>
                                 </div>
-                                <div class="edit-activity" 
-                                    @click="openEditActionPopup(activity_info.minuteActivityPopover.id)" 
-                                    data-toggle="modal" data-target="#activity"> <i class="fas fa-edit"></i> 
+                                <div class="edit-activity"
+                                    @click="openEditActionPopup(activity_info.minuteActivityPopover.id)"
+                                    data-toggle="modal" data-target="#activity"> <i class="fas fa-edit"></i>
                                 </div>
                             </div>
                         </td>
@@ -1098,7 +1098,7 @@
             });
         });
 
-        
+
         // $('.activity_delete').click(function () {
 
         //     alert()
@@ -2033,6 +2033,7 @@
                     url: '{{ url('/day/delete-activity') }}',
                     data: data,
                     success: function (res) {
+                        console.log(res)
                         $('#activity').modal('toggle');
                         getActivities()
                     }
