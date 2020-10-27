@@ -2,8 +2,9 @@
 
 {{--html in here--}}
 @section('content')
+    @include('admin.users.tab')
 
-<div class="row"  id="_days">
+    <div class="row"  id="_days">
 
     <div class="col-md-12 text-center" v-if="!assassmentAlert">
         <div class="alert warning-alert alert-dismissible">
@@ -233,7 +234,7 @@
                             </button>
                             <button
                                 class="mode-switcher-button "
-                                data-toggle="modal" 
+                                data-toggle="modal"
                                 data-target="#duplicateMeal"
                             >
                                 <i class="fas fa-clone"></i>
@@ -756,7 +757,7 @@
                     <div class="copyMeal">&nbsp;</div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" 
+                    <button type="button"
                     class="btn btn-success duplicate-meal">Duplicate</button>
                 </div>
             </div>
@@ -834,7 +835,7 @@
                     console.log('Data = ', res)
 
                     days.assassmentAlert = res.assessment_status;
-                
+
                     let p_met = 0;
                     for (var z = 0; z < res.meal.length; z++){
                         p_met += parseFloat(res.meal[z].get_meals.proteins)
@@ -920,8 +921,8 @@
 
             if (minPart % 10) {
 
-                let afterTimeRounded = (minPart % 10 > 5) ? 
-                    Math.ceil(minPart / 10) * 10 
+                let afterTimeRounded = (minPart % 10 > 5) ?
+                    Math.ceil(minPart / 10) * 10
                     : Math.floor(minPart / 10) * 10;
 
                 if (!afterTimeRounded) {
@@ -951,7 +952,7 @@
             let roundedTime = roundTime($(this).val())
             $(this).val(roundedTime)
         });
-        
+
         $('.activity_to').clockpicker({
             autoclose: true,
             placement: 'bottom',
@@ -994,7 +995,7 @@
 
 
 
-        
+
         let finalDatesArr = []
 
         $('.copyMeal').datepicker({
@@ -1005,7 +1006,7 @@
 
             finalDatesArr = []
 
-            let dates = e.dates, 
+            let dates = e.dates,
                 copyDatesArr = []
 
             for(let i=0; i<dates.length; i++) {
@@ -1015,12 +1016,12 @@
                     date = [str.getFullYear(), mnth, day].join("-");
                     copyDatesArr.push(date);
             }
-            
+
             finalDatesArr = copyDatesArr
 
         });
 
-        
+
         $('.duplicate-meal').click(function () {
 
             let data = {
@@ -1037,13 +1038,13 @@
                 url: '{{ url('/day/duplicate-meals') }}',
                 data: data,
                 success: function (res) {
-                    let alert = 
+                    let alert =
                         $('<div class="alert alert-success alert-dismissable" style="width: 25%;">' +
                         '<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>' +
                         res.msg + '</div>');
                     alert.appendTo("#alerts");
                     alert.slideDown("slow").delay(3000).fadeOut(2000, function(){
-                        $(this).remove();    
+                        $(this).remove();
                     });
                 }
             });

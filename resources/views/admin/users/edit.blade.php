@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
+    @include('admin.users.tab')
     <div class="row">
         <div class="col-md-12">
             <div class="panel panel-success">

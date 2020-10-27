@@ -1,6 +1,8 @@
 @extends('layouts.app')
 
 @section('content')
+    @include('admin.users.tab')
+
     <div class="row">
         <div class="col-md-10 text-left">
             <button class="btn btn-success m-b-30 assessment" data-toggle="modal" data-target="#largeModal">New

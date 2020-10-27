@@ -20,7 +20,7 @@ class UserController extends Controller
      */
     public function index()
     {
-        $data = User::all();
+        $data = User::paginate(10);
         $title = self::TITLE;
         $route = self::ROUTE;
         return view(self::FOLDER . ".index", compact("title", "route", "data"));
@@ -80,7 +80,11 @@ class UserController extends Controller
      */
     public function show(User $user)
     {
-        //
+        $title = "Basic";
+        $route = self::ROUTE;
+        $user_name = $user->name;
+
+        return view(self::FOLDER . ".show", compact("title", "route", 'user', 'user_name'));
     }
 
     /**

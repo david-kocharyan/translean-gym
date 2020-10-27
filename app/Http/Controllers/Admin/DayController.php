@@ -118,6 +118,15 @@ class DayController extends Controller
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
+    public function deleteActivity(Request $request){
+        DayActivity::where('id', $request->activity_id)->delete();
+        return response()->json(['success' => "Your activity has been deleted."], 200);
+    }
+
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function addMeal(Request $request)
     {
         $data = $request->all();
