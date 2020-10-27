@@ -1426,6 +1426,9 @@
 
         console.log('Get activities')
 
+        days.actions = []
+        days.meal = []
+
         let data = {
             date: $('.date-show').html(),
             id: $('.user_id').val(),
