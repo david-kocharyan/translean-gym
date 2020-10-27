@@ -159,7 +159,10 @@
                                         </div>
                                     </span>
                                 </div>
-                                <div class="edit-activity" data-toggle="modal" data-target="#activity"> <i class="fas fa-edit"></i> </div>
+                                <div class="edit-activity" 
+                                    @click="openEditActionPopup(activity_info.minuteActivityPopover.id)" 
+                                    data-toggle="modal" data-target="#activity"> <i class="fas fa-edit"></i> 
+                                </div>
                             </div>
                         </td>
 
@@ -423,7 +426,12 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-success activity_save">Save</button>
+                    <div class="d-flex justify-content-between" v-if="editActivityPopup">
+                        <button class="btn btn-danger activity_delete">Delete Activity</button>
+
+                        <button class="btn btn-success activity_edit">Edit</button>
+                    </div>
+                    <button class="btn btn-success activity_save" v-else>Save</button>
                 </div>
             </div>
         </div>
@@ -833,7 +841,6 @@
                 success: function (res) {
 
                     console.log('Data = ', res)
-
                     days.assassmentAlert = res.assessment_status;
 
                     let p_met = 0;
@@ -852,6 +859,7 @@
                     for(let i=0; i<activities.length; i++) {
 
                         let activityObj = {
+                            id: activities[i].activity_id,
                             activity: true,
                             name: activities[i].get_activity.name,
                             start: activities[i].from,
@@ -1191,6 +1199,10 @@
             });
         });
 
+        $('.activity_delete').click(function () {
+            alert('HELLO HELLO')
+        });
+
         $('.clear-all-meal').click(function() {
 
             let data = {
@@ -1273,22 +1285,13 @@
                 url: '{{ url('/day/edit-water') }}',
                 data: data,
                 success: function (res) {
-                    console.log('res ===============', res)
-                    // $('#water').modal('toggle');
 
-                    // let waterObj = {
-                    //     name: res.water.quantity + ' ml',
-                    //     start: res.water.from,
-                    //     type: 'water'
-                    // };
-                    // console.log(waterObj)
+                    $('#water').modal('toggle');
 
-                    // days.addMeals(waterObj)
+                    days.actions = []
+                    days.meal = []
 
-
-                    // days.createTimeGraphic();
-                    // days.createMealGraphic();
-                    // days.createStatusGraphic();
+                    getActivities();
 
                 }
             });
@@ -1534,6 +1537,7 @@
                 circleCount: 0,
 
                 assassmentAlert: false,
+                editActivityPopup: false,
             }
         },
         methods: {
@@ -1698,6 +1702,7 @@
                                 minuteExpenditure = expenditure
 
                                 let popover = {
+                                    id: this.actions[k].id,
                                     name: this.actions[k].name,
                                     start: this.actions[k].start,
                                     end: this.actions[k].end,
@@ -1967,199 +1972,6 @@
                 console.log('status = ',this.mealGraphic )
             },
 
-
-            initDayViewData() {
-
-                let activitiesFinalArray = [];
-                let mealFinalArray = [];
-                let staicTimes = this.staticTimes;
-                let activities = this.activities;
-                let meals = this.meal
-                let end = null;
-                let color = this.returnRandomColor();
-
-                if(activities.length != 0) {
-
-                    for(let i=0; i<staicTimes.length; i++) {
-
-                        activitiesFinalArray.push( { arr: [] } )
-                        let minutes = staicTimes[i].minutes
-
-                        for (let j = 0; j < minutes.length; j++) {
-                            let minute = staicTimes[i].minutes[j].minute;
-
-                            //Activity part
-                            for (let t = 0; t < activities.length; t++) {
-
-                                let activityObj = {
-                                    time: minute,
-                                    show: j == 0 ? true : false,
-                                };
-
-                                // let minCountFromStartToEnd = this.minCountFromStartToEnd(activities[t].start, activities[t].end);
-                                // let hourDiff = (minCountFromStartToEnd.hourCount >= 1) ? minCountFromStartToEnd.hourCount : 0;
-                                // let minDiff = (minCountFromStartToEnd.minDiff >= 1 && minCountFromStartToEnd.hourCount >= 1) ?
-                                // minCountFromStartToEnd.minDiff + minCountFromStartToEnd.hourCount * 6 : minCountFromStartToEnd.minDiff;
-
-                                let totalCalPerMin = countTotalCalPerMin(activities[t].met);
-
-                                if (activities[t].start == minute) {
-
-                                    activityObj.start = minute;
-                                    activityObj.end = activities[t].end;
-                                    activityObj.name = activities[t].name;
-
-                                    activityObj.totalCal = activities[t].totalCal;
-                                    activityObj.fatPercentage = activities[t].fatPercentage;
-                                    activityObj.carbPercentage = activities[t].carbPercentage;
-
-                                    // var cc = activityObj.carbCal = this.roundNumberDecimal(activityObj.totalCal * activities[t].carbPercentage / 100);
-                                    // var fc = activityObj.fatCal = this.roundNumberDecimal(activityObj.totalCal * activities[t].fatPercentage / 100);
-                                    // var fG = activityObj.fatGr = this.roundNumberDecimal(fc / 9);
-                                    // var cG = activityObj.carbGr = this.roundNumberDecimal(cc / 4);
-
-
-
-                                    activityObj.full = true;
-                                    activityObj.head = true;
-
-                                    end = activities[t].end;
-
-                                    this.staticTimes[i].minutes[j].color = color;
-                                    // color = this.returnRandomColor()
-
-                                    let status = this.calculateStatus(fG, cG);
-                                    activityObj.fatStatus = status.fatStatus;
-                                    activityObj.fatStatusText = status.fatStatusText;
-                                    activityObj.carbStatus = status.carbStatus;
-                                    activityObj.carbStatusText = status.carbStatusText;
-
-                                    activitiesFinalArray[i].arr = activitiesFinalArray[i].arr.filter(ac => ac.time !== minute);
-                                    activitiesFinalArray[i].arr.push(activityObj);
-
-
-                                } else {
-                                    if (end != null) {
-                                        if (activityObj.time == end) {
-                                            activityObj.full = true;
-                                            this.staticTimes[i].minutes[j].color = color;
-                                            end = null;
-                                            color = this.returnRandomColor();
-                                        } else {
-                                            activityObj.full = true;
-                                            this.staticTimes[i].minutes[j].color = color;
-                                        }
-
-                                        activityObj.totalCal = this.roundNumberDecimal(totalCalPerMin * 10);
-                                        activityObj.fatPercentage = activities[t].fatPercentage;
-                                        activityObj.carbPercentage = activities[t].carbPercentage;
-                                        var cc = activityObj.carbCal = this.roundNumberDecimal(activityObj.totalCal * activities[t].carbPercentage / 100);
-                                        var fc = activityObj.fatCal = this.roundNumberDecimal(activityObj.totalCal * activities[t].fatPercentage / 100);
-                                        activityObj.fatGr = this.roundNumberDecimal(fc / 9);
-
-                                        activityObj.carbGr = this.roundNumberDecimal(cc / 4);
-                                    }
-
-
-                                    let index = activitiesFinalArray[i].arr
-                                        .findIndex(activity => activity.time === minute)
-
-                                    if (index === -1) {
-                                        activitiesFinalArray[i].arr.push(activityObj)
-                                    }
-                                }
-
-                            }
-
-
-                            //Meal part
-                            if(meals.length) {
-                                mealFinalArray.push({arr: []});
-                                for (let t = 0; t < meals.length; t++) {
-
-                                    let activityObj = {
-                                        time: minute,
-                                        show: j == 0 ? true : false,
-                                    }
-
-                                    if (meals[t].start == minute) {
-
-                                        activityObj.start = meals[t].start
-                                        activityObj.end = getEndTime(meals[t].start)
-                                        activityObj.name = meals[t].name
-                                        activityObj.full = true
-                                        activityObj.head = true
-                                        activityObj.meals = meals[t].meals
-
-                                        end = getEndTime(activityObj.start)
-
-                                        this.staticTimes[i].minutes[j].color = color
-                                        // color = this.returnRandomColor()
-
-                                        mealFinalArray[i].arr = mealFinalArray[i].arr.filter(ac => ac.time !== minute)
-                                        mealFinalArray[i].arr.push(activityObj)
-
-
-                                    } else {
-                                        if (end != null) {
-                                            if (activityObj.time == end) {
-                                                activityObj.full = true
-                                                this.staticTimes[i].minutes[j].color = color
-                                                end = null
-                                                color = this.returnRandomColor()
-                                            } else {
-                                                activityObj.full = true
-                                                this.staticTimes[i].minutes[j].color = color
-                                            }
-
-                                        }
-
-                                        activityObj.meals = meals[t].meals
-
-                                        let index = mealFinalArray[i].arr
-                                            .findIndex(activity => activity.time === minute)
-
-                                        if (index === -1) {
-                                            mealFinalArray[i].arr.push(activityObj)
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-
-                    for(let k=0; k<activitiesFinalArray.length; k++) {
-                        this.circleCount = 0
-                        for(let b=0;  b<activitiesFinalArray[k].arr.length;  b++) {
-                            if(activitiesFinalArray[k].arr[b].full) {
-                                this.circleCount ++
-                                if(this.circleCount == 7) {
-                                    this.staticTimes[k].circle = false;
-                                }
-                            }
-                            else {
-                                this.staticTimes[k].circle = true
-                            }
-                        }
-                    }
-
-                    this.finalActivityArray = activitiesFinalArray;
-                    this.finalMealArray = mealFinalArray
-
-                    setTimeout(() => {
-                        console.log('finalActivityArray :', this.finalActivityArray )
-                        console.log('FINAL : ', activitiesFinalArray)
-                    }, 2000);
-
-                }else {
-                    this.finalActivityArray = [];
-                    this.finalMealArray = [];
-                }
-
-
-
-            },
-
             calculateStatus(fatGr, carbGr) {
                 var fatStatus = fatGr - 0;
                 var fatStatusText = fatStatus > 0 ? "loss" : "access";
@@ -2199,6 +2011,9 @@
                     placement: 'bottom'
                 }).val(time);
 
+            },
+            openEditActionPopup(id) {
+                this.id = id
             },
 
 
@@ -2258,6 +2073,10 @@
         // detect when water popup closed
         $('#water').on('hidden.bs.modal', function () {
             days.editWater = false
+        });
+        // detect when activity popup closed
+        $('#activity').on('hidden.bs.modal', function () {
+            days.editActivityPopup = false
         });
 
         let foods = '<?php echo $foods ?>';
@@ -2445,6 +2264,8 @@
 
         $(document).on("click", ".edit-activity", function () {
 
+            days.editActivityPopup = true
+
             let from = $(this).find('div.activity_start').html()
             let to =   $(this).find('div.activity_end').html()
 
@@ -2456,7 +2277,7 @@
             $('.activity_from').clockpicker({
                 autoclose: true,
                 placement: 'bottom',
-            }).val("08:00");
+            }).val("08:40");
 
             $('.activity_to').clockpicker({
                 autoclose: true,
