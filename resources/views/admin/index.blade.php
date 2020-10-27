@@ -10,24 +10,53 @@
 
             <div class="pages">
                 <div class="item">
-                    <img src="{{asset('assets/images/circle.png')}}" alt="Users">
                     <a href="/users" class="waves-effect text-bold text-uppercase">
-                        <span class="hide-menu">Users</span></a>
+                        <div class="circle-div">
+                            <i class="mdi mdi-account"></i>
+                        </div>
+                        <span class="hide-menu">Users</span>
+                    </a>
                 </div>
                 <div class="item">
-                    <img src="{{asset('assets/images/circle.png')}}" alt="Users">
                     <a href="/activities" class="waves-effect text-bold text-uppercase">
-                        <span class="hide-menu">Activities</span></a>
+                        <div class="circle-div">
+                            <i class="mdi mdi-pulse"></i>
+                        </div>
+                        <span class="hide-menu">Activities</span>
+                    </a>
                 </div>
                 <div class="item">
-                    <img src="{{asset('assets/images/circle.png')}}" alt="Food Items">
                     <a href="/foods" class="waves-effect text-bold text-uppercase">
-                        <span class="hide-menu">Food Items</span></a>
+                        <div class="circle-div">
+                            <i class="mdi mdi-carrot"></i>
+                        </div>
+                        <span class="hide-menu">Food Items</span>
+                    </a>
                 </div>
                 <div class="item">
-                    <img src="{{asset('assets/images/circle.png')}}" alt="Meals">
                     <a href="/meals" class="waves-effect text-bold text-uppercase">
-                        <span class="hide-menu">Meals</span></a>
+                        <div class="circle-div">
+                            <i class="mdi mdi-silverware-variant"></i>
+                        </div>
+                        <span class="hide-menu">Meals</span>
+                    </a>
+                </div>
+
+                <div class="item">
+                    <div class="dropdown show">
+                        <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <div class="circle-div">
+                                <i class="mdi mdi-settings"></i>
+                            </div>
+                            <span class="hide-menu">Settings</span>
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                            <a href="/met-range" class="waves-effect">
+                                <i class="mdi mdi-run-fast fa-fw"></i>
+                                <span class="hide-menu">MET Ranges</span>
+                            </a>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -38,6 +67,10 @@
 @push('header')
     <style>
         .item a {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-around;
             color: black;
             font-size: 20px;
             padding-top: 10px;
@@ -62,14 +95,19 @@
             padding-top: 80px;
         }
 
-        .item {
+        .circle-div{
+            height: 150px;
+            width: 150px;
+            background: #e3e3e3;
+            border-radius: 50%;
             display: flex;
-            flex-direction: column;
             align-items: center;
-            justify-content: space-around;
-            padding-top: 15px;
+            justify-content: center;
         }
 
+        .circle-div i{
+            font-size: 70px;
+        }
 
     </style>
 @endpush

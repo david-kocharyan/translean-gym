@@ -1098,7 +1098,7 @@ pre {
 
 .bg-title h4 {
     text-transform: uppercase;
-    font-size: 14px;
+    /*font-size: 14px;*/
     font-weight: 500;
     margin-top: 6px
 }

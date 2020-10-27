@@ -132,7 +132,8 @@
                 <div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">
                     <h4 class="page-title">
                         @isset($user_name)
-                            <span style="color: #3b8e34;">{{$user_name}}</span>`
+                            <a href="/users">Users</a> <span style="font-size: 20px; vertical-align: center">&#129058;</span>
+                            <span style="color: #3b8e34;">{{$user_name}}</span> <span style="font-size: 20px; vertical-align: center">&#129058;</span>
                         @endisset
                         {{$title}}
                     </h4>
