@@ -219,9 +219,9 @@ tr td {
   min-width: 240px;
 }
 
-.table-parent .col-big {
+/* .table-parent .col-big {
   flex: 5;
-}
+} */
 
 .small-font {
   display: flex;
@@ -344,4 +344,7 @@ th.parent-time {
 }
 i {
   cursor: pointer;
+}
+.copyMeal .datepicker.datepicker-inline {
+  margin: 0 auto;
 }
