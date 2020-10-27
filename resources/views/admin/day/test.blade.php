@@ -5,6 +5,13 @@
 
 <div class="row"  id="_days">
 
+    <div class="col-md-12 text-center" v-if="!assassmentAlert">
+        <div class="alert warning-alert alert-dismissible">
+            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+            <strong>Warning:</strong> The user does not have a projection or an assessment. System can't calculate the protein limit.
+        </div>
+    </div>
+
     <div class="col-md-12">
         <div class="white-box" style="overflow-y: auto;">
         <input type="hidden" class="user_id" name="id" value="{{$user->id}}">
@@ -826,6 +833,8 @@
 
                     console.log('Data = ', res)
 
+                    days.assassmentAlert = res.assessment_status;
+                
                     let p_met = 0;
                     for (var z = 0; z < res.meal.length; z++){
                         p_met += parseFloat(res.meal[z].get_meals.proteins)
@@ -1522,6 +1531,8 @@
 
                 energyExpendedMode: true,
                 circleCount: 0,
+
+                assassmentAlert: false,
             }
         },
         methods: {

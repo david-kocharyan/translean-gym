@@ -348,3 +348,8 @@ i {
 .copyMeal .datepicker.datepicker-inline {
   margin: 0 auto;
 }
+.warning-alert {
+  background-color: #ffb5b538!important;
+  border: 1px solid #ff00004a;
+  display: inline-block;
+}
