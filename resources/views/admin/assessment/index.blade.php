@@ -89,7 +89,7 @@
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                     <h4 class="modal-title" id="myModalLabel"></h4>
-                    <h3 class="text-danger m-t-20 m-b-20 error_modal"></h3>
+                    <ul class="text-danger m-t-20 m-b-20 error_modal"></ul>
                 </div>
                 <div class="modal-body">
 
@@ -101,14 +101,15 @@
                         <div class="col-md-6">
                             <div class="form-group col-md-12 m-b-20">
                                 <label>User Height (cm)</label>
-                                <input type="text" class="form-control" disabled value="{{$user->height}}" >
+                                <input type="text" class="form-control" disabled value="{{$user->height}}">
                             </div>
                         </div>
 
                         <div class="col-md-6">
                             <div class="form-group col-md-12 m-b-20">
                                 <label>User Age</label>
-                                <input type="text" class="form-control" disabled value="{{\Carbon\Carbon::parse($user->dob)->age}}" >
+                                <input type="text" class="form-control" disabled
+                                       value="{{\Carbon\Carbon::parse($user->dob)->age}}">
                             </div>
                         </div>
                     </div>
@@ -288,7 +289,7 @@
                 {data: 'lean_mass'},
                 {
                     data: 'type',
-                    render: function (data, type, row , meta ) {
+                    render: function (data, type, row, meta) {
                         var t = "";
                         if (data == 0 && meta.row == 0)
                             t = 'First Assessment'
@@ -388,6 +389,8 @@
             });
 
             $(".save_modal").click(function (e) {
+                $('.error_modal').empty();
+
                 let id = $("input[name=id]").val();
                 let data = {};
                 data = {
@@ -416,12 +419,43 @@
                     'type': $("input[name=type]").val()
                 };
 
+                let name_data = [
+                    "Id",
+                    "Activity Level",
+                    "Date",
+                    "Weight",
+                    "Total Fat",
+                    "Right Arm",
+                    "Left Arm",
+                    "Right Leg",
+                    "Left Leg",
+                    "Trunk",
+                    "Muscle Mass",
+                    "Right Arm Mass",
+                    "Left Arm Mass",
+                    "Right Leg Mass",
+                    "Left Leg Mass",
+                    "Trunk Mass",
+                    "Bone Mass",
+                    "Metabolic Age",
+                    "Body Water",
+                    "Visceral Fat",
+                    "Lean Mass",
+                    "Glycogen Store",
+                    "Type",
+                ];
+
+                let validate = true;
+                let count = 0;
                 for (let i in data) {
                     if (data[i] === '' || data[i] === null) {
-                        $('.error_modal').html('Please Fill All Inputs!')
-                        return;
+                        let elem = `<li>Please fill ${name_data[count]} input!</li>`
+                        $('.error_modal').append(elem)
+                        validate = false
                     }
+                    count++
                 }
+                if (validate == false) return;
 
                 $.ajax({
                     type: 'POST',
@@ -526,8 +560,7 @@
                             data.push(res[i].lean_mass);
                         }
 
-                        for(var j = 0 ; j < 6; j++)
-                        {
+                        for (var j = 0; j < 6; j++) {
                             if (type === 'weight' && res[i].type == 2) {
                                 projection_data.push(res[i].weight);
                             } else if (type === 'total_fat' && res[i].type == 2) {
