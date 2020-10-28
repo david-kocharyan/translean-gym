@@ -2031,7 +2031,6 @@
                     data: data,
                     success: function (res) {
                         $('#activity').modal('toggle');
-                        location.reload()
                         getActivities()
                     }
                 });
