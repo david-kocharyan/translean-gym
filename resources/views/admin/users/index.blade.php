@@ -14,7 +14,7 @@
         </div>
         <div class="col-md-6 col-xs-12 text-right">
             <a href="{{$route."/create"}}" class="btn btn-success m-b-30"><i class="fas fa-plus"></i>
-                Add {{$title}}</a>
+                Add User</a>
         </div>
     </div>
 

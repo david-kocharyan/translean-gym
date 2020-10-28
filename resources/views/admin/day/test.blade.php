@@ -2030,8 +2030,8 @@
                     url: '{{ url('/day/delete-activity') }}',
                     data: data,
                     success: function (res) {
-                        console.log(res)
                         $('#activity').modal('toggle');
+                        location.reload()
                         getActivities()
                     }
                 });

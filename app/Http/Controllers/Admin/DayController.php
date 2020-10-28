@@ -68,6 +68,7 @@ class DayController extends Controller
         if ($assessment != null and $met_variable != null) {
             $protein_must_eat = $met_variable->met_variable * $assessment->lean_mass;
         }
+        dd($total_prot_met, $met_variable, $assessment, $protein_must_eat);
         // end calc protein must eat
 
         $body_weight = $this->getUserBodyWeight($user_id);
