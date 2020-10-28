@@ -208,6 +208,7 @@ class DayController extends Controller
             "total_calories" => "required|numeric",
             "total_ph" => "required|numeric",
             "total_glycemic_load" => "required|numeric",
+            "from" => "required",
         ]);
 
         $check_from = DayMeal::where(array('user_id' => $data['id'], 'date' => $data['date'], 'from' => $data['from']))->first();
