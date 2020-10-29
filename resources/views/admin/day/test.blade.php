@@ -6,12 +6,7 @@
 
 <div class="row"  id="_days">
 
-    <div class="col-md-12 text-center" v-if="!assassmentAlert">
-        <div class="alert warning-alert alert-dismissible">
-            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-            <strong>Warning:</strong> The user does not have a projection or an assessment. System can't calculate the protein limit.
-        </div>
-    </div>
+    <div class="col-md-12 text-center" id="assassmentAlert"></div>
 
     <div class="col-md-12">
         <div class="white-box" style="overflow-y: auto;">
@@ -1376,6 +1371,14 @@
         });
     }
 
+    function drawAssassmentAlert() {
+        let html = ' <div class="alert warning-alert alert-dismissible">' +
+            '<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>' +
+            '<strong>Warning:</strong> The user does not have a projection or an assessment. System can not calculate the protein limit.' +
+            '</div>'
+        $('#assassmentAlert').append(html);
+    }
+
     function getActivities() {
 
         console.log('Get activities')
@@ -1400,7 +1403,11 @@
             success: function (res) {
 
                 console.log('Data = ', res)
-                days.assassmentAlert = res.assessment_status;
+
+                if(!res.assessment_status) {
+                    drawAssassmentAlert();
+                }
+                
 
                 let p_met = 0;
                 for (var z = 0; z < res.meal.length; z++){
@@ -1496,9 +1503,7 @@
                 energyExpendedMode: false,
                 circleCount: 0,
 
-                assassmentAlert: false,
                 editActivityPopup: false,
-
                 proteinHourlyLimit: 0,
             }
         },
