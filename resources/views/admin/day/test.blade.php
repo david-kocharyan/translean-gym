@@ -320,7 +320,14 @@
                         <td><b>@{{ meal.totals.totalCarb }}</b></td>
                         <td><b>@{{ meal.totals.totalCarbD }}</b></td>
                         <td><b>@{{ meal.totals.totalProteinG }}</b></td>
-                        <td><b>@{{ meal.totals.totalProtein }}</b></td>
+                        <td class="p-0">
+                            <b :class="{ 'text-danger' : meal.totals.proteinHourlyLimit > 0 }">
+                                @{{ meal.totals.totalProtein }}
+                            </b>
+                            <small v-if="meal.totals.proteinHourlyLimit > 0">
+                                (+@{{ meal.totals.proteinHourlyLimit }} )
+                            </small>
+                        </td>
                     </tr>
 
                     <tr v-for="(meal_info, j) in meal.minutes" :key="j"
@@ -791,6 +798,11 @@
     $(document).ready(function () {
 
         show_date();
+
+        // Protein Hourly limit
+        let res = JSON.parse('<?php echo json_encode($user); ?>');
+        days.proteinHourlyLimit = res.protein_hourly_limit
+
 
         function show_date(type = 0, dateString = null) {
             let date = 0;
@@ -1486,6 +1498,8 @@
 
                 assassmentAlert: false,
                 editActivityPopup: false,
+
+                proteinHourlyLimit: 0,
             }
         },
         methods: {
@@ -1743,7 +1757,8 @@
                             totalCarb: null,
                             totalCarbD: null,
                             totalProteinG: null,
-                            totalProtein: null
+                            totalProtein: null,
+                            proteinHourlyLimit: null
                         }
                     }
 
@@ -1852,7 +1867,8 @@
                         _totalCarb = 0,
                         _totalCarbD = 0,
                         _totalProteinG = 0,
-                        _totalProtein = 0;
+                        _totalProtein = 0,
+                        _proteinHourlyLimit = 0;
 
                     for(let i=0; i<timeObj.minutes.length; i++) {
                         if(timeObj.minutes[i].intake) {
@@ -1868,12 +1884,15 @@
                         }
                     }
 
+                    let proteinHLFinal = parseFloat(_totalProtein) - this.proteinHourlyLimit
+
                     timeObj.totals.totalFat = _totalFat != 0 ? _totalFat.toFixed(2) : ""
                     timeObj.totals.totalFatD = _totalFatD != 0 ? _totalFatD.toFixed(2) : ""
                     timeObj.totals.totalCarb = _totalCarb != 0 ? _totalCarb.toFixed(2) : ""
                     timeObj.totals.totalCarbD = _totalCarbD != 0 ? _totalCarbD.toFixed(2) : ""
                     timeObj.totals.totalProteinG = _totalProteinG != 0 ? _totalProteinG.toFixed(2) : ""
                     timeObj.totals.totalProtein = _totalProtein != 0 ? _totalProtein.toFixed(2) : ""
+                    timeObj.totals.proteinHourlyLimit = proteinHLFinal != 0 ? proteinHLFinal.toFixed(2) : ""
 
                     mealArr.push(timeObj)
                 }
