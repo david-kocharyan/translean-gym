@@ -141,7 +141,35 @@ class DayController extends Controller
      */
     public function editActivity(Request $request)
     {
-        dd($request->all());
+        $current_activity = DayActivity::find($request->id);
+
+        $from = Carbon::parse($request->from)->format('H:i:s');
+        $to = Carbon::parse($request->to)->format('H:i:s');
+
+        $check_from = DayActivity::whereTime('from', '<=', $from)
+            ->whereTime('to', '>=', $from)
+            ->where('user_id', '=', $request->user_id)
+            ->where('date', '=', $request->date)
+            ->where('id', '!=', $request->id)
+            ->get();
+
+        $check_to = DayActivity::whereTime('to', '>=', $to)
+            ->whereTime('from', '<=', $to)
+            ->where('user_id', '=', $request->user_id)
+            ->where('date', '=', $request->date)
+            ->where('id', '!=', $request->id)
+            ->get();
+
+        if (!$check_from->isEmpty() OR !$check_to->isEmpty()) {
+            return response()->json(['success' => "This Hour Is Already Taken!"], 422);
+        }
+
+        $current_activity->activity_id = $request->activity;
+        $current_activity->from = $from;
+        $current_activity->to = $to;
+        $current_activity->save();
+
+        return response()->json(['success' => "Activity Has Been Updated Successfully!"], 200);
     }
 
     /**

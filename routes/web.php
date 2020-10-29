@@ -55,7 +55,7 @@ Route::group(['namespace' => 'Admin', 'middleware' => 'auth:admin'], function ()
 
     Route::post('/day/add-activity', 'DayController@addActivity');
     Route::post('/day/delete-activity', 'DayController@deleteActivity');
-    Route::post('/day/edit-activity', 'DayController@deleteActivity');
+    Route::post('/day/edit-activity', 'DayController@editActivity');
 
     Route::post('/day/calculate-protein-limit', 'DayController@calculateProteinMustEat');
 
