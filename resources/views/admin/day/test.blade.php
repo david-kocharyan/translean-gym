@@ -846,15 +846,21 @@
                 }
 
                 if(afterTimeRounded == '60') {
-                    let newTimepart = parseInt(timePart[0]) + 1
-                    if(newTimepart < 10) {
-                        newTimepart = '0'+newTimepart
-                        timePart[0] = newTimepart
-                    }
-                    afterTimeRounded = '00'
-                }
 
-                newTime += timePart[0] + ':' + afterTimeRounded;
+                    afterTimeRounded = '00'
+
+                    let newTimepart = parseInt(timePart[0]) + 1
+                    
+
+                    if(newTimepart < 10) {
+                        newTimepart = '0' + newTimepart
+                    } 
+
+                    timePart[0] = newTimepart
+                    
+                }                
+
+                newTime = timePart[0] + ':' + afterTimeRounded
                 return newTime;
             }
 
@@ -896,6 +902,9 @@
         $('.create_meal_time').clockpicker({
             autoclose: true,
             placement: 'top',
+        }).change(function(){
+            let roundedTime = roundTime($(this).val())
+            $(this).val(roundedTime)
         });
 
         $('.date').datepicker({autoclose: true, format: 'yyyy-mm-dd'}).on('changeDate', function (e) {
@@ -2135,12 +2144,12 @@
             $('.activity_from').clockpicker({
                 autoclose: true,
                 placement: 'bottom',
-            }).val();
+            }).val('');
 
             $('.activity_to').clockpicker({
                 autoclose: true,
                 placement: 'bottom',
-            }).val();
+            }).val('');
         });
 
         let foods = '<?php echo $foods ?>';
@@ -2322,9 +2331,6 @@
                 }
             });
         }
-
-        // activity_from
-        // activity_to
 
         $(document).on("click", ".edit-activity", function () {
 
