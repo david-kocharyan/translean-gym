@@ -850,15 +850,15 @@
                     afterTimeRounded = '00'
 
                     let newTimepart = parseInt(timePart[0]) + 1
-                    
+
 
                     if(newTimepart < 10) {
                         newTimepart = '0' + newTimepart
-                    } 
+                    }
 
                     timePart[0] = newTimepart
-                    
-                }                
+
+                }
 
                 newTime = timePart[0] + ':' + afterTimeRounded
                 return newTime;
@@ -1310,7 +1310,15 @@
                     if (reject.status === 422) {
                         var err = $.parseJSON(reject.responseText);
                         $.each(err.errors, function (key, val) {
-                            $('.errors').append(`<li>${val[0]}</li>`)
+                            if(key == 'name'){
+                                $('.errors').append(`<li>Please Add Meal Name!</li>`)
+                            }
+                            if(key == 'food'){
+                                $('.errors').append(`<li>A Meal Must Have At Least One Food Item!</li>`)
+                            }
+                            if(key == 'from'){
+                                $('.errors').append(`<li>Please Select A Time!</li>`)
+                            }
                         });
                     }
                     setTimeout(function () {
@@ -1417,7 +1425,7 @@
                 if(!res.assessment_status) {
                     drawAssassmentAlert();
                 }
-                
+
 
                 let p_met = 0;
                 for (var z = 0; z < res.meal.length; z++){
@@ -2174,7 +2182,7 @@
             }).val('');
 
             $('.error_modal_activity').empty()
-            
+
         });
 
         let foods = '<?php echo $foods ?>';
