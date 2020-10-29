@@ -2056,6 +2056,17 @@
                     success: function (res) {
                         $('#activity').modal('toggle');
                         getActivities()
+                    },
+                    error: function (reject) {
+                        $('.error_modal_activity').empty()
+                        console.log(reject)
+                        if (reject.status === 422) {
+                            let err = $.parseJSON(reject.responseText)
+                            $('.error_modal_activity').append(err.success)
+                        }
+                        setTimeout(function () {
+                            $('.error_modal_activity').empty()
+                        }, 6000)
                     }
                 });
             },
@@ -2081,6 +2092,17 @@
                     success: function (res) {
                         $('#activity').modal('toggle');
                         getActivities()
+                    },
+                    error: function (reject) {
+                        $('.error_modal_activity').empty()
+                        console.log(reject)
+                        if (reject.status === 422) {
+                            let err = $.parseJSON(reject.responseText)
+                            $('.error_modal_activity').append(err.success)
+                        }
+                        setTimeout(function () {
+                            $('.error_modal_activity').empty()
+                        }, 6000)
                     }
                 });
             },
@@ -2150,6 +2172,9 @@
                 autoclose: true,
                 placement: 'bottom',
             }).val('');
+
+            $('.error_modal_activity').empty()
+            
         });
 
         let foods = '<?php echo $foods ?>';
