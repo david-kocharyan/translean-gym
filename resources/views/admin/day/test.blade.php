@@ -1372,6 +1372,7 @@
     }
 
     function drawAssassmentAlert() {
+        $('#assassmentAlert').html('');
         let html = ' <div class="alert warning-alert alert-dismissible">' +
             '<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>' +
             '<strong>Warning:</strong> The user does not have a projection or an assessment. System can not calculate the protein limit.' +
@@ -2052,12 +2053,13 @@
             editActivity() {
 
                 let data = {
-                    activity: $('#activity_list').find(":selected").val(),
-                    from: $('.activity_from').val(),
-                    to: $('.activity_to').val(),
-                    date: $('.date-show').html(),
-                    id: $('.user_id').val(),
-                    activity_id: days.selectedActivity.activity_id
+                    activity:       $('#activity_list').find(":selected").val(),
+                    from:           $('.activity_from').val(),
+                    to:             $('.activity_to').val(),
+                    date:           $('.date-show').html(),
+                    id:             days.selectedActivity.id,
+                    user_id:        $('.user_id').val(),
+                    activity_id:    days.selectedActivity.activity_id
                 };
 
                 $.ajax({
