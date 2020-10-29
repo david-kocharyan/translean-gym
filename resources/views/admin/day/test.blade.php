@@ -4,7 +4,7 @@
 @section('content')
     @include('admin.users.tab')
 
-    <div class="row"  id="_days">
+<div class="row"  id="_days">
 
     <div class="col-md-12 text-center" v-if="!assassmentAlert">
         <div class="alert warning-alert alert-dismissible">
@@ -160,7 +160,7 @@
                                     </span>
                                 </div>
                                 <div class="edit-activity"
-                                    @click="openEditActionPopup(activity_info.minuteActivityPopover.id)"
+                                    @click="openEditActionPopup(activity_info.minuteActivityPopover)"
                                     data-toggle="modal" data-target="#activity"> <i class="fas fa-edit"></i>
                                 </div>
                             </div>
@@ -395,7 +395,8 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title">Activity</h4>
+                    <h4 class="modal-title" v-if="!editActivityPopup">Activity</h4>
+                    <h4 class="modal-title" v-else>Edit Activity</h4>
                 </div>
                 <div class="modal-body">
                     <h3 class="text-danger m-t-20 m-b-20 error_modal_activity"></h3>
@@ -403,7 +404,7 @@
                         <label for="activity_list">Choose Activity</label>
                         <select name="activity" id="activity_list" class="activity_list form-control">
                             @foreach($activity as $key => $val)
-                                <option value="{{$val->id}}">{{$val->name}}</option>
+                                <option value="{{$val->id}}"> {{$val->name}} </option>
                             @endforeach
                         </select>
                     </div>
@@ -1027,75 +1028,6 @@
             })
         })
 
-        // delete
-        $('.activity_save4').click(function () {
-
-            $('.error_modal_activity').empty();
-
-            let data = {
-                activity: $('#activity_list').find(":selected").val(),
-                from: $('.activity_from').val(),
-                to: $('.activity_to').val(),
-                date: $('.date-show').html(),
-                id: $('.user_id').val(),
-            };
-
-            let activityObj = {
-                name: $('#activity_list').find(":selected").text(),
-                start: $('.activity_from').val(),
-                end: $('.activity_to').val()
-            }
-
-            for (let i in data) {
-                if (data[i] === '' || data[i] === null) {
-                    $('.error_modal_activity').html('Please Fill All Inputs!')
-                    return;
-                }
-            }
-
-            $.ajax({
-                type: "POST",
-                headers: {
-                    'X-CSRF-TOKEN': '{{csrf_token()}}'
-                },
-                url: '{{ url('/day/add-activity') }}',
-                data: data,
-                success: function (res) {
-                    $('#activity').modal('toggle');
-                    getActivities()
-                    // let date = $('.date-show').html()
-                    // let activities = res.activity
-
-                    // if(activities.length == 0) {
-                    //     days.clearActivity()
-                    // } else {
-                    //     for(let i=0; i<activities.length; i++) {
-
-                    //         // let diffBetweenStartToEnd = days.minCountFromStartToEnd(activities[i].from, activities[i].to);
-
-                    //         let activityObj = {
-                    //             name: activities[i].get_activity.name,
-                    //             start: activities[i].from,
-                    //             end: activities[i].to,
-
-                    //             fatPercentage: activities[i].get_activity.fat_ratio,
-                    //             carbPercentage: activities[i].get_activity.carb_ratio,
-                    //             met: activities[i].get_activity.met
-                    //         };
-
-                    //         days.addActivity(activityObj)
-                    //     }
-
-                    //     // days.createTimeGraphic();
-                    //     // days.createMealGraphic();
-                    //     // days.createStatusGraphic();
-
-                    // }
-                }
-            });
-
-        });
-
         $('.clear-all-meal').click(function() {
 
             let data = {
@@ -1474,6 +1406,7 @@
 
                     let activityObj = {
                         id: activities[i].id,
+                        activity_id: activities[i].activity_id,
                         activity: true,
                         name: activities[i].get_activity.name,
                         start: activities[i].from,
@@ -1546,6 +1479,7 @@
 
                 editWater: false,
                 id: 0,
+                selectedActivity: [],
 
                 energyExpendedMode: false,
                 circleCount: 0,
@@ -1720,6 +1654,7 @@
                                     name: this.actions[k].name,
                                     start: this.actions[k].start,
                                     end: this.actions[k].end,
+                                    activity_id: this.actions[k].activity_id,
                                     total: ((finalResult / 10) * totalCal).toFixed(2),
                                 }
 
@@ -2026,8 +1961,9 @@
                 }).val(time);
 
             },
-            openEditActionPopup(id) {
-                this.id = id
+            openEditActionPopup(activity) {
+                this.id = activity.id
+                this.selectedActivity = activity
             },
 
             deleteActivity() {
@@ -2334,21 +2270,22 @@
 
             days.editActivityPopup = true
 
-            // let from = $(this).find('div.activity_start').html()
-            // let to =   $(this).find('div.activity_end').html()
-
-            // from = from.replace(/\s/g,'');
-            // to = to.replace(/\s/g,'');
+            let from = days.selectedActivity.start
+            let to =   days.selectedActivity.end
+            let id = days.selectedActivity.activity_id
 
             $('.activity_from').clockpicker({
                 autoclose: true,
                 placement: 'bottom',
-            }).val("08:00");
+            }).val(from);
 
             $('.activity_to').clockpicker({
                 autoclose: true,
                 placement: 'bottom',
-            }).val("08:50");
+            }).val(to);
+
+            $("#activity_list").val( id );
+            
 
         });
 
