@@ -4,7 +4,7 @@
     <div class="row">
         <div class="col-md-12">
             <div class="panel panel-success">
-                <div class="panel-heading">{{$action." ".$title}}</div>
+                <div class="panel-heading">{{$action." User"}}</div>
                 <div class="panel-wrapper collapse in" aria-expanded="true">
                     <div class="panel-body">
                         <form method="post" action="{{ $route }}" enctype="multipart/form-data">
@@ -38,7 +38,7 @@
                             </div>
 
                             <div class="form-group">
-                                <label for="email">Email <span class="text-danger">(Unique and Optional)</span></label>
+                                <label for="email">Email</label>
                                 @error('email')
                                 <p class="invalid-feedback text-danger" role="alert"><strong>{{ $message }}</strong></p>
                                 @enderror

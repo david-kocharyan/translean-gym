@@ -789,7 +789,8 @@
 <script !src="">
     $(document).ready(function () {
 
-
+        show_date();
+        calculateProteinLimit();
 
         function show_date(type = 0, dateString = null) {
             let date = 0;
@@ -872,11 +873,9 @@
                 }
             });
         }
+
+
         
-
-        show_date();
-        calculateProteinLimit();
-
 
         $('.activity_from').clockpicker({
             autoclose: true,
@@ -2442,4 +2441,5 @@
     }
 
 </style>
+
 @endpush

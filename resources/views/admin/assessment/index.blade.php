@@ -89,7 +89,6 @@
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                     <h4 class="modal-title" id="myModalLabel"></h4>
-                    <h3 class="text-danger m-t-20 m-b-20 error_modal"></h3>
                 </div>
                 <div class="modal-body">
 
@@ -101,14 +100,15 @@
                         <div class="col-md-6">
                             <div class="form-group col-md-12 m-b-20">
                                 <label>User Height (cm)</label>
-                                <input type="text" class="form-control" disabled value="{{$user->height}}" >
+                                <input type="text" class="form-control" disabled value="{{$user->height}}">
                             </div>
                         </div>
 
                         <div class="col-md-6">
                             <div class="form-group col-md-12 m-b-20">
                                 <label>User Age</label>
-                                <input type="text" class="form-control" disabled value="{{\Carbon\Carbon::parse($user->dob)->age}}" >
+                                <input type="text" class="form-control" disabled
+                                       value="{{\Carbon\Carbon::parse($user->dob)->age}}">
                             </div>
                         </div>
                     </div>
@@ -288,7 +288,7 @@
                 {data: 'lean_mass'},
                 {
                     data: 'type',
-                    render: function (data, type, row , meta ) {
+                    render: function (data, type, row, meta) {
                         var t = "";
                         if (data == 0 && meta.row == 0)
                             t = 'First Assessment'
@@ -340,17 +340,23 @@
 
     <script>
         $(document).ready(function () {
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+
             $('.assessment').click(function () {
                 $('.modal-title').html('Assessment');
                 $('.type').val(1);
-                $('.error_modal').empty();
+                $('.form-control').removeClass('error');
                 $('.glycogen_store').remove();
             });
 
             $('.projection').click(function () {
                 $('.modal-title').html('Projection');
                 $('.type').val(2);
-                $('.error_modal').empty();
+                $('.form-control').removeClass('error');
                 $('.down').append(`<div class="form-group col-md-12 m-b-20 glycogen_store">
                                         <label>Glycogen Store (gr)</label>
                                         <input type="number" class="form-control" name="glycogen_store" disabled>
@@ -381,13 +387,8 @@
                 }
             });
 
-            $.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                }
-            });
-
             $(".save_modal").click(function (e) {
+                $('.form-control').removeClass('error');
                 let id = $("input[name=id]").val();
                 let data = {};
                 data = {
@@ -416,12 +417,14 @@
                     'type': $("input[name=type]").val()
                 };
 
+                let validate = true;
                 for (let i in data) {
                     if (data[i] === '' || data[i] === null) {
-                        $('.error_modal').html('Please Fill All Inputs!')
-                        return;
+                        $(`input[name=${i}]`).addClass("error")
+                        validate = false;
                     }
                 }
+                if (validate == false) return;
 
                 $.ajax({
                     type: 'POST',
@@ -526,8 +529,7 @@
                             data.push(res[i].lean_mass);
                         }
 
-                        for(var j = 0 ; j < 6; j++)
-                        {
+                        for (var j = 0; j < 6; j++) {
                             if (type === 'weight' && res[i].type == 2) {
                                 projection_data.push(res[i].weight);
                             } else if (type === 'total_fat' && res[i].type == 2) {
@@ -681,6 +683,9 @@
             padding: 5px;
         }
 
+        .error{
+            border: 1px solid red;
+        }
     </style>
 @endpush
 

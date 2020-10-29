@@ -85,12 +85,39 @@ class DayController extends Controller
             'activity' => $activity,
             'meal' => $meals,
             'water' => $water,
-            'protein_must_eat' => $protein_must_eat,
             'body_weight' => $body_weight,
             'assessment_status' => $assessment_status,
         );
 
         return response()->json($data, 200);
+    }
+
+    /**
+     * @param Request $request
+     */
+    public function calculateProteinMustEat(Request $request)
+    {
+        $user_id = $request->id;
+        $date = $request->date;
+
+        $activity = DayActivity::with('getActivity')->where(["user_id" => $user_id, "date" => $date])->get();
+
+        $total_prot_met = 0;
+        foreach ($activity as $key => $val) {
+            $from = Carbon::createFromFormat('H:i', $val->from);
+            $to = Carbon::createFromFormat('H:i', $val->to);
+            $diff_in_minutes = $to->diffInMinutes($from);
+            $total_prot_met += ($diff_in_minutes * $val->getActivity->met);
+        }
+        $met_variable = MetRange::where('lower_limit', '<=', $total_prot_met)
+            ->where('upper_limit', '>=', $total_prot_met)->first();
+        $assessment = UserAssessments::where(["user_id" => $user_id, "type" => 1])->first();
+        $protein_must_eat = 0;
+        if ($assessment != null and $met_variable != null) {
+            $protein_must_eat = $met_variable->met_variable * $assessment->lean_mass;
+        }
+
+        return response()->json(['protein_must_eat' => $protein_must_eat], 200);
     }
 
     /**
@@ -208,6 +235,7 @@ class DayController extends Controller
             "total_calories" => "required|numeric",
             "total_ph" => "required|numeric",
             "total_glycemic_load" => "required|numeric",
+            "from" => "required",
         ]);
 
         $check_from = DayMeal::where(array('user_id' => $data['id'], 'date' => $data['date'], 'from' => $data['from']))->first();
