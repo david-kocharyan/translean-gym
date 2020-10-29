@@ -429,7 +429,7 @@
                 <div class="modal-footer">
                     <div class="d-flex justify-content-between" v-if="editActivityPopup">
                         <button class="btn btn-danger activity_delete" @click="deleteActivity">Delete Activity</button>
-                        <button class="btn btn-success activity_edit">Edit</button>
+                        <button class="btn btn-success activity_edit" @click="editActivity">Edit</button>
                     </div>
                     <button class="btn btn-success" @click="saveActivity" v-if="!editActivityPopup">Save</button>
                 </div>
@@ -1988,6 +1988,7 @@
 
             },
             saveActivity() {
+
                 $('.error_modal_activity').empty();
 
                 let data = {
@@ -2024,6 +2025,30 @@
                     }
                 });
             },
+            editActivity() {
+
+                let data = {
+                    activity: $('#activity_list').find(":selected").val(),
+                    from: $('.activity_from').val(),
+                    to: $('.activity_to').val(),
+                    date: $('.date-show').html(),
+                    id: $('.user_id').val(),
+                    activity_id: days.selectedActivity.activity_id
+                };
+
+                $.ajax({
+                    type: "POST",
+                    headers: {
+                        'X-CSRF-TOKEN': '{{csrf_token()}}'
+                    },
+                    url: '{{ url('/day/edit-activity') }}',
+                    data: data,
+                    success: function (res) {
+                        $('#activity').modal('toggle');
+                        getActivities()
+                    }
+                });
+            }
 
 
             clearActivity() {
@@ -2081,6 +2106,15 @@
         // detect when activity popup closed
         $('#activity').on('hidden.bs.modal', function () {
             days.editActivityPopup = false
+            $('.activity_from').clockpicker({
+                autoclose: true,
+                placement: 'bottom',
+            }).val();
+
+            $('.activity_to').clockpicker({
+                autoclose: true,
+                placement: 'bottom',
+            }).val();
         });
 
         let foods = '<?php echo $foods ?>';
