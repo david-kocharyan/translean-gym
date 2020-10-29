@@ -89,7 +89,6 @@
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                     <h4 class="modal-title" id="myModalLabel"></h4>
-                    <ul class="text-danger m-t-20 m-b-20 error_modal"></ul>
                 </div>
                 <div class="modal-body">
 
@@ -341,17 +340,23 @@
 
     <script>
         $(document).ready(function () {
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+
             $('.assessment').click(function () {
                 $('.modal-title').html('Assessment');
                 $('.type').val(1);
-                $('.error_modal').empty();
+                $('.form-control').removeClass('error');
                 $('.glycogen_store').remove();
             });
 
             $('.projection').click(function () {
                 $('.modal-title').html('Projection');
                 $('.type').val(2);
-                $('.error_modal').empty();
+                $('.form-control').removeClass('error');
                 $('.down').append(`<div class="form-group col-md-12 m-b-20 glycogen_store">
                                         <label>Glycogen Store (gr)</label>
                                         <input type="number" class="form-control" name="glycogen_store" disabled>
@@ -382,15 +387,8 @@
                 }
             });
 
-            $.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                }
-            });
-
             $(".save_modal").click(function (e) {
-                $('.error_modal').empty();
-
+                $('.form-control').removeClass('error');
                 let id = $("input[name=id]").val();
                 let data = {};
                 data = {
@@ -419,41 +417,12 @@
                     'type': $("input[name=type]").val()
                 };
 
-                let name_data = [
-                    "Id",
-                    "Activity Level",
-                    "Date",
-                    "Weight",
-                    "Total Fat",
-                    "Right Arm",
-                    "Left Arm",
-                    "Right Leg",
-                    "Left Leg",
-                    "Trunk",
-                    "Muscle Mass",
-                    "Right Arm Mass",
-                    "Left Arm Mass",
-                    "Right Leg Mass",
-                    "Left Leg Mass",
-                    "Trunk Mass",
-                    "Bone Mass",
-                    "Metabolic Age",
-                    "Body Water",
-                    "Visceral Fat",
-                    "Lean Mass",
-                    "Glycogen Store",
-                    "Type",
-                ];
-
                 let validate = true;
-                let count = 0;
                 for (let i in data) {
                     if (data[i] === '' || data[i] === null) {
-                        let elem = `<li>Please fill ${name_data[count]} input!</li>`
-                        $('.error_modal').append(elem)
-                        validate = false
+                        $(`input[name=${i}]`).addClass("error")
+                        validate = false;
                     }
-                    count++
                 }
                 if (validate == false) return;
 
@@ -714,6 +683,9 @@
             padding: 5px;
         }
 
+        .error{
+            border: 1px solid red;
+        }
     </style>
 @endpush
 
