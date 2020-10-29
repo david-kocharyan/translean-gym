@@ -145,9 +145,9 @@
                             class="d-flex justify-content-between align-items-center"
                             v-if="activity_info.show"
                         >
-                            <div
-                                v-if="activity_info.name"
-                                class="w-100 green d-flex justify-content-between align-items-center">
+                            <div v-if="activity_info.name"
+                                 class="w-100 green d-flex justify-content-between align-items-center"
+                            >
                                 <div class="tooltipp">
                                     @{{ activity_info.name }}
                                     <span class="tooltiptext">
@@ -428,10 +428,9 @@
                 <div class="modal-footer">
                     <div class="d-flex justify-content-between" v-if="editActivityPopup">
                         <button class="btn btn-danger activity_delete" @click="deleteActivity">Delete Activity</button>
-
                         <button class="btn btn-success activity_edit">Edit</button>
                     </div>
-                    <button class="btn btn-success activity_save" v-else>Save</button>
+                    <button class="btn btn-success" @click="saveActivity" v-if="!editActivityPopup">Save</button>
                 </div>
             </div>
         </div>
@@ -772,8 +771,6 @@
         </div>
     </div>
 
-
-
 </div>
 
 <div id="alerts" style="position: absolute; bottom: 32%; left: 75%; width: 100%; z-index: 99999; text-align: center;"></div>
@@ -792,7 +789,7 @@
 <script !src="">
     $(document).ready(function () {
 
-        show_date();
+
 
         function show_date(type = 0, dateString = null) {
             let date = 0;
@@ -821,8 +818,6 @@
             getActivities();
 
         }
-
-
 
         function roundTime(time) {
 
@@ -858,6 +853,31 @@
             return time;
         }
 
+        function calculateProteinLimit() {
+
+            let data = {
+                date: $('.date-show').html(),
+                id: $('.user_id').val()
+            };
+
+            $.ajax({
+                type: "POST",
+                headers: {
+                    'X-CSRF-TOKEN': '{{csrf_token()}}'
+                },
+                url: "{{ url('/day/calculate-protein-limit') }}",
+                data: data,
+                success: function (res) {
+                    console.log('calculateProteinLimit', res)
+                }
+            });
+        }
+        
+
+        show_date();
+        calculateProteinLimit();
+
+
         $('.activity_from').clockpicker({
             autoclose: true,
             placement: 'bottom',
@@ -889,7 +909,6 @@
             let roundedTime = roundTime($(this).val())
             $(this).val(roundedTime)
         });
-
 
         $('.create_meal_time').clockpicker({
             autoclose: true,
@@ -1032,7 +1051,8 @@
             })
         })
 
-        $('.activity_save').click(function () {
+        // delete
+        $('.activity_save4').click(function () {
 
             $('.error_modal_activity').empty();
 
@@ -1066,46 +1086,39 @@
                 data: data,
                 success: function (res) {
                     $('#activity').modal('toggle');
+                    getActivities()
                     // let date = $('.date-show').html()
-                    let activities = res.activity
+                    // let activities = res.activity
 
-                    if(activities.length == 0) {
-                        days.clearActivity()
-                    } else {
-                        for(let i=0; i<activities.length; i++) {
+                    // if(activities.length == 0) {
+                    //     days.clearActivity()
+                    // } else {
+                    //     for(let i=0; i<activities.length; i++) {
 
-                            // let diffBetweenStartToEnd = days.minCountFromStartToEnd(activities[i].from, activities[i].to);
+                    //         // let diffBetweenStartToEnd = days.minCountFromStartToEnd(activities[i].from, activities[i].to);
 
-                            let activityObj = {
-                                name: activities[i].get_activity.name,
-                                start: activities[i].from,
-                                end: activities[i].to,
+                    //         let activityObj = {
+                    //             name: activities[i].get_activity.name,
+                    //             start: activities[i].from,
+                    //             end: activities[i].to,
 
-                                fatPercentage: activities[i].get_activity.fat_ratio,
-                                carbPercentage: activities[i].get_activity.carb_ratio,
-                                met: activities[i].get_activity.met
-                            };
+                    //             fatPercentage: activities[i].get_activity.fat_ratio,
+                    //             carbPercentage: activities[i].get_activity.carb_ratio,
+                    //             met: activities[i].get_activity.met
+                    //         };
 
-                            days.addActivity(activityObj)
-                        }
+                    //         days.addActivity(activityObj)
+                    //     }
 
-                        days.createTimeGraphic();
-                        days.createMealGraphic();
-                        days.createStatusGraphic();
+                    //     // days.createTimeGraphic();
+                    //     // days.createMealGraphic();
+                    //     // days.createStatusGraphic();
 
-                    }
+                    // }
                 }
             });
+
         });
-
-
-        // $('.activity_delete').click(function () {
-
-        //     alert()
-
-
-
-        // });
 
         $('.clear-all-meal').click(function() {
 
@@ -1200,6 +1213,7 @@
                 }
             });
         })
+
 
     });
 </script>
@@ -1450,9 +1464,10 @@
                 for (var z = 0; z < res.meal.length; z++){
                     p_met += parseFloat(res.meal[z].get_meals.proteins)
                 }
-
                 $('.protein_eat').html(p_met);
+
                 $('.protein_must').html(res.protein_must_eat);
+
 
                 let activities = res.activity,
                     meals = res.meal,
@@ -1536,7 +1551,7 @@
                 editWater: false,
                 id: 0,
 
-                energyExpendedMode: true,
+                energyExpendedMode: false,
                 circleCount: 0,
 
                 assassmentAlert: false,
@@ -2040,6 +2055,43 @@
                 });
 
             },
+            saveActivity() {
+                $('.error_modal_activity').empty();
+
+                let data = {
+                    activity: $('#activity_list').find(":selected").val(),
+                    from: $('.activity_from').val(),
+                    to: $('.activity_to').val(),
+                    date: $('.date-show').html(),
+                    id: $('.user_id').val(),
+                };
+
+                let activityObj = {
+                    name: $('#activity_list').find(":selected").text(),
+                    start: $('.activity_from').val(),
+                    end: $('.activity_to').val()
+                }
+
+                for (let i in data) {
+                    if (data[i] === '' || data[i] === null) {
+                        $('.error_modal_activity').html('Please Fill All Inputs!')
+                        return;
+                    }
+                }
+
+                $.ajax({
+                    type: "POST",
+                    headers: {
+                        'X-CSRF-TOKEN': '{{csrf_token()}}'
+                    },
+                    url: '{{ url('/day/add-activity') }}',
+                    data: data,
+                    success: function (res) {
+                        $('#activity').modal('toggle');
+                        getActivities()
+                    }
+                });
+            },
 
 
             clearActivity() {
@@ -2082,11 +2134,6 @@
             setTimeout(() => {
                 this.createStatusGraphic()
             }, 1000);
-
-            setTimeout(() => {
-                console.log('staticTimes = ', this.staticTimes)
-                console.log('mealGraphic = ', this.mealGraphic)
-            }, 8000);
         }
     })
 
@@ -2291,18 +2338,16 @@
 
             days.editActivityPopup = true
 
-            let from = $(this).find('div.activity_start').html()
-            let to =   $(this).find('div.activity_end').html()
+            // let from = $(this).find('div.activity_start').html()
+            // let to =   $(this).find('div.activity_end').html()
 
             // from = from.replace(/\s/g,'');
             // to = to.replace(/\s/g,'');
 
-            console.log(from, to)
-
             $('.activity_from').clockpicker({
                 autoclose: true,
                 placement: 'bottom',
-            }).val("08:40");
+            }).val("08:00");
 
             $('.activity_to').clockpicker({
                 autoclose: true,
