@@ -132,8 +132,8 @@
                 <div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">
                     <h4 class="page-title">
                         @isset($user_name)
-                            <a href="/users">Users</a> <span>&nbsp;</span>
-                            <span style="color: #3b8e34;">{{$user_name}}</span> <span>&nbsp;</span>
+                            <a href="/users">Users</a> <span><i class="fas fa-arrow-right"></i></span>
+                            <span style="color: #3b8e34;">{{$user_name}}</span> <span><i class="fas fa-arrow-right"></i></span>
                         @endisset
                         {{$title}}
                     </h4>
