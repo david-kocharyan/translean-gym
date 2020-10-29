@@ -790,7 +790,6 @@
     $(document).ready(function () {
 
         show_date();
-        calculateProteinLimit();
 
         function show_date(type = 0, dateString = null) {
             let date = 0;
@@ -853,29 +852,6 @@
 
             return time;
         }
-
-        function calculateProteinLimit() {
-
-            let data = {
-                date: $('.date-show').html(),
-                id: $('.user_id').val()
-            };
-
-            $.ajax({
-                type: "POST",
-                headers: {
-                    'X-CSRF-TOKEN': '{{csrf_token()}}'
-                },
-                url: "{{ url('/day/calculate-protein-limit') }}",
-                data: data,
-                success: function (res) {
-                    console.log('calculateProteinLimit', res)
-                }
-            });
-        }
-
-
-        
 
         $('.activity_from').clockpicker({
             autoclose: true,
@@ -1001,39 +977,40 @@
                 data: form.serialize(),
                 success: function (res) {
                     $('#meal').modal('toggle');
-                    let meals = res.meal
+                    getActivities();
+                    // let meals = res.meal
 
-                    for(let i=0; i<meals.length; i++) {
+                    // for(let i=0; i<meals.length; i++) {
 
-                        let time = days.existMealTimeFormula( meals[i].get_meals.glycemic_load )
-                        let start = parseInt(meals[i].from.substring(0, 2))
-                        let startsEnd = meals[i].from.substring(3)
-                        let end = start + time + ":" + startsEnd
+                    //     let time = days.existMealTimeFormula( meals[i].get_meals.glycemic_load )
+                    //     let start = parseInt(meals[i].from.substring(0, 2))
+                    //     let startsEnd = meals[i].from.substring(3)
+                    //     let end = start + time + ":" + startsEnd
 
-                        let mealObj = {
-                            meal: true,
-                            name: meals[i].get_meals.name,
-                            start: meals[i].from,
-                            end: end,
+                    //     let mealObj = {
+                    //         meal: true,
+                    //         name: meals[i].get_meals.name,
+                    //         start: meals[i].from,
+                    //         end: end,
 
-                            fatG: meals[i].get_meals.fat,
-                            fatD: 0,
+                    //         fatG: meals[i].get_meals.fat,
+                    //         fatD: 0,
 
-                            carbG: meals[i].get_meals.carbs,
-                            carbD: 0,
+                    //         carbG: meals[i].get_meals.carbs,
+                    //         carbD: 0,
 
-                            proteinG:  meals[i].get_meals.proteins,
-                            proteinD: 0,
-                            glycemicLoad: meals[i].get_meals.glycemic_load,
-                        };
+                    //         proteinG:  meals[i].get_meals.proteins,
+                    //         proteinD: 0,
+                    //         glycemicLoad: meals[i].get_meals.glycemic_load,
+                    //     };
 
-                        days.addMeals(mealObj)
+                    //     days.addMeals(mealObj)
 
-                    }
+                    // }
 
-                    days.createTimeGraphic();
-                    days.createMealGraphic();
-                    days.createStatusGraphic();
+                    // days.createTimeGraphic();
+                    // days.createMealGraphic();
+                    // days.createStatusGraphic();
 
                 },
                 error: function (reject) {
@@ -1435,9 +1412,31 @@
         return tr;
     }
 
+    function calculateProteinLimit() {
+
+        let data = {
+            date: $('.date-show').html(),
+            id: $('.user_id').val()
+        };
+
+        $.ajax({
+            type: "POST",
+            headers: {
+                'X-CSRF-TOKEN': '{{csrf_token()}}'
+            },
+            url: "{{ url('/day/calculate-protein-limit') }}",
+            data: data,
+            success: function (res) {
+                $('.protein_must').html(res.protein_must_eat);
+            }
+        });
+    }
+
     function getActivities() {
 
         console.log('Get activities')
+
+        calculateProteinLimit();
 
         days.actions = []
         days.meal = []
@@ -1464,8 +1463,6 @@
                     p_met += parseFloat(res.meal[z].get_meals.proteins)
                 }
                 $('.protein_eat').html(p_met);
-
-                $('.protein_must').html(res.protein_must_eat);
 
 
                 let activities = res.activity,
