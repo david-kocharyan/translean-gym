@@ -51,15 +51,20 @@ Route::group(['namespace' => 'Admin', 'middleware' => 'auth:admin'], function ()
 
 //    day view part
     Route::get('/day/{id}', 'DayController@testIndex');
+    Route::post('/day/get-all-data', 'DayController@getAllData');
+
     Route::post('/day/add-activity', 'DayController@addActivity');
     Route::post('/day/delete-activity', 'DayController@deleteActivity');
+    Route::post('/day/edit-activity', 'DayController@deleteActivity');
+
     Route::post('/day/calculate-protein-limit', 'DayController@calculateProteinMustEat');
+
     Route::post('/day/add-meals', 'DayController@addMeal');
     Route::post('/day/create-meals', 'DayController@createMeal');
     Route::post('/day/get-meal-ajax', 'DayController@getMealAjax');
-    Route::post('/day/get-all-data', 'DayController@getAllData');
     Route::post('/day/clear-all-meals', 'DayController@clearMeal');
     Route::post('/day/duplicate-meals', 'DayController@duplicateMeal');
+
     Route::post('/day/add-water', 'DayController@addWater');
     Route::post('/day/edit-water', 'DayController@editWater');
 

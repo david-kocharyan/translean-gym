@@ -53,22 +53,10 @@ class DayController extends Controller
         $meals = DayMeal::with('getMeals')->where(["user_id" => $user_id, "date" => $date])->get();
         $water = DayWater::where(["user_id" => $user_id, "date" => $date])->get();
 
-        //calc protein must eat
-        $total_prot_met = 0;
-        foreach ($activity as $key => $val) {
-            $from = Carbon::createFromFormat('H:i', $val->from);
-            $to = Carbon::createFromFormat('H:i', $val->to);
-            $diff_in_minutes = $to->diffInMinutes($from);
-            $total_prot_met += ($diff_in_minutes * $val->getActivity->met);
+        for ($i = 0; $i < count($activity); $i++) {
+            $activity[$i]->from = Carbon::parse($activity[$i]->from)->format('H:i');
+            $activity[$i]->to = Carbon::parse($activity[$i]->to)->format('H:i');
         }
-        $met_variable = MetRange::where('lower_limit', '<=', $total_prot_met)
-            ->where('upper_limit', '>=', $total_prot_met)->first();
-        $assessment = UserAssessments::where(["user_id" => $user_id, "type" => 1])->first();
-        $protein_must_eat = 0;
-        if ($assessment != null and $met_variable != null) {
-            $protein_must_eat = $met_variable->met_variable * $assessment->lean_mass;
-        }
-        // end calc protein must eat
 
         $body_weight = $this->getUserBodyWeight($user_id);
 
@@ -101,6 +89,10 @@ class DayController extends Controller
         $date = $request->date;
 
         $activity = DayActivity::with('getActivity')->where(["user_id" => $user_id, "date" => $date])->get();
+        for ($i = 0; $i < count($activity); $i++) {
+            $activity[$i]->from = Carbon::parse($activity[$i]->from)->format('H:i');
+            $activity[$i]->to = Carbon::parse($activity[$i]->to)->format('H:i');
+        }
 
         $total_prot_met = 0;
         foreach ($activity as $key => $val) {
@@ -138,8 +130,18 @@ class DayController extends Controller
 
         $body_weight = $this->getUserBodyWeight($request->id);
         $activity[0]['body_weight'] = $body_weight;
+        $activity[0]['from'] = Carbon::parse($activity[0]->from)->format('H:i');
+        $activity[0]['to'] = Carbon::parse($activity[0]->to)->format('H:i');
 
         return response()->json(['success' => "Your activity has been saved.", 'activity' => $activity], 200);
+    }
+
+    /**
+     * @param Request $request
+     */
+    public function editActivity(Request $request)
+    {
+        dd($request->all());
     }
 
     /**

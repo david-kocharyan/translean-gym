@@ -2048,7 +2048,7 @@
                         getActivities()
                     }
                 });
-            }
+            },
 
 
             clearActivity() {
@@ -2319,7 +2319,7 @@
             }).val(to);
 
             $("#activity_list").val( id );
-            
+
 
         });
 
