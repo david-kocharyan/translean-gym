@@ -193,13 +193,13 @@
                 </thead>
                 <tbody v-for="(time, i) in staticTimes" :key="time.time">
                     <tr  @click="toggleTimes(i)" >
-                        <td class="bg-dark-p"><b>@{{ time.totals.totalCal }}</b></td>
-                        <td class="bg-dark-p" v-if='energyExpendedMode'></td>
-                        <td class="bg-dark-p" v-if='energyExpendedMode'><b>@{{ time.totals.totalFatC }}</b></td>
-                        <td class="bg-dark-p"><b>@{{ time.totals.totalFatG }}</b></td>
-                        <td class="bg-dark-p" v-if='energyExpendedMode'></td>
-                        <td class="bg-dark-p" v-if='energyExpendedMode'><b>@{{ time.totals.totalCarbC }}</b></td>
-                        <td class="bg-dark-p"><b>@{{ time.totals.totalCarbG }}</b></td>
+                        <td><b>@{{ time.totals.totalCal }}</b></td>
+                        <td v-if='energyExpendedMode'></td>
+                        <td v-if='energyExpendedMode'><b>@{{ time.totals.totalFatC }}</b></td>
+                        <td><b>@{{ time.totals.totalFatG }}</b></td>
+                        <td v-if='energyExpendedMode'></td>
+                        <td v-if='energyExpendedMode'><b>@{{ time.totals.totalCarbC }}</b></td>
+                        <td><b>@{{ time.totals.totalCarbG }}</b></td>
                     </tr>
 
                     <tr v-for="(minute, j) in time.minutes" :key="j"
@@ -310,12 +310,12 @@
                 </thead>
                 <tbody v-for="(meal, i) in mealGraphic" :key="meal.time">
                     <tr  @click="toggleTimes(i)" >
-                        <td class="bg-dark-p"><b>@{{ meal.totals.totalFat }}</b></td>
-                        <td class="bg-dark-p"><b>@{{ meal.totals.totalFatD }}</b></td>
-                        <td class="bg-dark-p"><b>@{{ meal.totals.totalCarb }}</b></td>
-                        <td class="bg-dark-p"><b>@{{ meal.totals.totalCarbD }}</b></td>
-                        <td class="bg-dark-p"><b>@{{ meal.totals.totalProteinG }}</b></td>
-                        <td class="bg-dark-p" class="p-0">
+                        <td><b>@{{ meal.totals.totalFat }}</b></td>
+                        <td><b>@{{ meal.totals.totalFatD }}</b></td>
+                        <td><b>@{{ meal.totals.totalCarb }}</b></td>
+                        <td><b>@{{ meal.totals.totalCarbD }}</b></td>
+                        <td><b>@{{ meal.totals.totalProteinG }}</b></td>
+                        <td class="p-0">
                             <b :class="{ 'text-danger' : meal.totals.proteinHourlyLimit > 0 }">
                                 @{{ meal.totals.totalProtein }}
                             </b>
@@ -1521,6 +1521,11 @@
                 for(let i=0; i<this.staticTimes.length; i++) {
                     for(let j=0; j<this.staticTimes[i].minutes.length; j++) {
                         this.staticTimes[i].minutes[j].show = false
+                    }
+                }
+                for(let i=0; i<this.mealGraphic.length; i++) {
+                    for(let j=0; j<this.mealGraphic[i].minutes.length; j++) {
+                        this.mealGraphic[i].minutes[j].show = false
                     }
                 }
             },
