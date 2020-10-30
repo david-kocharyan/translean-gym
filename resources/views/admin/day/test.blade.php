@@ -362,7 +362,7 @@
                     >
                         <td>
                             <div>
-                                @{{ status_info.statusObj.fat }}
+                                @{{ Math.abs(status_info.statusObj.fat) }}
                                 <span v-if="status_info.statusObj.fat != 0">
                                     <span class="green" v-if="status_info.statusObj.fat > 0">(loss)</span>
                                     <span class="red" v-else>(access)</span>
@@ -371,7 +371,7 @@
                         </td>
                         <td>
                             <div>
-                                @{{ status_info.statusObj.carb }}
+                                @{{ Math.abs(status_info.statusObj.carb) }}
                                 <span v-if="status_info.statusObj.carb != 0">
                                     <span class="green" v-if="status_info.statusObj.carb > 0">(loss)</span>
                                     <span class="red" v-else>(access)</span>
