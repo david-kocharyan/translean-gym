@@ -182,7 +182,7 @@
                         </th>
                     </tr>
                     <tr>
-                        <td>Total&nbsp;cal</td>
+                        <td >Total&nbsp;cal</td>
                         <td v-if='energyExpendedMode'>Fat&nbsp;%</td>
                         <td v-if='energyExpendedMode'>Fat&nbsp;(c)</td>
                         <td>Fat&nbsp;(g)</td>
@@ -193,13 +193,13 @@
                 </thead>
                 <tbody v-for="(time, i) in staticTimes" :key="time.time">
                     <tr  @click="toggleTimes(i)" >
-                        <td><b>@{{ time.totals.totalCal }}</b></td>
-                        <td v-if='energyExpendedMode'></td>
-                        <td v-if='energyExpendedMode'><b>@{{ time.totals.totalFatC }}</b></td>
-                        <td><b>@{{ time.totals.totalFatG }}</b></td>
-                        <td v-if='energyExpendedMode'></td>
-                        <td v-if='energyExpendedMode'><b>@{{ time.totals.totalCarbC }}</b></td>
-                        <td><b>@{{ time.totals.totalCarbG }}</b></td>
+                        <td class="bg-dark-p"><b>@{{ time.totals.totalCal }}</b></td>
+                        <td class="bg-dark-p" v-if='energyExpendedMode'></td>
+                        <td class="bg-dark-p" v-if='energyExpendedMode'><b>@{{ time.totals.totalFatC }}</b></td>
+                        <td class="bg-dark-p"><b>@{{ time.totals.totalFatG }}</b></td>
+                        <td class="bg-dark-p" v-if='energyExpendedMode'></td>
+                        <td class="bg-dark-p" v-if='energyExpendedMode'><b>@{{ time.totals.totalCarbC }}</b></td>
+                        <td class="bg-dark-p"><b>@{{ time.totals.totalCarbG }}</b></td>
                     </tr>
 
                     <tr v-for="(minute, j) in time.minutes" :key="j"
@@ -310,12 +310,12 @@
                 </thead>
                 <tbody v-for="(meal, i) in mealGraphic" :key="meal.time">
                     <tr  @click="toggleTimes(i)" >
-                        <td><b>@{{ meal.totals.totalFat }}</b></td>
-                        <td><b>@{{ meal.totals.totalFatD }}</b></td>
-                        <td><b>@{{ meal.totals.totalCarb }}</b></td>
-                        <td><b>@{{ meal.totals.totalCarbD }}</b></td>
-                        <td><b>@{{ meal.totals.totalProteinG }}</b></td>
-                        <td class="p-0">
+                        <td class="bg-dark-p"><b>@{{ meal.totals.totalFat }}</b></td>
+                        <td class="bg-dark-p"><b>@{{ meal.totals.totalFatD }}</b></td>
+                        <td class="bg-dark-p"><b>@{{ meal.totals.totalCarb }}</b></td>
+                        <td class="bg-dark-p"><b>@{{ meal.totals.totalCarbD }}</b></td>
+                        <td class="bg-dark-p"><b>@{{ meal.totals.totalProteinG }}</b></td>
+                        <td class="bg-dark-p" class="p-0">
                             <b :class="{ 'text-danger' : meal.totals.proteinHourlyLimit > 0 }">
                                 @{{ meal.totals.totalProtein }}
                             </b>
@@ -353,8 +353,8 @@
                 </thead>
                 <tbody v-for="(status, i) in mealGraphic" :key="status.time">
                     <tr  @click="toggleTimes(i)" >
-                        <td></td>
-                        <td></td>
+                        <td class="bg-dark-p"></td>
+                        <td class="bg-dark-p"></td>
                     </tr>
 
                     <tr v-for="(status_info, j) in status.minutes" :key="j"
@@ -883,12 +883,26 @@
             $(this).val(roundedTime)
         });
 
+        function returnPlus4Time(time) {
+            let roundedTime = roundTime(time);
+            let start = parseInt(roundedTime.substring(0, 2));
+            let startsEnd = roundedTime.substring(3);
+            start += 4;
+            let final = start + ":" + startsEnd;
+            console.log('Start time : ', time)
+            console.log('Final time : ', final)
+            return final
+        }
+
         $('.meal_from').clockpicker({
             autoclose: true,
             placement: 'top',
         }).change(function(){
-            let roundedTime = roundTime($(this).val())
-            $(this).val(roundedTime)
+
+            let finTIme = returnPlus4Time($(this).val())
+        
+
+            $(this).val($(this).val())
         });
 
         $('.water_time').clockpicker({
@@ -995,40 +1009,6 @@
                 success: function (res) {
                     $('#meal').modal('toggle');
                     getActivities();
-                    // let meals = res.meal
-
-                    // for(let i=0; i<meals.length; i++) {
-
-                    //     let time = days.existMealTimeFormula( meals[i].get_meals.glycemic_load )
-                    //     let start = parseInt(meals[i].from.substring(0, 2))
-                    //     let startsEnd = meals[i].from.substring(3)
-                    //     let end = start + time + ":" + startsEnd
-
-                    //     let mealObj = {
-                    //         meal: true,
-                    //         name: meals[i].get_meals.name,
-                    //         start: meals[i].from,
-                    //         end: end,
-
-                    //         fatG: meals[i].get_meals.fat,
-                    //         fatD: 0,
-
-                    //         carbG: meals[i].get_meals.carbs,
-                    //         carbD: 0,
-
-                    //         proteinG:  meals[i].get_meals.proteins,
-                    //         proteinD: 0,
-                    //         glycemicLoad: meals[i].get_meals.glycemic_load,
-                    //     };
-
-                    //     days.addMeals(mealObj)
-
-                    // }
-
-                    // days.createTimeGraphic();
-                    // days.createMealGraphic();
-                    // days.createStatusGraphic();
-
                 },
                 error: function (reject) {
                     $('.m_errors').empty()
@@ -1221,6 +1201,7 @@
             $(document).find(".food_items").each(function () {
 
                 if($(this).find('input').val()) {
+
                     let mass = parseFloat($(this).find("#mass").val());
                     food_mass = parseFloat($(this).find("#food_sel").find(":selected").data('quantity_measure'));
 
@@ -1271,9 +1252,11 @@
                 },
                 data: form.serialize(),
                 success: function (data) {
+
                     $('.errors').empty()
                     $('.success').empty()
                     $('.success').append(`<span>${data.msg}</span>`)
+                    
                     setTimeout(function () {
                         $('.success').empty();
                     }, 5000);
@@ -2403,6 +2386,10 @@
 <link href="{{asset('assets/plugins/datepicker-new/css/bootstrap-datepicker.css')}}" rel="stylesheet">
 
 <style>
+
+.bg-dark-p {
+    background: #dbdcdd !important;
+}
 
     .red-circle {
         position: absolute;
