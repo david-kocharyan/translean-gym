@@ -1357,7 +1357,7 @@
             let fatStatus = fourHourFat - fatGr;
             let fatStatusText = (fatStatus > 0) ? roundNumberDecimal(Math.abs(fourHourFat - fatGr)) + " access " : roundNumberDecimal(Math.abs(fourHourFat - fatGr)) + ' loss';
             tr += `<tr>
-                        <td>10 ${carbGr}</td>
+                        <td>${carbGr}</td>
                         <td>${fatGr}</td>
                         <td>${currentCarb}</td>
                         <td>${roundNumberDecimal(fourHourFat)}</td>
