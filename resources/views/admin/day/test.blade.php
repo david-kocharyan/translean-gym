@@ -548,7 +548,7 @@
                                 <div class="form-row">
                                     <div class="form-group col-md-3">
                                         <label for="meal_from">Time</label>
-                                        <input type="text" name="from" class="clockpicker meal_from form-control">
+                                        <input type="text" readonly name="from" class="clockpicker meal_from form-control">
                                     </div>
 
                                     <div class="col-md-9 table-of-carb-fat">
@@ -663,7 +663,7 @@
                                     <div class="col-md-12">
                                         <div class="form-group col-md-3">
                                             <label for="meal_from">Time</label>
-                                            <input type="text" name="from"
+                                            <input type="text" name="from" readonly
                                                     class="clockpicker create_meal_time form-control">
                                         </div>
                                         <div class="col-md-9 table-of-carb-fat">
@@ -741,7 +741,7 @@
                                 </div>
                                 <div class="form-group col-md-12 mb-0">
                                     <label for="" class="mb-2">Time</label>
-                                    <input type="text" name="waterTime" class="clockpicker water_time form-control">
+                                    <input type="text" readonly name="waterTime" class="clockpicker water_time form-control">
                                 </div>
                             </div>
                         </form>
@@ -2463,6 +2463,11 @@
 
     .text-right {
         text-align: right !important;
+    }
+
+    .form-control[disabled], .form-control[readonly], fieldset[disabled] .form-control {
+        background-color: #fff;
+        opacity: 1;
     }
 
 </style>
