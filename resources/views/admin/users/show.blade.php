@@ -16,6 +16,16 @@
                             <a href="{{"/users/".$user->id."/edit"}}" class="btn btn-info">
                                 Edit <i class="fas fa-edit"></i>
                             </a>
+                            <form style="display: inline-block" action="{{ $route."/".$user->id }}"
+                                  method="post" id="work-for-form">
+                                @csrf
+                                @method("DELETE")
+                                <a href="javascript:void(0);" data-text="User" class="delForm"
+                                   data-id="{{$user->id}}">
+                                    <button class="btn btn-danger tooltip-danger">Delete
+                                        <i class="fas fa-trash"></i></button>
+                                </a>
+                            </form>
                         </div>
                     </div>
                     <div class="row">
@@ -67,3 +77,7 @@
         </div>
     </div>
 @endsection
+
+@push('footer')
+    <script src="{{asset('assets/plugins/swal/sweetalert.min.js')}}"></script>
+@endpush

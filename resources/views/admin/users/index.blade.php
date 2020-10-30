@@ -94,7 +94,7 @@
 @endsection
 
 @push('footer')
-
+        <script src="{{asset('assets/plugins/swal/sweetalert.min.js')}}"></script>
 @endpush
 
 
