@@ -13,9 +13,6 @@
                     Day View <i class="fas fa-user-ninja"></i>
                 </a>
 
-                <a href="{{"/users/".$user->id."/edit"}}" class="btn btn-info">
-                    Edit <i class="fas fa-edit"></i>
-                </a>
             </div>
         </div>
     </div>

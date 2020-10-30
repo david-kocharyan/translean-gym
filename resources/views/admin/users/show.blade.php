@@ -7,7 +7,17 @@
         <div class="col-lg-12">
             <div class="white-box">
                 <div class="">
-                    <h2 class="m-b-0 m-t-0">{{$user->name}}</h2> <small class="text-muted db ">{{$user->username}}</small>
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div>
+                            <h2 class="m-b-0 m-t-0">{{$user->name}}</h2>
+                            <small class="text-muted db ">{{$user->username}}</small>
+                        </div>
+                        <div>
+                            <a href="{{"/users/".$user->id."/edit"}}" class="btn btn-info">
+                                Edit <i class="fas fa-edit"></i>
+                            </a>
+                        </div>
+                    </div>
                     <div class="row">
                         <div class="col-lg-12 col-md-12 col-sm-12">
                             <div class="table-responsive">
