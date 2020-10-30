@@ -1951,8 +1951,8 @@
 
 
                         let statusObj = {
-                            fat: parseFloat(fatStatus.toFixed(2)),
-                            carb: parseFloat(carbStatus.toFixed(2))
+                            fat: Math.abs(parseFloat(fatStatus.toFixed(2))),
+                            carb: Math.abs(parseFloat(carbStatus.toFixed(2)))
                         }
 
                         this.mealGraphic[i].minutes[j].statusObj = statusObj
