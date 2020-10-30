@@ -76,6 +76,14 @@
             padding-top: 10px;
         }
 
+        .item a:hover {
+            color: green;
+        }
+
+        .item a span {
+            padding-top: 20px;
+        }
+
         #page-wrapper {
             background: white !important;
         }
@@ -91,13 +99,17 @@
             flex-wrap: wrap;
         }
 
+        .banner img{
+            height: 213px;
+        }
+
         .pages {
             padding-top: 80px;
         }
 
         .circle-div{
-            height: 150px;
-            width: 150px;
+            height: 100px;
+            width: 100px;
             background: #e3e3e3;
             border-radius: 50%;
             display: flex;
@@ -106,7 +118,7 @@
         }
 
         .circle-div i{
-            font-size: 70px;
+            font-size: 50px;
         }
 
     </style>

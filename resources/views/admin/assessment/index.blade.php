@@ -452,6 +452,14 @@
                     location.reload()
                 }
             });
+
+            $(document).on('change', '.form-control', function () {
+                if ($(this).val() != "") {
+                    $(this).removeClass('error')
+                } else {
+                    $(this).addClass('error')
+                }
+            })
         })
     </script>
 
@@ -683,7 +691,7 @@
             padding: 5px;
         }
 
-        .error{
+        .error {
             border: 1px solid red;
         }
     </style>

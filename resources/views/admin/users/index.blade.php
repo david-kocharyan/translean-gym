@@ -4,12 +4,18 @@
     <div class="row">
         <div class="col-md-6 col-xs-12">
             <div class="row d-flex align-items-center justify-content-center">
-                <div class="col-md-6">
-                    <input type="text" class="form-control" placeholder="Enter Username or Name">
-                </div>
-                <div class="col-md-2">
-                    <button type="button" class="btn btn-danger">Search</button>
-                </div>
+                <form action="{{$route}}" method="GET" class="col-md-12" >
+                    <div class="col-md-6">
+                        <input type="text" name="search" class="form-control" placeholder="Enter Username or Name">
+                    </div>
+                    <div class="col-md-2 d-flex">
+                        <button type="submit" class="btn btn-danger display-inline"><i class="fas fa-search"></i></button>
+                        <button type="submit" class="m-l-5 btn btn-primary display-inline"><i class="fas fa-sync-alt"></i></button>
+                    </div>
+                    <div class="col-md-2">
+
+                    </div>
+                </form>
             </div>
         </div>
         <div class="col-md-6 col-xs-12 text-right">

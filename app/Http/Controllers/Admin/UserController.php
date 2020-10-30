@@ -18,9 +18,15 @@ class UserController extends Controller
      * Display a listing of the resource.
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $data = User::paginate(10);
+        if (isset($request->search)) {
+            $data = User::where('name', 'LIKE', '%' . $request->search . '%')
+                ->orWhere('username', 'LIKE', '%' . $request->search . '%')
+                ->paginate(10);
+        } else {
+            $data = User::paginate(10);
+        }
         $title = self::TITLE;
         $route = self::ROUTE;
         return view(self::FOLDER . ".index", compact("title", "route", "data"));
@@ -110,8 +116,8 @@ class UserController extends Controller
     {
         $request->validate([
             "name" => "required",
-            "username" => "required|unique:users,username,". $user->id,
-            "email" => "unique:users,email,". $user->id,
+            "username" => "required|unique:users,username," . $user->id,
+            "email" => "unique:users,email," . $user->id,
             "dob" => "required",
             "gender" => "required|numeric",
             "height" => "required|numeric",
@@ -142,5 +148,14 @@ class UserController extends Controller
     {
         User::destroy($user->id);
         return redirect(self::ROUTE);
+    }
+
+    public function search(Request $request)
+    {
+
+
+        $title = self::TITLE;
+        $route = self::ROUTE;
+        return view(self::FOLDER . ".index", compact("title", "route", "data"));
     }
 }

@@ -10376,6 +10376,10 @@ ul.pro-amenities li span i {
         width: 300px;
         margin-top: 10%
     }
+
+    .bg-title h4{
+        font-size: 14px;
+    }
 }
 
  .swal-modal {
