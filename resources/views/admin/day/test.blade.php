@@ -900,7 +900,7 @@
         }).change(function(){
 
             let finTIme = returnPlus4Time($(this).val())
-        
+
 
             $(this).val($(this).val())
         });
@@ -1252,40 +1252,8 @@
                 },
                 data: form.serialize(),
                 success: function (data) {
-
-                    $('.errors').empty()
-                    $('.success').empty()
-                    $('.success').append(`<span>${data.msg}</span>`)
-                    
-                    setTimeout(function () {
-                        $('.success').empty();
-                    }, 5000);
-
-                    $("input[name='name']").val('');
-                    $("input[name='total_mass']").val('');
-                    $("input[name='total_carbs']").val('');
-                    $("input[name='total_fat']").val('');
-                    $("input[name='total_proteins']").val('');
-                    $("input[name='total_calories']").val('');
-                    $("input[name='total_ph']").val('');
-                    $("input[name='total_glycemic_load']").val('');
-
-                    $('.foods').empty()
-                    $('.foods').append(`<button type="button" class="btn btn-success col-md-2 m-b-20 plus"
-                                                style=" height: 200px;width: 200px;">
-                                            <i class="fa fa-plus" style="font-size: 100px;"></i></button>`)
-                    $('#meal_list').append(`<option value="${data.meal.id}"
-                                                data-carbs="${data.meal.carbs}"
-                                                data-fat="${data.meal.fat}"
-                                                data-proteins="${data.meal.proteins}"
-                                                data-calories="${data.meal.calories}"
-                                                data-fiber="${data.meal.fiber}"
-                                                data-glycemic_index="${data.meal.glycemic_index}"
-                                                data-glycemic_load="${data.meal.glycemic_load}"
-                                                data-ph="${data.meal.ph}"
-                                                data-quantity_measure="${data.meal.quantity_measure}">
-                                                        ${data.meal.name}
-                                                </option>`)
+                    $('#meal').modal('toggle');
+                    getActivities();
                 },
                 error: function (reject) {
                     $('.errors').empty()
