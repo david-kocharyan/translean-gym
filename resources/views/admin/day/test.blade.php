@@ -1964,6 +1964,8 @@
             },
 
             calculateStatus(fatGr, carbGr) {
+                console.log('loooooooooooooooooooooool')
+                console.log(fatGr, carbGr)
                 var fatStatus = fatGr - 0;
                 var fatStatusText = fatStatus > 0 ? "loss" : "access";
                 fatStatus = Math.abs(fatStatus);
