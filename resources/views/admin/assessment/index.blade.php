@@ -323,18 +323,28 @@
 
         $(document).on('click', '.delete', function () {
             let id = $(this).data('id');
-            $.ajax({
-                type: 'POST',
-                url: '/deleteAssessment',
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                data: {id},
-                success: function (data) {
-                    location.reload();
-                },
+            swal({
+                title: "Are You Sure?",
+                icon: "warning",
+                dangerMode: true,
+                buttons: ['No', 'Yes'],
+            }).then((willDelete) => {
+                if (willDelete) {
+                    $.ajax({
+                        type: 'POST',
+                        url: '/deleteAssessment',
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        data: {id},
+                        success: function (data) {
+                            location.reload();
+                        },
+                    });
+                } else {
+                    swal.close();
+                }
             });
-
         })
     </script>
 

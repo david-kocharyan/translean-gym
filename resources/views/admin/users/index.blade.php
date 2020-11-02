@@ -29,7 +29,7 @@
             @foreach($data as $key=>$val)
                 <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
                     <div class="panel panel-default">
-                        <div class="panel-heading">
+                        <div class="panel-heading rounded-top">
                             {{$val->name}} ({{$val->username}})
                             <div class="panel-action">
                                 <a href="{{$route."/".$val->id}}">Basic Info</a>
@@ -37,6 +37,11 @@
                         </div>
                         <div class="panel-wrapper collapse in">
                             <div class="panel-body">
+                                @if($val->image != null)
+                                    <img src="{{asset("uploads/$val->image")}}" alt="{{$val->username}}" width="150" height="150" class="img-circle">
+                                @else
+                                    <img src="{{asset('assets/images/def.png')}}" alt="{{$val->username}}" width="150" height="150" class="img-circle">
+                                @endif
                                 <ul>
                                     <li>Phone: {{$val->phone}}</li>
                                     <li>Email: {{$val->email ?? "Empty"}}</li>
@@ -97,6 +102,15 @@
         <script src="{{asset('assets/plugins/swal/sweetalert.min.js')}}"></script>
 @endpush
 
-
+@push('header')
+    <style>
+        .panel-body{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+    </style>
+    @endpush
 
 

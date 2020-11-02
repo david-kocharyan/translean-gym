@@ -1569,6 +1569,10 @@
                 for (var z = 0; z < res.meal.length; z++){
                     p_met += parseFloat(res.meal[z].get_meals.proteins)
                 }
+<<<<<<< HEAD
+=======
+                $('.protein_eat').html(p_met.toFixed(2));
+>>>>>>> 2e69c604525037cddd1efc2c8180af98103871fc
 
                 $('.protein_eat').html(p_met);
 
