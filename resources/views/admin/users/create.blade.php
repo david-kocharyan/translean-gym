@@ -103,6 +103,14 @@
                                        placeholder="Protein Hourly Limit" name="protein_hourly_limit" value="{{old('protein_hourly_limit')}}">
                             </div>
 
+                            <div class="form-group">
+                                <label for="image">Image</label>
+                                @error('image')
+                                <p class="invalid-feedback text-danger" role="alert"><strong>{{ $message }}</strong></p>
+                                @enderror
+                                <input type="file" id="image" name="image" class="dropify"/>
+                            </div>
+
                             <button type="submit" class="btn btn-success waves-effect waves-light m-r-10">
                                 Save User
                             </button>
@@ -114,57 +122,15 @@
     </div>
 @endsection
 
+
 @push('footer')
-    <script !src="">
-        $(document).ready(function () {
-
-            $('#carbs').on('input',function () {
-                let carbs = $(this).val()
-                let fat = $('#fat').val();
-                let proteins = $('#proteins').val();
-                let glycemic_index = $('#glycemic_index').val();
-
-                let calories = calories_calculate(carbs, fat, proteins);
-                $('#calories').val(calories);
-
-                let glycemic_load = glycemic_load_calculate(carbs, glycemic_index);
-                $('#glycemic_load').val(glycemic_load);
-            });
-
-            $('#fat').on('input',function () {
-                let carbs = $('#carbs').val();
-                let fat = $(this).val();
-                let proteins = $('#proteins').val();
-
-                let calories = calories_calculate(carbs, fat, proteins);
-                $('#calories').val(calories)
-            });
-
-            $('#proteins').on('input',function () {
-                let carbs = $('#carbs').val();
-                let fat = $('#fat').val();
-                let proteins = $(this).val()
-
-                let calories = calories_calculate(carbs, fat, proteins);
-                $('#calories').val(calories)
-            });
-
-            $('#glycemic_index').on('input',function () {
-                let carbs = $('#carbs').val();
-                let glycemic_index = $(this).val()
-
-                let glycemic_load = glycemic_load_calculate(carbs, glycemic_index);
-                $('#glycemic_load').val(glycemic_load)
-            });
-
-            function calories_calculate(carbs, fat, proteins) {
-                return carbs * 4 + fat * 9 + proteins * 4;
-            }
-
-            function glycemic_load_calculate(carbs, glycemic_index) {
-                return glycemic_index * carbs / 100;
-            }
-
-        })
+    <!-- jQuery file upload -->
+    <script src="{{asset('assets/plugins/dropify/dist/js/dropify.min.js')}}"></script>
+    <script>
+        $('.dropify').dropify();
     </script>
+@endpush
+
+@push('header')
+    <link rel="stylesheet" href="{{asset('assets/plugins/dropify/dist/css/dropify.min.css')}}">
 @endpush

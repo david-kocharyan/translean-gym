@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\MOdel\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller
 {
@@ -51,6 +52,7 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
+
         $request->validate([
             "name" => "required",
             "username" => "required|unique:users,username",
@@ -74,6 +76,12 @@ class UserController extends Controller
         $user->height = $request->height;
         $user->dimmer = $request->dimmer;
         $user->protein_hourly_limit = $request->protein_hourly_limit;
+
+        if ($request->image) {
+            $image_name = Storage::disk('public')->put('users/', $request->image);
+            $user->image = $image_name;
+        }
+
         $user->save();
 
         return redirect(self::ROUTE);
@@ -118,12 +126,25 @@ class UserController extends Controller
             "name" => "required",
             "username" => "required|unique:users,username," . $user->id,
             "email" => "unique:users,email," . $user->id,
+            "password" => "nullable|min:6",
             "dob" => "required",
             "gender" => "required|numeric",
             "height" => "required|numeric",
             "dimmer" => "required|numeric",
             "protein_hourly_limit" => "required|numeric",
         ]);
+
+        if ($request->password != null) {
+            $user->password = Hash::make($request->password);
+        }
+        if ($request->email != null) {
+            $user->email = $request->email;
+        }
+        if ($request->image){
+            Storage::disk('public')->delete("$user->image");
+            $image_name =  Storage::disk('public')->put('users/', $request->image);
+            $user->image = $image_name;
+        }
 
         $user->name = $request->name;
         $user->username = $request->username;
