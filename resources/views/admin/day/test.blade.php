@@ -552,7 +552,108 @@
                                     </div>
 
                                     <div class="col-md-9 table-of-carb-fat">
-                                        <table class="intake-table border-green table table-striped">
+
+                                        <div class="row">
+                                            <div class="col-md-1 p-0">
+                                                <table class="firs-table table table-striped">
+                                                    <thead>
+                                                        <tr>
+                                                            <th colspan="1">&nbsp;</th>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>&nbsp;</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody v-for="(time, i) in mealPopupData" :key="i">
+                                                        <tr>
+                                                            <th class="parent-time">
+                                                                @{{ time.headTime }}
+                                                            </th>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                            <div class="col-md-3 p-0">
+                                                <table class="energy-table table table-striped border-green">
+                                                    <thead>
+                                                        <tr>
+                                                            <th colspan="2" class="text-center position-relative">
+                                                                Energy Expenditure
+                                                            </th>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>Carb</th>
+                                                            <th>Fat</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody v-for="(time, i) in mealPopupData" :key="i">
+                                                        <tr>
+                                                            <td>@{{time.totals.totalCarb}}</td>
+                                                            <td>@{{time.totals.totalFat}}</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                            <div class="col-md-3 p-0">
+                                                <table class="energy-table table table-striped border-green">
+                                                    <thead>
+                                                        <tr>
+                                                            <th colspan="2" class="text-center position-relative">
+                                                                Intake
+                                                            </th>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>Carb</th>
+                                                            <th>Fat</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody v-for="(time, i) in mealGraphicPopup" :key="i">
+                                                        <tr>
+                                                            <td>@{{time.totals.totalCarb}}</td>
+                                                            <td>@{{time.totals.totalFat}}</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                            <div class="col-md-4 p-0">
+                                                <table class="last-table table table-striped">
+                                                    <thead>
+                                                        <tr>
+                                                            <th colspan="2" class="text-center red">Status</th>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>Carb</th>
+                                                            <th>Fat</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody v-for="(status, i) in mealStatusPopup" :key="i">
+                                                        <tr>
+                                                            <td class="bg-dark-p">
+                                                                <div>
+                                                                    @{{ Math.abs(status.carb) }}
+                                                                    <span v-if="status.carb != 0">
+                                                                        <span class="green" v-if="status.carb > 0">(loss)</span>
+                                                                        <span class="red" v-else>(access)</span>
+                                                                    </span>
+                                                                </div>
+                                                            </td>
+                                                            <td class="bg-dark-p">
+                                                                <div>
+                                                                    @{{ Math.abs(status.fat) }}
+                                                                    <span v-if="status.fat != 0">
+                                                                        <span class="green" v-if="status.fat > 0">(loss)</span>
+                                                                        <span class="red" v-else>(access)</span>
+                                                                    </span>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- <table class="intake-table border-green table table-striped">
+                                            <h1>ggggggggg</h1>
                                             <thead>
                                                 <tr>
                                                     <th colspan="2">Expenditure</th>
@@ -569,7 +670,8 @@
                                                 </tr>
                                             </thead>
                                             <tbody id="meal_carb_fat"></tbody>
-                                        </table>
+                                        </table> -->
+
                                     </div>
                                 </div>
 
@@ -785,6 +887,7 @@
 {{--script in here --}}
 @push("footer")
 <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/lodash@4.17.20/lodash.min.js"></script>
 <script src="{{asset('assets/plugins/clockpicker/dist/jquery-clockpicker.js')}}"></script>
 <script src="{{asset('assets/plugins/datepicker-new/js/bootstrap-datepicker.js')}}"></script>
 
@@ -883,14 +986,98 @@
             $(this).val(roundedTime)
         });
 
+        // return plus 4 time
         function returnPlus4Time(time) {
+
             let roundedTime = roundTime(time);
             let start = parseInt(roundedTime.substring(0, 2));
+            let startEveryHour = start
             let startsEnd = roundedTime.substring(3);
             start += 4;
             let final = start + ":" + startsEnd;
+
             console.log('Start time : ', time)
             console.log('Final time : ', final)
+
+            let _finalArr = []
+            let concatArr = []
+            let doing = false
+
+            // Create concat Array 
+            firstLoop:
+            for(let i=0; i<days.staticTimes.length; i++) {
+                
+                let _minutes = days.staticTimes[i].minutes
+            
+                for(let j=0; j<_minutes.length; j++) {
+
+                    if(_minutes[j].minute == time) {
+
+                        doing = true
+                        concatArr.push(_minutes[j])
+                        
+                    }
+                    
+                    if(_minutes[j].minute == final) {
+
+                        doing = false
+                        concatArr.push(_minutes[j])
+
+                        break firstLoop
+                    }
+
+                    if(doing && _minutes[j].minute != time) {
+                        concatArr.push(_minutes[j])
+                    }
+
+                }
+                
+            }
+
+            let x = _.chunk(concatArr, 6);
+            let ffArr = []
+
+            for(let i=0; i<x.length; i++) {
+
+                if(startEveryHour < 10) {
+                    startEveryHour = "0" + startEveryHour
+                }
+
+                let obj = {
+                    headTime: startEveryHour + ":" + startsEnd,
+                    minutes: x[i],
+                    totals: {
+                        totalCarb: null,
+                        totalFat: null
+                    }
+                }
+
+                startEveryHour++;
+
+                let _totalCarb = 0,
+                    _totalFat = 0;
+
+                for(let t=0; t<obj.minutes.length; t++) {
+                    if(obj.minutes[t].energyExpenditure) {
+                        _totalCarb  += parseFloat(obj.minutes[t].energyExpenditure.carbG)
+                        _totalFat   += parseFloat(obj.minutes[t].energyExpenditure.fatG)
+                    }
+                }
+
+                obj.totals.totalCarb =  _totalCarb != 0 ? _totalCarb.toFixed(2) : "";
+                obj.totals.totalFat =  _totalFat != 0 ? _totalFat.toFixed(2) : "";
+
+
+                ffArr.push(obj)
+                
+            }
+
+            console.log('MINUTE = ', ffArr)
+            days.setMealPopupData(ffArr)
+            setTimeout(() => {
+                days.calculateStatusPopup()
+            }, 1000);
+
             return final
         }
 
@@ -898,11 +1085,9 @@
             autoclose: true,
             placement: 'top',
         }).change(function(){
-
-            let finTIme = returnPlus4Time($(this).val())
-
-
-            $(this).val($(this).val())
+            let finTime = returnPlus4Time($(this).val())
+            let roundedTime = roundTime($(this).val())
+            $(this).val(roundedTime)
         });
 
         $('.water_time').clockpicker({
@@ -1146,8 +1331,7 @@
             }
 
             let btn = `<button type="button" class="btn btn-danger col-md-12 m-b-20 minus" data-row="${row}"><i class="fa fa-minus"></i></button>`
-            let element = `
-                            <div class="form-group col-md-3 row_${row} food_items">
+            let element = ` <div class="form-group col-md-3 row_${row} food_items">
                                 <label for="name">Food</label>
                                 <select name="food[]" id="food_sel" class="form-control m-b-20">
                                     ${food}
@@ -1198,11 +1382,14 @@
             var gl_d = 0;
 
 
+            // mass bug fix later
             $(document).find(".food_items").each(function () {
 
                 if($(this).find('input').val()) {
 
                     let mass = parseFloat($(this).find("#mass").val());
+                    console.log('mass', mass)
+
                     food_mass = parseFloat($(this).find("#food_sel").find(":selected").data('quantity_measure'));
 
                     total_mass += parseFloat($(this).find("#mass").val());
@@ -1234,6 +1421,7 @@
                     $('#total_glycemic_load').val(total_glycemic_load);
 
                     var tr = calculateCarbDigestion(total_glycemic_load, total_carbs, total_fat);
+                    console.log(tr)
                     $('#meal_carb_fat_add').html(tr);
                 }
             });
@@ -1377,13 +1565,12 @@
                     drawAssassmentAlert();
                 }
 
-
                 let p_met = 0;
                 for (var z = 0; z < res.meal.length; z++){
                     p_met += parseFloat(res.meal[z].get_meals.proteins)
                 }
-                $('.protein_eat').html(p_met);
 
+                $('.protein_eat').html(p_met);
 
                 let activities = res.activity,
                     meals = res.meal,
@@ -1474,9 +1661,20 @@
 
                 editActivityPopup: false,
                 proteinHourlyLimit: 0,
+
+                mealPopupData: [],
+                mealGraphicPopup: [],
+                mealStatusPopup: [],
             }
         },
         methods: {
+            setMealPopupData(data) {
+                this.mealPopupData = []
+                this.mealPopupData = data
+                setTimeout(() => {
+                    console.log('mealPopupData', this.mealPopupData)
+                }, 3000);
+            },
             returnRandomColor() {
                 this.color = this.color + 1
                 if(this.color % 2) {
@@ -1587,7 +1785,6 @@
                             totalCarbG: null,
                             totalFatG: null
                         }
-                        // mealPopover: [],
                     }
 
                     for(let j=0; j<6; j++) {
@@ -1918,21 +2115,111 @@
                 }
                 console.log('status = ',this.mealGraphic )
             },
+            createMealPopupGraphic(mealObj) {
+                
+                console.log(' meal graphic draw started .... ')
+                console.log('obj =', mealObj)
 
-            calculateStatus(fatGr, carbGr) {
-                var fatStatus = fatGr - 0;
-                var fatStatusText = fatStatus > 0 ? "loss" : "access";
-                fatStatus = Math.abs(fatStatus);
+                let fArr = []
+                for(let i=0; i<5; i++) {
+                    let obj = {
+                        minutes: [],
+                        totals: {
+                            totalCarb: null,
+                            totalFat: null
+                        }
+                    }
+                    for(let j=0; j<6; j++) {
 
-                var carbStatus = carbGr - 0;
-                var carbStatusText = carbStatus > 0 ? "loss" : "access";
-                carbStatus = Math.abs(carbStatus);
+                        let carbs = mealObj.carbG,
+                            load = mealObj.glycemicLoad,
+                            carbD = this.carbDigestFormula(carbs, load),
+                            fatD = ((mealObj.fatG / 4) / 6).toFixed(2);
 
-                return {
-                    'carbStatus': carbStatus,
-                    'carbStatusText': carbStatusText,
-                    'fatStatusText': fatStatusText,
-                    'fatStatus': fatStatus
+                        let intake = {
+                            carb: carbD,
+                            fat:  fatD
+                        }
+
+                        let minuteObj = {
+                            intake: intake
+                        }
+
+                        obj.minutes.push(minuteObj)
+                    }
+
+                    let _totalCarb = 0,
+                        _totalFat = 0;
+
+                    for(let t=0; t<obj.minutes.length; t++) {
+                        // if(obj.minutes[t].intake) {
+                            _totalCarb  += parseFloat(obj.minutes[t].intake.carb)
+                            _totalFat   += parseFloat(obj.minutes[t].intake.fat)
+                        // }
+                    }
+
+                    obj.totals.totalCarb =  _totalCarb != 0 ? _totalCarb.toFixed(2) : "";
+                    obj.totals.totalFat =  _totalFat != 0 ? _totalFat.toFixed(2) : "";
+
+
+                    fArr.push(obj)
+                }
+                this.mealGraphicPopup = fArr
+                console.log('final final final', fArr)
+            },
+
+            // calculateStatus(fatGr, carbGr) {
+            //     var fatStatus = fatGr - 0;
+            //     var fatStatusText = fatStatus > 0 ? "loss" : "access";
+            //     fatStatus = Math.abs(fatStatus);
+
+            //     var carbStatus = carbGr - 0;
+            //     var carbStatusText = carbStatus > 0 ? "loss" : "access";
+            //     carbStatus = Math.abs(carbStatus);
+
+            //     return {
+            //         'carbStatus': carbStatus,
+            //         'carbStatusText': carbStatusText,
+            //         'fatStatusText': fatStatusText,
+            //         'fatStatus': fatStatus
+            //     }
+            // },
+
+            calculateStatusPopup() {
+                console.log('Calculate popup status ...');
+                this.mealStatusPopup = []
+
+                let fatExpenditure = 0,
+                    fatIntake = 0,
+                    carbExpenditure = 0,
+                    carbIntake = 0,
+                    fatStatus = 0,
+                    carbStatus = 0;
+
+                for(let i=0; i<this.mealPopupData.length; i++) {
+                    // console.log('1= ', this.mealPopupData[i].totals)
+                   
+                    if(this.mealPopupData[i]) {
+                        fatExpenditure =  this.mealPopupData[i].totals.totalFat
+                        carbExpenditure = this.mealPopupData[i].totals.totalCarb
+                    }
+
+                    if(this.mealGraphicPopup[i]) {
+                        // console.log('2= ', this.mealGraphicPopup[i].totals)
+                        fatIntake = this.mealGraphicPopup[i].totals.totalFat
+                        carbIntake = this.mealGraphicPopup[i].totals.totalCarb
+                    }
+
+                    fatStatus = fatExpenditure - fatIntake
+                    carbStatus = carbExpenditure - carbIntake
+
+                    let statusObj = {
+                        fat: parseFloat(fatStatus.toFixed(2)),
+                        carb: parseFloat(carbStatus.toFixed(2))
+                    }
+                    
+                    this.mealStatusPopup.push(statusObj)
+
                 }
             },
 
@@ -2146,6 +2433,7 @@
         let row = 0;
 
         $('#meal_list').change(function () {
+            // grigor
             var id = $(this).val();
             $.ajax({
                 type: "POST",
@@ -2155,7 +2443,8 @@
                 },
                 data: {id},
                 success: function (data) {
-                    console.log('data meal : ', data)
+                    
+                    console.log('changed meal data ===== : ', data)
 
                     $('#m_total_mass').val(roundNumberDecimal(data.mass));
                     $('#m_total_carbs').val(roundNumberDecimal(data.carbs));
@@ -2165,12 +2454,24 @@
                     $('#m_total_ph').val(roundNumberDecimal(data.ph));
                     $('#m_total_glycemic_load').val(roundNumberDecimal(data.glycemic_load));
 
-                    var tr = calculateCarbDigestion(data.glycemic_load, data.carbs, data.fat);
-                    $('#meal_carb_fat').html(tr);
+                    // var tr = calculateCarbDigestion(data.glycemic_load, data.carbs, data.fat);
+                    // console.log('table =', tr)
+                    // console.log('Table params =', data.glycemic_load, data.carbs, data.fat)
+                    
+                    let mealObj = {
+                        glycemicLoad: data.glycemic_load,
+                        carbG: data.carbs,
+                        fatG: data.fat
+                    }
+          
+                    days.createMealPopupGraphic(mealObj)
+                    days.calculateStatusPopup()
 
-                    var m_pl = ` <button type="button" class="btn btn-success col-md-2 m-b-20 m_plus"
-                                                style=" height: 100px;width: 100px;">
-                                            <i class="fa fa-plus" style="font-size: 60px;"></i></button>`
+                    // $('#meal_carb_fat').html(tr);
+
+                    var m_pl = `    <button type="button" class="btn btn-success col-md-2 m-b-20 m_plus" style=" height: 50px;width: 50px;">
+                                        <i class="fa fa-plus" style="font-size: 25px;"></i>
+                                    </button>`
                     $('.m_foods').empty();
                     $('.m_foods').append(m_pl);
 
@@ -2178,34 +2479,36 @@
                         var opt = "";
                         for (var j = 0; j < foods.length; j++) {
                             var sel = "";
+
                             if (foods[j].id == data.attached_foods[i].food_id) {
                                 sel = "selected"
                             }
 
-                            opt += `<option value="${foods[j].id}"
-                                                data-carbs="${foods[j].carbs}"
-                                                data-fat="${foods[j].fat}"
-                                                data-proteins="${foods[j].proteins}"
-                                                data-calories="${foods[j].calories}"
-                                                data-fiber="${foods[j].fiber}"
-                                                data-glycemic_index="${foods[j].glycemic_index}"
-                                                data-glycemic_load="${foods[j].glycemic_load}"
-                                                data-ph="${foods[j].ph}"
-                                                data-quantity_measure="${foods[j].quantity_measure}" ${sel}>
-                                                        ${foods[j].name}
-                                                </option>`
+                                opt += `<option value="${foods[j].id}"
+                                        data-carbs="${foods[j].carbs}"
+                                        data-fat="${foods[j].fat}"
+                                        data-proteins="${foods[j].proteins}"
+                                        data-calories="${foods[j].calories}"
+                                        data-fiber="${foods[j].fiber}"
+                                        data-glycemic_index="${foods[j].glycemic_index}"
+                                        data-glycemic_load="${foods[j].glycemic_load}"
+                                        data-ph="${foods[j].ph}"
+                                        data-quantity_measure="${foods[j].quantity_measure}" ${sel}>
+                                        ${foods[j].name}
+                                    </option>`
                         }
 
                         var elem = `<div class="form-group row_${i} m_food_items col-md-1">
-                                            <select name="food[]" class="form-control m-b-20 m_food_sel">
-                                                ${opt}
-                                            </select>
-                                            <input type="number" name="mass[]" class="m_mass form-control m-b-20" placeholder="Mass" value="${data.attached_foods[i].mass}" required>
-                                            <button type="button" class="btn btn-danger col-md-12 m-b-20 m_minus" data-row="${i}"><i class="fa fa-minus"></i></button>
-                                        </div>`
+                                        <select name="food[]" class="form-control m-b-20 m_food_sel">
+                                            ${opt}
+                                        </select>
+                                        <input type="number" name="mass[]" class="m_mass form-control m-b-20" placeholder="Mass" value="${data.attached_foods[i].mass}" required>
+                                        <button type="button" class="btn btn-danger col-md-12 m-b-20 m_minus" data-row="${i}"><i class="fa fa-minus"></i></button>
+                                    </div>`
                         $('.m_foods').prepend(elem);
                         row++;
                     }
+
                 }
             })
         });
@@ -2228,8 +2531,7 @@
             }
 
             let btn = `<button type="button" class="btn btn-danger col-md-12 m-b-20 m_minus" data-row="${row}"><i class="fa fa-minus"></i></button>`
-            let element = `
-                            <div class="form-group row_${row} m_food_items col-md-1">
+            let element = `<div class="form-group row_${row} m_food_items col-md-1">
                                 <select name="food[]" class="form-control m-b-20 m_food_sel">
                                     ${food}
                                 </select>
@@ -2315,8 +2617,19 @@
                     $('#m_total_ph').val(total_ph);
                     $('#m_total_glycemic_load').val(total_glycemic_load);
 
-                    var tr = calculateCarbDigestion(total_glycemic_load, total_carbs, total_fat);
-                    $('#meal_carb_fat').html(tr);
+                    // var tr = calculateCarbDigestion(total_glycemic_load, total_carbs, total_fat);
+                    // $('#meal_carb_fat').html(tr);
+
+                    let mealObj = {
+                        glycemicLoad: total_glycemic_load,
+                        carbG: total_carbs,
+                        fatG: total_fat
+                    }
+
+                    console.log('HHHHHHHHHHHHHHHH', mealObj)
+          
+                    days.createMealPopupGraphic(mealObj)
+                    days.calculateStatusPopup()
                 }
             });
         }
@@ -2360,9 +2673,9 @@
 
 <style>
 
-.bg-dark-p {
-    background: #dbdcdd !important;
-}
+    .bg-dark-p {
+        background: #dbdcdd !important;
+    }
 
     .red-circle {
         position: absolute;
