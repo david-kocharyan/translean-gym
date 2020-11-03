@@ -50,7 +50,7 @@ class DayController extends Controller
         $date = $request->date;
 
         $activity = DayActivity::with('getActivity')->where(["user_id" => $user_id, "date" => $date])->get();
-        $meals = DayMeal::with(['getMeals', 'attachedFoods'])->where(["user_id" => $user_id, "date" => $date])->get();
+        $meals = DayMeal::with(['getMeals', 'getPersonalFood'])->where(["user_id" => $user_id, "date" => $date])->get();
         $water = DayWater::where(["user_id" => $user_id, "date" => $date])->get();
 
         for ($i = 0; $i < count($activity); $i++) {

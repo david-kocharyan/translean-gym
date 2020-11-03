@@ -14,7 +14,7 @@ class DayMeal extends Model
         return $this->hasOne("App\Model\PersonalMeal", "id", "personal_meal_id");
     }
 
-    public function attachedFoods()
+    public function getPersonalFood()
     {
         return $this->hasManyThrough("App\Model\PersonalMealFood", "App\Model\PersonalMeal", "id", "personal_meal_id", "personal_meal_id", "id");
     }
