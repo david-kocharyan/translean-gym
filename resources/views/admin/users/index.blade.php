@@ -43,8 +43,8 @@
                                     <img src="{{asset('assets/images/def.png')}}" alt="{{$val->username}}" width="150" height="150" class="img-circle">
                                 @endif
                                 <ul>
-                                    <li>Phone: {{$val->phone}}</li>
-                                    <li>Email: {{$val->email ?? "Empty"}}</li>
+{{--                                    <li>Phone: {{$val->phone}}</li>--}}
+{{--                                    <li>Email: {{$val->email ?? "Empty"}}</li>--}}
                                     <li>DOB: {{$val->dob}}</li>
                                     <li>Gender: {{App\Model\User::GENDER[$val->gender]}} </li>
                                     <li>Height: {{$val->height}}</li>
