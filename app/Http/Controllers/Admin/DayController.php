@@ -342,11 +342,76 @@ class DayController extends Controller
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function deleteMeal(Request $request){
+    public function editMeal(Request $request)
+    {
+        $request->validate([
+            "meal" => "required",
+            "food" => "required|array|min:1",
+            "mass" => "required|array|min:1",
+            "total_mass" => "required|numeric",
+            "total_carbs" => "required|numeric",
+            "total_fat" => "required|numeric",
+            "total_proteins" => "required|numeric",
+            "total_calories" => "required|numeric",
+            "total_ph" => "required|numeric",
+            "total_glycemic_load" => "required|numeric",
+        ]);
+
+        $meal_name = Meal::where('id', $request->meal)->first()->name;
+        $check_from = DayMeal::where(array('user_id' => $request->id, 'date' => $request->date, 'from' => $request->from))->where('id', "!=", $request->day_meal_id)->first();
+        if ($check_from != null) {
+            return response()->json(array('msg' => 'This Time Is Busy!'), 422);
+        }
+
+        DB::beginTransaction();
+
+        DayMeal::destroy('id', $request->day_meal_id);
+        PersonalMeal::destroy('id', $request->personal_meal_id);
+
+        $personal_meal = new PersonalMeal;
+        $personal_meal->name = $meal_name;
+        $personal_meal->mass = $request->total_mass;
+        $personal_meal->carbs = $request->total_carbs;
+        $personal_meal->fat = $request->total_fat;
+        $personal_meal->proteins = $request->total_proteins;
+        $personal_meal->calories = $request->total_calories;
+        $personal_meal->ph = $request->total_ph;
+        $personal_meal->glycemic_load = $request->total_glycemic_load;
+        $personal_meal->save();
+
+        $arr = array();
+        foreach ($request->food as $bin => $key) {
+            $arr[$bin]['personal_meal_id'] = $personal_meal->id;
+            $arr[$bin]['food_id'] = $key;
+            $arr[$bin]['mass'] = $request->mass[$bin];
+        }
+
+        $personal_meal->attachedFoods()->createMany($arr);
+
+        $dayMeal = new DayMeal;
+        $dayMeal->user_id = $request->id;
+        $dayMeal->personal_meal_id = $personal_meal->id;
+        $dayMeal->date = $request->date;
+        $dayMeal->from = $request->from;
+        $dayMeal->save();
+        DB::commit();
+
+        $meal = DayMeal::with('getMeals')->where(["id" => $dayMeal->id])->get();
+
+        return response()->json(['success' => "Your meal has been saved.", 'meal' => $meal], 200);
+    }
+
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function deleteMeal(Request $request)
+    {
         DayMeal::destroy('id', $request->id);
         PersonalMeal::destroy('id', $request->personal_meal_id);
         return response()->json(array('msg' => 'Meal deleted successfully!'), 200);
     }
+
     /**
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
@@ -488,9 +553,10 @@ class DayController extends Controller
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function deleteWater(Request $request){
-       DayWater::destroy('id', $request->id);
-       return response()->json(array('msg' => 'Water deleted successfully!'), 200);
+    public function deleteWater(Request $request)
+    {
+        DayWater::destroy('id', $request->id);
+        return response()->json(array('msg' => 'Water deleted successfully!'), 200);
     }
 
     /**

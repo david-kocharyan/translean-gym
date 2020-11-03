@@ -65,6 +65,7 @@ Route::group(['namespace' => 'Admin', 'middleware' => 'auth:admin'], function ()
     Route::post('/day/clear-all-meals', 'DayController@clearMeal');
     Route::post('/day/duplicate-meals', 'DayController@duplicateMeal');
     Route::post('/day/delete-meals', 'DayController@deleteMeal');
+    Route::post('/day/edit-meals', 'DayController@editMeal');
 
     Route::post('/day/add-water', 'DayController@addWater');
     Route::post('/day/edit-water', 'DayController@editWater');
