@@ -462,7 +462,7 @@
                                 <span class="hidden-xs">Choose Meal</span>
                             </a>
                         </li>
-                        <li role="presentation" class="">
+                        <li role="presentation" class="" v-show="!editMeal">
                             <a href="#add" aria-controls="profile" role="tab" data-toggle="tab" aria-expanded="false">
                                 <span class="visible-xs"><i class="ti-user"></i></span>
                                 <span class="hidden-xs">Create Meal</span>
@@ -483,7 +483,7 @@
                                 <input type="hidden" class="meal_date" name="date">
                                 <div class="form-row">
                                     <div class="form-group col-md-12">
-                                        <label for="activity_list">Choose Meal</label>
+                                        <label for="activity_list">Choose Meal 44</label>
                                         <select name="meal" id="meal_list" class="meal_list form-control">
                                             <option value="">Choose Meal</option>
                                             @foreach($meals as $key => $val)
@@ -551,6 +551,7 @@
                                     </div>
                                 </div>
 
+                                <!-- grigor -->
                                 <div class="form-row">
                                     <div class="form-group col-md-3">
                                         <label for="meal_from">Time</label>
@@ -886,13 +887,176 @@
 
 
 <script !src="">
+
+    let foods = '<?php echo $foods ?>';
+    foods = JSON.parse(foods);
+    let row = 0;
+
+
+
+
+
+
+
+
+
+    function roundTime(time) {
+        let timePart = time.split(':');
+
+        let minPart = parseInt(timePart[1]);
+
+        let newTime = '';
+
+        if (minPart % 10) {
+
+            let afterTimeRounded = (minPart % 10 > 5) ?
+                Math.ceil(minPart / 10) * 10
+                : Math.floor(minPart / 10) * 10;
+
+            if (!afterTimeRounded) {
+                afterTimeRounded = '00';
+            }
+
+            if(afterTimeRounded == '60') {
+
+                afterTimeRounded = '00'
+
+                let newTimepart = parseInt(timePart[0]) + 1
+
+
+                if(newTimepart < 10) {
+                    newTimepart = '0' + newTimepart
+                }
+
+                timePart[0] = newTimepart
+
+            }
+
+            newTime = timePart[0] + ':' + afterTimeRounded
+            return newTime;
+        }
+
+        return time;
+    }
+    // return plus 4 time
+    function returnPlus4Time(time) {
+
+        let roundedTime = roundTime(time);
+        let start = parseInt(roundedTime.substring(0, 2));
+        let startEveryHour = start
+        let startsEnd = roundedTime.substring(3);
+        start += 4;
+        let final = start + ":" + startsEnd;
+
+        console.log('Start time : ', time)
+        console.log('Final time : ', final)
+
+        let _finalArr = []
+        let concatArr = []
+        let doing = false
+
+        // Create concat Array 
+        firstLoop:
+        for(let i=0; i<days.staticTimes.length; i++) {
+            
+            let _minutes = days.staticTimes[i].minutes
+
+            for(let j=0; j<_minutes.length; j++) {
+
+                if(_minutes[j].minute == time) {
+
+                    doing = true
+                    concatArr.push(_minutes[j])
+                    
+                }
+                
+                if(_minutes[j].minute == final) {
+
+                    doing = false
+                    concatArr.push(_minutes[j])
+
+                    break firstLoop
+                }
+
+                if(doing && _minutes[j].minute != time) {
+                    concatArr.push(_minutes[j])
+                }
+
+            }
+            
+        }
+
+        let x = _.chunk(concatArr, 6);
+        let ffArr = []
+
+        for(let i=0; i<x.length; i++) {
+
+            if(startEveryHour < 10) {
+                startEveryHour = "0" + startEveryHour
+            }
+
+            let obj = {
+                headTime: startEveryHour + ":" + startsEnd,
+                minutes: x[i],
+                totals: {
+                    totalCarb: null,
+                    totalFat: null
+                }
+            }
+
+            startEveryHour++;
+
+            let _totalCarb = 0,
+                _totalFat = 0;
+
+            for(let t=0; t<obj.minutes.length; t++) {
+                if(obj.minutes[t].energyExpenditure) {
+                    _totalCarb  += parseFloat(obj.minutes[t].energyExpenditure.carbG)
+                    _totalFat   += parseFloat(obj.minutes[t].energyExpenditure.fatG)
+                }
+            }
+
+            obj.totals.totalCarb =  _totalCarb != 0 ? _totalCarb.toFixed(2) : "";
+            obj.totals.totalFat =  _totalFat != 0 ? _totalFat.toFixed(2) : "";
+
+
+            ffArr.push(obj)
+            
+        }
+
+        console.log('MINUTE = ', ffArr)
+        days.setMealPopupData(ffArr)
+        setTimeout(() => {
+            days.calculateStatusPopup()
+        }, 1000);
+
+        return final
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     $(document).ready(function () {
 
         show_date();
 
         // Protein Hourly limit
         let res = JSON.parse('<?php echo json_encode($user); ?>');
+        
+        
         days.proteinHourlyLimit = res.protein_hourly_limit
+
+        
 
 
         function show_date(type = 0, dateString = null) {
@@ -923,45 +1087,7 @@
 
         }
 
-        function roundTime(time) {
 
-            let timePart = time.split(':');
-
-            let minPart = parseInt(timePart[1]);
-
-            let newTime = '';
-
-            if (minPart % 10) {
-
-                let afterTimeRounded = (minPart % 10 > 5) ?
-                    Math.ceil(minPart / 10) * 10
-                    : Math.floor(minPart / 10) * 10;
-
-                if (!afterTimeRounded) {
-                    afterTimeRounded = '00';
-                }
-
-                if(afterTimeRounded == '60') {
-
-                    afterTimeRounded = '00'
-
-                    let newTimepart = parseInt(timePart[0]) + 1
-
-
-                    if(newTimepart < 10) {
-                        newTimepart = '0' + newTimepart
-                    }
-
-                    timePart[0] = newTimepart
-
-                }
-
-                newTime = timePart[0] + ':' + afterTimeRounded
-                return newTime;
-            }
-
-            return time;
-        }
 
         $('.activity_from').clockpicker({
             autoclose: true,
@@ -979,100 +1105,7 @@
             $(this).val(roundedTime)
         });
 
-        // return plus 4 time
-        function returnPlus4Time(time) {
 
-            let roundedTime = roundTime(time);
-            let start = parseInt(roundedTime.substring(0, 2));
-            let startEveryHour = start
-            let startsEnd = roundedTime.substring(3);
-            start += 4;
-            let final = start + ":" + startsEnd;
-
-            console.log('Start time : ', time)
-            console.log('Final time : ', final)
-
-            let _finalArr = []
-            let concatArr = []
-            let doing = false
-
-            // Create concat Array 
-            firstLoop:
-            for(let i=0; i<days.staticTimes.length; i++) {
-                
-                let _minutes = days.staticTimes[i].minutes
-            
-                for(let j=0; j<_minutes.length; j++) {
-
-                    if(_minutes[j].minute == time) {
-
-                        doing = true
-                        concatArr.push(_minutes[j])
-                        
-                    }
-                    
-                    if(_minutes[j].minute == final) {
-
-                        doing = false
-                        concatArr.push(_minutes[j])
-
-                        break firstLoop
-                    }
-
-                    if(doing && _minutes[j].minute != time) {
-                        concatArr.push(_minutes[j])
-                    }
-
-                }
-                
-            }
-
-            let x = _.chunk(concatArr, 6);
-            let ffArr = []
-
-            for(let i=0; i<x.length; i++) {
-
-                if(startEveryHour < 10) {
-                    startEveryHour = "0" + startEveryHour
-                }
-
-                let obj = {
-                    headTime: startEveryHour + ":" + startsEnd,
-                    minutes: x[i],
-                    totals: {
-                        totalCarb: null,
-                        totalFat: null
-                    }
-                }
-
-                startEveryHour++;
-
-                let _totalCarb = 0,
-                    _totalFat = 0;
-
-                for(let t=0; t<obj.minutes.length; t++) {
-                    if(obj.minutes[t].energyExpenditure) {
-                        _totalCarb  += parseFloat(obj.minutes[t].energyExpenditure.carbG)
-                        _totalFat   += parseFloat(obj.minutes[t].energyExpenditure.fatG)
-                    }
-                }
-
-                obj.totals.totalCarb =  _totalCarb != 0 ? _totalCarb.toFixed(2) : "";
-                obj.totals.totalFat =  _totalFat != 0 ? _totalFat.toFixed(2) : "";
-
-
-                ffArr.push(obj)
-                
-            }
-
-            console.log('MINUTE = ', ffArr)
-            days.setMealPopupData(ffArr)
-            setTimeout(() => {
-                days.calculateStatusPopup()
-            }, 1000);
-
-            return final
-        }
 
         $('.meal_from').clockpicker({
             autoclose: true,
@@ -1364,9 +1397,6 @@
 
 <script !src="">
     $(document).ready(function () {
-        let foods = '<?php echo $foods ?>';
-        foods = JSON.parse(foods);
-        let row = 0;
         add();
 
         function add() {
@@ -1674,6 +1704,8 @@
 
                         id: meals[i].id,
                         personal_meal_id: meals[i].personal_meal_id,
+                        get_personal_food: meals[i].get_personal_food,
+                        get_meals: meals[i].get_meals,
                     };
 
                     days.addMeals(mealObj)
@@ -2008,11 +2040,7 @@
                             show: false
                         }
 
-                        
-
                         for(let k=0; k<this.meal.length; k++) {
-
-                            
 
                             if(this.meal[k].type) {
 
@@ -2053,6 +2081,8 @@
                                     minute.mealType = 2
                                     minute.id = this.meal[k].id
                                     minute.personal_meal_id = this.meal[k].personal_meal_id
+                                    minute.get_personal_food = this.meal[k].get_personal_food
+                                    minute.get_meals = this.meal[k].get_meals
 
                                     let popover = {
                                         name: this.meal[k].name
@@ -2097,22 +2127,9 @@
                                         }
                                     }
 
-                                    console.log('x', x)
-                                    console.log('minute intake=',minuteIntake )
+                                    // console.log('x', x)
+                                    // console.log('minute intake=',minuteIntake )
 
-                                    // if(this.meal[k].end == fm) {
-                                    //     console.log('fm=',fm, 'end=',end, 'this.meal[k].end=',this.meal[k].end)
-                                    //     minute.end = true
-                                    //     alert(this.meal[k].end)
-
-                                    //     if( !minute.intake ) {
-                                    //         minute.intake = x
-                                    //         alert('if')
-                                    //     }else {
-                                    //         minute.intake = intake
-                                    //         alert('else')
-                                    //     }
-                                    // }
                                 }
 
                             }
@@ -2523,9 +2540,7 @@
         foods = JSON.parse(foods);
         let row = 0;
 
-        $('#meal_list').change(function () {
-            // grigor
-            var id = $(this).val();
+        function mealListOnChange(id) {
             $.ajax({
                 type: "POST",
                 url: "/day/get-meal-ajax",
@@ -2544,10 +2559,6 @@
                     $('#m_total_calories').val(roundNumberDecimal(data.calories));
                     $('#m_total_ph').val(roundNumberDecimal(data.ph));
                     $('#m_total_glycemic_load').val(roundNumberDecimal(data.glycemic_load));
-
-                    // var tr = calculateCarbDigestion(data.glycemic_load, data.carbs, data.fat);
-                    // console.log('table =', tr)
-                    // console.log('Table params =', data.glycemic_load, data.carbs, data.fat)
                     
                     let mealObj = {
                         glycemicLoad: data.glycemic_load,
@@ -2558,8 +2569,6 @@
                     days.createMealPopupGraphic(mealObj)
                     days.calculateStatusPopup()
 
-                    // $('#meal_carb_fat').html(tr);
-
                     var m_pl = `    <button type="button" class="btn btn-success col-md-2 m-b-20 m_plus" style=" height: 50px;width: 50px;">
                                         <i class="fa fa-plus" style="font-size: 25px;"></i>
                                     </button>`
@@ -2569,6 +2578,7 @@
                     for (var i = 0; i < data.attached_foods.length; i++) {
                         var opt = "";
                         for (var j = 0; j < foods.length; j++) {
+                            console.log('foods', foods)
                             var sel = "";
 
                             if (foods[j].id == data.attached_foods[i].food_id) {
@@ -2602,6 +2612,11 @@
 
                 }
             })
+        }
+
+        $('#meal_list').change(function () {
+            var id = $(this).val();
+            mealListOnChange(id)
         });
 
         function m_add() {
@@ -2748,8 +2763,88 @@
 
         });
 
+
+
+        // edit meal
         $(document).on("click", ".edit-meal", function () {
-            console.log('edit-meal')
+            console.log('edit-meal', days.selectedMeal)
+
+            let res_meals = JSON.parse('<?php echo json_encode($meals); ?>');
+            let item = days.selectedMeal.name
+            let id = res_meals.filter(obj => obj.name == item)
+            $("#meal_list").val( id[0].id );
+
+            $('.meal_from').clockpicker({
+                autoclose: true,
+                placement: 'bottom',
+            }).val(days.selectedMeal.minute);
+
+            let finTime = returnPlus4Time(days.selectedMeal.minute)
+
+
+            let getMeals = days.selectedMeal.get_meals
+
+            $('#m_total_mass').val(roundNumberDecimal(getMeals.mass));
+            $('#m_total_carbs').val(roundNumberDecimal(getMeals.carbs));
+            $('#m_total_fat').val(roundNumberDecimal(getMeals.fat));
+            $('#m_total_proteins').val(roundNumberDecimal(getMeals.proteins));
+            $('#m_total_calories').val(roundNumberDecimal(getMeals.calories));
+            $('#m_total_ph').val(roundNumberDecimal(getMeals.ph));
+            $('#m_total_glycemic_load').val(roundNumberDecimal(getMeals.glycemic_load));
+
+
+            let mealObj = {
+                glycemicLoad: getMeals.glycemic_load,
+                carbG: getMeals.carbs,
+                fatG: getMeals.fat
+            }
+    
+            days.createMealPopupGraphic(mealObj)
+            days.calculateStatusPopup()
+
+            var m_pl = `<button type="button" class="btn btn-success col-md-2 m-b-20 m_plus" style=" height: 50px;width: 50px;">
+                            <i class="fa fa-plus" style="font-size: 25px;"></i>
+                        </button>`
+            $('.m_foods').empty();
+            $('.m_foods').append(m_pl);
+
+
+            let personalFood = days.selectedMeal.get_personal_food
+
+            for (var i = 0; i < personalFood.length; i++) {
+                var opt = "";
+                for (var j = 0; j < foods.length; j++) {
+                    var sel = "";
+
+                    if (foods[j].id == personalFood[i].food_id) {
+                        sel = "selected"
+                    }
+
+                        opt += `<option value="${foods[j].id}"
+                                data-carbs="${foods[j].carbs}"
+                                data-fat="${foods[j].fat}"
+                                data-proteins="${foods[j].proteins}"
+                                data-calories="${foods[j].calories}"
+                                data-fiber="${foods[j].fiber}"
+                                data-glycemic_index="${foods[j].glycemic_index}"
+                                data-glycemic_load="${foods[j].glycemic_load}"
+                                data-ph="${foods[j].ph}"
+                                data-quantity_measure="${foods[j].quantity_measure}" ${sel}>
+                                ${foods[j].name}
+                            </option>`
+                }
+
+                var elem = `<div class="form-group row_${i} m_food_items col-md-1">
+                                <select name="food[]" class="form-control m-b-20 m_food_sel">
+                                    ${opt}
+                                </select>
+                                <input type="number" name="mass[]" class="m_mass form-control m-b-20" placeholder="Mass" value="${personalFood[i].mass}" required>
+                                <button type="button" class="btn btn-danger col-md-12 m-b-20 m_minus" data-row="${i}"><i class="fa fa-minus"></i></button>
+                            </div>`
+                $('.m_foods').prepend(elem);
+                row++;
+            }
+
         });
 
     })
