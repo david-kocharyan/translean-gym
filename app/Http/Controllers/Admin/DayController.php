@@ -342,6 +342,14 @@ class DayController extends Controller
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
+    public function deleteMeal(Request $request){
+        DayMeal::destroy('id', $request->id);
+        return response()->json(array('msg' => 'Meal deleted successfully!'), 200);
+    }
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function getMealAjax(Request $request)
     {
         $id = $request->id;
@@ -473,6 +481,15 @@ class DayController extends Controller
         $water->save();
 
         return response()->json(array('msg' => 'Water Edit Successfully!', 'water' => $water), 200);
+    }
+
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function deleteWater(Request $request){
+       DayWater::destroy('id', $request->id);
+       return response()->json(array('msg' => 'Water deleted successfully!'), 200);
     }
 
     /**
