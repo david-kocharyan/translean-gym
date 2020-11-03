@@ -27,7 +27,7 @@
     <div class="row">
         <div class="col-md-12">
             @foreach($data as $key=>$val)
-                <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
+                <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
                     <div class="panel panel-default">
                         <div class="panel-heading rounded-top">
                             {{$val->name}} ({{$val->username}})
@@ -106,7 +106,7 @@
     <style>
         .panel-body{
             display: flex;
-            justify-content: space-between;
+            justify-content: flex-start;
             align-items: center;
             flex-wrap: wrap;
         }
