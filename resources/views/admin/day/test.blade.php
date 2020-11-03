@@ -1330,8 +1330,12 @@
         $('.delete-personal-meal').click(function() {
 
             let data = {
-                id: days.selectedActivity.id
+                id: days.selectedMeal.id,
+                personal_meal_id: days.selectedMeal.personal_meal_id
             };
+
+            console.log(days.selectedMeal)
+            console.log('data', data)
 
             $.ajax({
                 type: "POST",
@@ -2092,6 +2096,9 @@
                                             minute.intake = x
                                         }
                                     }
+
+                                    console.log('x', x)
+                                    console.log('minute intake=',minuteIntake )
 
                                     // if(this.meal[k].end == fm) {
                                     //     console.log('fm=',fm, 'end=',end, 'this.meal[k].end=',this.meal[k].end)
