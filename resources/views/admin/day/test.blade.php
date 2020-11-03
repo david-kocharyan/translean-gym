@@ -277,9 +277,14 @@
                                 class="w-100 green d-flex justify-content-between align-items-center">
                                 @{{ meal_info.name }}
 
-                                <div class="edit-meal" data-toggle="modal" data-target="#meal" v-if="!meal_info.water"> <i class="fas fa-edit"></i> </div>
+                                <div class="edit-meal" data-toggle="modal" data-target="#meal" 
+                                    @click="openEditMealPopup(meal_info)" 
+                                    v-if="!meal_info.water"> 
+                                    <i class="fas fa-edit"></i> 
+                                </div>
+                                
                                 <div class="edit-meal" data-toggle="modal" data-target="#water"
-                                    @click="openEditWaterPopup( meal_info.quantity, meal_info.minute, meal_info.id )" v-else>
+                                     @click="openEditWaterPopup( meal_info.quantity, meal_info.minute, meal_info.id )" v-else>
                                     <i class="fas fa-edit"></i>
                                 </div>
 
@@ -444,7 +449,8 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title">Meals</h4>
+                    <h4 v-show="!editMeal" class="modal-title">Add Meals</h4>
+                    <h4 v-show="editMeal" class="modal-title">Edit Meals</h4>
                 </div>
 
                 <div class="modal-body" style="position: relative; overflow-y: auto;">
@@ -651,35 +657,20 @@
                                                 </table>
                                             </div>
                                         </div>
-                                        
-                                        <!-- <table class="intake-table border-green table table-striped">
-                                            <h1>ggggggggg</h1>
-                                            <thead>
-                                                <tr>
-                                                    <th colspan="2">Expenditure</th>
-                                                    <th colspan="2">Intake</th>
-                                                    <th colspan="2">Status</th>
-                                                </tr>
-                                                <tr>
-                                                    <th>Carb</th>
-                                                    <th>Fat</th>
-                                                    <th>Carb</th>
-                                                    <th>Fat</th>
-                                                    <th>Carb</th>
-                                                    <th>Fat</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody id="meal_carb_fat"></tbody>
-                                        </table> -->
 
                                     </div>
                                 </div>
 
                                 <div class="form-row">
                                     <div class="form-group col-md-12">
-                                        <button type="button"
-                                                class="btn add-personal-meal btn-success waves-effect waves-light m-r-10">
+                                        <button v-show="editMeal" type="button" class="btn delete-personal-meal btn-danger waves-effect waves-light m-r-10">
+                                            Delete Meals
+                                        </button>
+                                        <button v-show="!editMeal" type="button" class="btn add-personal-meal btn-success waves-effect waves-light m-r-10">
                                             Save
+                                        </button>
+                                        <button v-show="editMeal" type="button" class="btn edit-personal-meal btn-success waves-effect waves-light m-r-10">
+                                            Edit
                                         </button>
                                     </div>
                                 </div>
@@ -830,7 +821,8 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title">Add Water</h4>
+                    <h4 class="modal-title" v-show="!editWater">Add Water</h4>
+                    <h4 class="modal-title" v-show="editWater">Edit Water</h4>
                 </div>
                 <div class="modal-body">
 
@@ -851,6 +843,7 @@
 
                 </div>
                 <div class="modal-footer">
+                    <button class="btn btn-danger delete-water" v-show="editWater">Delete water</button>
                     <button  class="btn btn-success add-water" v-show="!editWater">Add</button>
                     <button  class="btn btn-success edit-water" v-show="editWater">Edit</button>
                 </div>
@@ -1303,6 +1296,64 @@
             });
         })
 
+        $('.delete-water').click(function() {
+
+            let data = {
+                user_id: $('.user_id').val(),
+                date: $('.date-show').html(),
+                quantity: parseFloat($('.quantity').val()),
+                from: $('.water_time').val(),
+                id: days.id
+            };
+
+            $.ajax({
+                type: "POST",
+                headers: {
+                    'X-CSRF-TOKEN': '{{csrf_token()}}'
+                },
+                url: '{{ url('/day/delete-water') }}',
+                data: data,
+                success: function (res) {
+
+                    $('#water').modal('toggle');
+
+                    days.actions = []
+                    days.meal = []
+
+                    getActivities();
+
+                }
+            });
+
+        })
+
+        $('.delete-personal-meal').click(function() {
+
+            let data = {
+                id: days.selectedActivity.id
+            };
+
+            $.ajax({
+                type: "POST",
+                headers: {
+                    'X-CSRF-TOKEN': '{{csrf_token()}}'
+                },
+                url: '{{ url('/day/delete-meals') }}',
+                data: data,
+                success: function (res) {
+
+                    $('#meal').modal('toggle');
+
+                    days.actions = []
+                    days.meal = []
+
+                    getActivities();
+
+                }
+            });
+
+        })
+
 
     });
 </script>
@@ -1616,6 +1667,9 @@
                         proteinG:  meals[i].get_meals.proteins,
                         proteinD: 0,
                         glycemicLoad: meals[i].get_meals.glycemic_load,
+
+                        id: meals[i].id,
+                        personal_meal_id: meals[i].personal_meal_id,
                     };
 
                     days.addMeals(mealObj)
@@ -1653,8 +1707,10 @@
                 color: 0,
 
                 editWater: false,
+                editMeal: false,
                 id: 0,
                 selectedActivity: [],
+                selectedMeal: [],
 
                 energyExpendedMode: false,
                 circleCount: 0,
@@ -1948,7 +2004,11 @@
                             show: false
                         }
 
+                        
+
                         for(let k=0; k<this.meal.length; k++) {
+
+                            
 
                             if(this.meal[k].type) {
 
@@ -1987,6 +2047,8 @@
                                     end = this.meal[k].end
                                     minute.name = this.meal[k].name
                                     minute.mealType = 2
+                                    minute.id = this.meal[k].id
+                                    minute.personal_meal_id = this.meal[k].personal_meal_id
 
                                     let popover = {
                                         name: this.meal[k].name
@@ -2014,10 +2076,11 @@
 
                                 } else {
 
+                                    
+                                    
                                     if(end == fm) {
                                         end = null
                                     }
-
                                     else if(fm != this.meal[k].start && end != null) {
                                         minute.mealType = 2
 
@@ -2029,6 +2092,20 @@
                                             minute.intake = x
                                         }
                                     }
+
+                                    // if(this.meal[k].end == fm) {
+                                    //     console.log('fm=',fm, 'end=',end, 'this.meal[k].end=',this.meal[k].end)
+                                    //     minute.end = true
+                                    //     alert(this.meal[k].end)
+
+                                    //     if( !minute.intake ) {
+                                    //         minute.intake = x
+                                    //         alert('if')
+                                    //     }else {
+                                    //         minute.intake = intake
+                                    //         alert('else')
+                                    //     }
+                                    // }
                                 }
 
                             }
@@ -2222,7 +2299,6 @@
 
                 }
             },
-
             addActivity(activityObj){
                 this.actions.push(activityObj)
             },
@@ -2250,7 +2326,11 @@
                 this.id = activity.id
                 this.selectedActivity = activity
             },
-
+            openEditMealPopup(meal) {
+                this.editMeal = true
+                this.selectedMeal = meal 
+                console.log('Meal : ', meal)
+            },
             deleteActivity() {
 
                 let data = {
@@ -2426,6 +2506,10 @@
 
             $('.error_modal_activity').empty()
 
+        });
+         // detect when meal popup closed
+         $('#meal').on('hidden.bs.modal', function () {
+            days.editMeal = false
         });
 
         let foods = '<?php echo $foods ?>';
