@@ -604,6 +604,11 @@
                                         ticks: {
                                             beginAtZero: true
                                         }
+                                    }],
+                                    xAxes: [{
+                                        ticks: {
+                                            beginAtZero: true
+                                        }
                                     }]
                                 },
                                 legend: {
