@@ -527,7 +527,7 @@
                 data: {id: id},
                 success: function (res) {
                     let labels = [""];
-                    let data = [0];
+                    let data = [];
                     let projection_data = [];
                     console.log(res)
 
