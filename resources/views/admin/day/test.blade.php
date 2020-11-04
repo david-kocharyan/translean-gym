@@ -1233,6 +1233,44 @@
                     }, 10000)
                 }
             })
+
+        })
+
+        $('.edit-personal-meal').click(function () {
+
+            let day_meal_id = days.selectedMeal.id, 
+                personal_meal_id = days.selectedMeal.personal_meal_id;
+
+            $('.add-personal-meal-form').append(`<input type="hidden" name="day_meal_id" value=${day_meal_id} />`)
+            $('.add-personal-meal-form').append(`<input type="hidden" name="personal_meal_id" value=${personal_meal_id} />`)
+
+            var form = $('.add-personal-meal-form');
+            $('.meal_date').val($('.date-show').html())
+
+            $.ajax({
+                type: "POST",
+                url: "/day/edit-meals",
+                headers: {
+                    'X-CSRF-TOKEN': '{{csrf_token()}}'
+                },
+                data: form.serialize(),
+                success: function (res) {
+                    $('#meal').modal('toggle');
+                    getActivities();
+                },
+                error: function (reject) {
+                    $('.m_errors').empty()
+                    $('.m_success').empty()
+                    if (reject.status === 422) {
+                        var err = $.parseJSON(reject.responseText)
+                        $('.m_errors').append(`<li>Please choose a meal!</li>`)
+                    }
+                    setTimeout(function () {
+                        $('.m_errors').empty()
+                    }, 10000)
+                }
+            })
+
         })
 
         $('.clear-all-meal').click(function() {
