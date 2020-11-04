@@ -69,11 +69,14 @@
                     <tr>
                         <th colspan="1">
                             <a href="javascript:void(0)" @click.prevent="closeAll">Close</a>
+                            <span @click="hideZeroToEight" style="margin-left: 8px">
+                                <i class="fas fa-bed"></i>
+                            </span>
                         </th>
                     </tr>
                 </thead>
 
-                <tbody v-for="(time, i) in staticTimes" :key="time.time">
+                <tbody v-for="(time, i) in staticTimes" :key="time.time" v-if="time.show">
                     <tr>
                         <th class="parent-time"
                             @click="toggleTimes(i)"
@@ -114,7 +117,7 @@
                     </tr>
                 </thead>
                 <tbody class="font-sm">
-                    <tr v-for="(activity, i) in staticTimes" :key="activity.time">
+                    <tr v-for="(activity, i) in staticTimes" :key="activity.time" v-if="activity.show">
 
                         <td class="d-flex align-items-center activity-color"
                         @click="toggleTimes(i)" >
@@ -162,7 +165,6 @@
                         </td>
 
                     </tr>
-
                 </tbody>
             </table>
         </div>
@@ -191,7 +193,7 @@
                         <td>Carb&nbsp;(g)</td>
                     </tr>
                 </thead>
-                <tbody v-for="(time, i) in staticTimes" :key="time.time">
+                <tbody v-for="(time, i) in staticTimes" :key="time.time" v-if="time.show">
                     <tr  @click="toggleTimes(i)" >
                         <td><b>@{{ time.totals.totalCal }}</b></td>
                         <td v-if='energyExpendedMode'></td>
@@ -205,13 +207,13 @@
                     <tr v-for="(minute, j) in time.minutes" :key="j"
                         v-if="minute.show"
                     >
-                        <td><span class="green" v-if="minute.borderColor">@{{ minute.energyExpenditure.totalCal }}</span></td>
+                        <td><span class="green" v-if="minute.borderColor">@{{ parseFloat(minute.energyExpenditure.totalCal).toFixed(2) }}</span></td>
                         <td v-if='energyExpendedMode'><span v-if="minute.borderColor">@{{ minute.energyExpenditure.fatPercentage }}</span></td>
-                        <td v-if='energyExpendedMode'><span class="green" v-if="minute.borderColor">@{{ minute.energyExpenditure.fatC }}</span></td>
-                        <td><span v-if="minute.borderColor">@{{ minute.energyExpenditure.fatG }}</span></td>
+                        <td v-if='energyExpendedMode'><span class="green" v-if="minute.borderColor">@{{ parseFloat(minute.energyExpenditure.fatC).toFixed(2) }}</span></td>
+                        <td><span v-if="minute.borderColor">@{{ parseFloat(minute.energyExpenditure.fatG).toFixed(2) }}</span></td>
                         <td v-if='energyExpendedMode'><span v-if="minute.borderColor">@{{ minute.energyExpenditure.carbPercentage }}</span></td>
-                        <td v-if='energyExpendedMode'><span v-if="minute.borderColor">@{{ minute.energyExpenditure.carbC }}</span></td>
-                        <td><span v-if="minute.borderColor">@{{ minute.energyExpenditure.carbG }}</span></td>
+                        <td v-if='energyExpendedMode'><span v-if="minute.borderColor">@{{ parseFloat(minute.energyExpenditure.carbC).toFixed(2) }}</span></td>
+                        <td><span v-if="minute.borderColor">@{{ parseFloat(minute.energyExpenditure.carbG).toFixed(2) }}</span></td>
                     </tr>
                 </tbody>
             </table>
@@ -255,7 +257,7 @@
                 </thead>
                 <tbody>
 
-                    <tr v-for="(meal, i) in mealGraphic" :key="meal.time">
+                    <tr v-for="(meal, i) in mealGraphic" :key="meal.time" v-if="meal.show">
 
                         <td class="d-flex align-items-center activity-color"
                         @click="toggleTimes(i)" >
@@ -313,7 +315,7 @@
                         <td>Protein&nbsp;Dig.</td>
                     </tr>
                 </thead>
-                <tbody v-for="(meal, i) in mealGraphic" :key="meal.time">
+                <tbody v-for="(meal, i) in mealGraphic" :key="meal.time" v-if="meal.show">
                     <tr  @click="toggleTimes(i)" >
                         <td><b>@{{ meal.totals.totalFat }}</b></td>
                         <td><b>@{{ meal.totals.totalFatD }}</b></td>
@@ -333,12 +335,12 @@
                     <tr v-for="(meal_info, j) in meal.minutes" :key="j"
                         v-if="meal_info.show"
                     >
-                        <td><span class="green" v-if="meal_info.mealType == 2 && meal_info.name && !meal_info.water">@{{ meal_info.intake.fatG }}</span></td>
-                        <td><span v-if="meal_info.mealType == 2">@{{ meal_info.intake.fatD }}</span></td>
-                        <td><span class="green" v-if="meal_info.mealType == 2 && meal_info.name && !meal_info.water">@{{ meal_info.intake.carbG }}</span></td>
-                        <td><span v-if="meal_info.mealType == 2">@{{ meal_info.intake.carbD }}</span></td>
-                        <td><span v-if="meal_info.mealType == 2 && meal_info.name && !meal_info.water">@{{ meal_info.intake.proteinG }}</span></td>
-                        <td><span v-if="meal_info.mealType == 2">@{{ meal_info.intake.proteinD }}</span></td>
+                        <td><span class="green" v-if="meal_info.mealType == 2 && meal_info.name && !meal_info.water">@{{ parseFloat(meal_info.intake.fatG).toFixed(2) }}</span></td>
+                        <td><span v-if="meal_info.mealType == 2">@{{ parseFloat(meal_info.intake.fatD).toFixed(2) }}</span></td>
+                        <td><span class="green" v-if="meal_info.mealType == 2 && meal_info.name && !meal_info.water">@{{ parseFloat(meal_info.intake.carbG).toFixed(2) }}</span></td>
+                        <td><span v-if="meal_info.mealType == 2">@{{ parseFloat(meal_info.intake.carbD).toFixed(2) }}</span></td>
+                        <td><span v-if="meal_info.mealType == 2 && meal_info.name && !meal_info.water">@{{ parseFloat(meal_info.intake.proteinG).toFixed(2) }}</span></td>
+                        <td><span v-if="meal_info.mealType == 2">@{{ parseFloat(meal_info.intake.proteinD).toFixed(2) }}</span></td>
                     </tr>
                 </tbody>
             </table>
@@ -356,7 +358,7 @@
                         <td class="text-center">Carb</td>
                     </tr>
                 </thead>
-                <tbody v-for="(status, i) in mealGraphic" :key="status.time">
+                <tbody v-for="(status, i) in mealGraphic" :key="status.time" v-if="status.show">
                     <tr  @click="toggleTimes(i)" >
                         <td class="bg-dark-p"></td>
                         <td class="bg-dark-p"></td>
@@ -1825,7 +1827,21 @@
                     }
                 }
             },
+            hideZeroToEight() {
+                let times = this.staticTimes,
+                    meals = this.mealGraphic;
+
+                    console.log('times',times)
+                    console.log('meals',meals)
+
+                for(let k=0; k < 8; k++) {
+                    times[k].show ? times[k].show = false : times[k].show = true
+                    meals[k].show ? meals[k].show = false : meals[k].show = true
+                }
+
+            },
             toggleTimes(i) {
+
                 let times = this.staticTimes[i].minutes
                 for(let k=0; k < times.length; k++) {
                     times[k].show ? times[k].show = false : times[k].show = true
@@ -1898,15 +1914,17 @@
                 let timeArr = [],
                     end = null,
                     color = this.returnRandomColor(),
+                    
                     // totalCount = 0,
                     minuteExpenditure = {};
 
-                for(let i=8; i<=20; i++) {
+                for(let i=0; i<=23; i++) {
 
                     let timeObj = {
                         time: i < 10 ? '0' + i + ':00' : i + ':00',
                         minutes: [],
                         activityPopover: [],
+                        show: true,
                         totals: {
                             totalCal: null,
                             totalFatC: null,
@@ -2051,12 +2069,13 @@
                 sw = false;
                 let x = {}
 
-                for(let i=8; i<=20; i++) {
+                for(let i=0; i<=23; i++) {
 
                     let timeObj = {
                         time: i < 10 ? '0' + i + ':00' : i + ':00',
                         minutes: [],
                         mealPopover: [],
+                        show: true,
                         totals: {
                             totalFat: null,
                             totalFatD: null,

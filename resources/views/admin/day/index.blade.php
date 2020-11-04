@@ -1281,6 +1281,8 @@
 
         .table-parent .col-small {
             flex: 1;
+            max-width: 90px;
+            min-width: 90px;
         }
 
         .table-parent .col-medium {
