@@ -56,18 +56,11 @@
                     </tr>
                     </thead>
                     <tbody>
-                    @foreach ($products as $product)
-                        <tr>
-                            <td style="text-align: left; padding: 5px 10px;">{{ $product['title'] }}</td>
-                            <td style="text-align: center; padding: 5px 10px;">{{ $product['price'] }}</td>
-                            <td style="text-align: center; padding: 5px 10px;">{{ $product['quantity'] }}</td>
-                            <td style="text-align: right; padding: 5px 10px;">{{ $product['totals'] }}</td>
-                        </tr>
-                    @endforeach
+
                     <tr>
                         <td colspan="2"></td>
                         <td style="text-align: center; padding: 5px 10px;"><strong>Totals</strong></td>
-                        <td style="text-align: right; padding: 5px 10px;">{{ $total }}</td>
+                        <td style="text-align: right; padding: 5px 10px;"></td>
                     </tr>
                     </tbody>
                 </table>
