@@ -565,6 +565,8 @@
 
                     }
 
+                    var miny = data[0];
+
                     new Chart(document.getElementById("myChart"),
                         {
                             "type": "line",
@@ -603,7 +605,7 @@
                                 scales: {
                                     yAxes: [{
                                         ticks: {
-                                            min: data[0],
+                                            min: miny,
                                         }
                                     }]
                                 },
