@@ -529,7 +529,6 @@
                     let labels = [];
                     let data = [];
                     let projection_data = [];
-                    console.log(res)
 
                     for (let i = 0; i < res.length; i++) {
                         labels.push(res[i].date);

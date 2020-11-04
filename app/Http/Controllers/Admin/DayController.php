@@ -209,6 +209,58 @@ class DayController extends Controller
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
+    public function clearAllActivity(Request $request)
+    {
+        if ($request->user_id == null OR $request->date == null) {
+            return response()->json(array('msg' => 'Please Send User ID or Date!'), 422);
+        }
+        DayActivity::where(array('user_id' => $request->user_id, 'date' => $request->date))->delete();
+        return response()->json(array('msg' => 'Activity Clear Successfully!'), 200);
+    }
+
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function duplicateActivity(Request $request)
+    {
+        if ($request->user_id == null OR $request->date_from == null OR $request->date_to == null) {
+            return response()->json(array('msg' => 'Please Send User ID or Date From or Date To!'), 422);
+        } elseif (!is_array($request->date_to)) {
+            return response()->json(array('msg' => 'Date To must be array!'), 422);
+        }
+
+        $activity = DayActivity::where(array('user_id' => $request->user_id, 'date' => $request->date_from))->get();
+
+        $arr_activity = array();
+        foreach ($request->date_to as $k => $v) {
+            foreach ($activity as $key => $val) {
+                $arr_activity[] = [
+                    'user_id' => $val->user_id,
+                    'activity_id' => $val->activity_id,
+                    'date' => $v,
+                    'from' => $val->from,
+                    'to' => $val->to,
+                    'created_at' => Carbon::now()->toDateTimeString(),
+                    'updated_at' => Carbon::now()->toDateTimeString(),
+                ];
+            }
+        }
+
+        DB::beginTransaction();
+
+        DayMeal::where('user_id', $request->user_id)->whereIn('date', $request->date_to)->delete();
+        DayMeal::insert($arr_activity);
+
+        DB::commit();
+
+        return response()->json(array('msg' => 'Activity Duplicate Successfully!'), 200);
+    }
+
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function addMeal(Request $request)
     {
         $data = $request->all();

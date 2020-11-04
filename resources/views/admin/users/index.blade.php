@@ -48,8 +48,8 @@
                                     <li>DOB: {{$val->dob}}</li>
                                     <li>Gender: {{App\Model\User::GENDER[$val->gender]}} </li>
                                     <li>Height: {{$val->height}}</li>
-                                    <li>Dimmer: {{$val->dimmer}}</li>
-                                    <li>Protein hourly limit: {{$val->protein_hourly_limit}}</li>
+{{--                                    <li>Dimmer: {{$val->dimmer}}</li>--}}
+{{--                                    <li>Protein hourly limit: {{$val->protein_hourly_limit}}</li>--}}
                                 </ul>
                             </div>
                             <div class="panel-footer text-right">
