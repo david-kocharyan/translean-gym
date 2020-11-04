@@ -704,6 +704,19 @@
             border: 1px solid red;
         }
     </style>
+    @if(count($assessments) <= 2)
+        <style>
+            .weight,
+            .fat,
+            .age,
+            .visceral,
+            .muscle,
+            .lean{
+                pointer-events: none;
+                color: #948e8e;
+            }
+        </style>
+    @endif
 @endpush
 
 
