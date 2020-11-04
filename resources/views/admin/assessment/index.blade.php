@@ -526,7 +526,7 @@
                 url: '/getAssessment',
                 data: {id: id},
                 success: function (res) {
-                    let labels = [""];
+                    let labels = [];
                     let data = [];
                     let projection_data = [];
                     console.log(res)
