@@ -527,7 +527,7 @@
                 data: {id: id},
                 success: function (res) {
                     let labels = [""];
-                    let data = [""];
+                    let data = [];
                     let projection_data = [];
                     console.log(res)
 
@@ -600,6 +600,13 @@
                                 }
                             },
                             options: {
+                                scales: {
+                                    yAxes: [{
+                                        ticks: {
+                                            min: data[0],
+                                        }
+                                    }]
+                                },
                                 legend: {
                                     display: false
                                 },
