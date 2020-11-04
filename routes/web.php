@@ -73,6 +73,9 @@ Route::group(['namespace' => 'Admin', 'middleware' => 'auth:admin'], function ()
     Route::post('/day/edit-water', 'DayController@editWater');
     Route::post('/day/delete-water', 'DayController@deleteWater');
 
+//    day view export part
+    Route::get('day/export-view/{id}', 'ExportController@index');
+    Route::get('day/export/{id}', 'ExportController@download');
 
     Route::get('/day-test/{id}', 'DayController@testIndex');
     Route::resource('/met-range', 'MetRangeController');
