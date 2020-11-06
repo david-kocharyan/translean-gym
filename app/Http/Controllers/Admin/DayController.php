@@ -591,13 +591,11 @@ class DayController extends Controller
             "id" => "required"
         ]);
 
-        $check_from = DayWater::where(array('user_id' => $request->user_id, 'date' => $request->date, 'from' => $request->from))->first();
+        $check_from = DayWater::where(array('user_id' => $request->user_id, 'date' => $request->date, 'from' => $request->from))->where('id', '!=', $request->id)->first();
         $check_from_meal = DayMeal::where(array('user_id' => $request->user_id, 'date' => $request->date, 'from' => $request->from))->first();
 
         if ($check_from != null OR $check_from_meal != null) {
-            if ($check_from->id != $request->id) {
-                return response()->json(array('msg' => 'This Time Is Busy!'), 422);
-            }
+            return response()->json(array('msg' => 'This Time Is Busy!'), 422);
         }
 
         $water = DayWater::find($request->id);
