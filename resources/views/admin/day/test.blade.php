@@ -4,6 +4,8 @@
 @section('content')
     @include('admin.users.tab')
 
+
+
 <div class="row"  id="_days">
 
     <div class="col-md-12 text-center" id="assassmentAlert"></div>
@@ -96,7 +98,6 @@
                         </th>
                     </tr>
                 </tbody>
-
             </table>
         </div>
 
@@ -667,7 +668,7 @@
                                 <div class="form-row">
                                     <div class="form-group col-md-12">
                                         <button v-show="editMeal" type="button" class="btn delete-personal-meal btn-danger waves-effect waves-light m-r-10">
-                                            Delete Meals
+                                            Delete Meal
                                         </button>
                                         <button v-show="!editMeal" type="button" class="btn add-personal-meal btn-success waves-effect waves-light m-r-10">
                                             Save
@@ -876,7 +877,133 @@
 
 <div id="alerts" style="position: absolute; bottom: 32%; left: 75%; width: 100%; z-index: 99999; text-align: center;"></div>
 
+<div  id="cont" style="display: none;">
+    <div class="report-head">
+        <div class="logo-parent"></div>
+        <div class="info-parent">
+            <div class="name"></div>
+            <div class="date-pdf">
+                <span class="date-pdf-month"></span> 
+                <span class="date-pdf-day"></span>, 
+                <span class="date-pdf-year"></span>
+            </div>
+            <div class="week-day"></div>
+        </div>
+    </div>
+    <div class ="container-pdf">
 
+        <div class="timings">
+            <div> <span> 00:00 </span> AM </div>
+            <div> 00:30 </div>
+            <div> <span> 1:00 </span> AM </div>
+            <div> 1:30 </div>
+            <div> <span> 2:00 </span> AM </div>
+            <div> 2:30 </div>
+            <div> <span> 3:00 </span> AM </div>
+            <div> 3:30 </div>
+            <div> <span> 4:00 </span> AM </div>
+            <div> 4:30 </div>
+            <div> <span> 5:00 </span> AM </div>
+            <div> 5:30 </div>
+            <div> <span> 6:00 </span> AM </div>
+            <div> 6:30 </div>
+            <div> <span> 7:00 </span> AM </div>
+            <div> 7:30 </div>
+            <div> <span> 8:00 </span> AM </div>
+            <div> 8:30 </div>
+            <div> <span> 9:00 </span> AM </div>
+            <div> 9:30 </div>
+            <div> <span> 10:00 </span>AM </div>
+            <div> 10:30 </div>
+            <div> <span> 11:00 </span>AM </div>
+            <div> 11:30 </div>
+            <div> <span> 12:00 </span>PM </div>
+            <div> 12:30 </div>
+            <div> <span> 1:00 </span>PM </div>
+            <div> 1:30 </div>
+            <div> <span> 2:00 </span>PM </div>
+            <div> 2:30 </div>
+            <div> <span> 3:00 </span>PM </div>
+            <div> 3:30 </div>
+            <div> <span> 4:00 </span>PM </div>
+            <div> 4:30 </div>
+            <div> <span> 5:00 </span>PM </div>
+            <div> 5:30 </div>
+            <div> <span> 6:00 </span>PM </div>
+            <div> 6:30 </div>
+            <div> <span> 7:00 </span>PM </div>
+            <div> 7:30 </div>
+            <div> <span> 8:00 </span>PM </div>
+            <div> 8:30 </div>
+            <div> <span> 9:00 </span>PM </div>
+            <div> 9:30 </div>
+            <div> <span> 10:00 </span>PM </div>
+            <div> 10:30 </div>
+            <div> <span> 11:00 </span>PM </div>
+            <div> 11:30 </div>
+        </div>
+
+        <div class="days" id="actions-pdf">
+        </div>
+        <div class="water" id="water-pdf">
+        </div>
+        <div class="meal" id="meal-pdf">
+        </div>
+
+        <div class="timings right-timing">
+            <div> <span> 00:00 </span> AM </div>
+            <div> 00:30 </div>
+            <div> <span> 1:00 </span> AM </div>
+            <div> 1:30 </div>
+            <div> <span> 2:00 </span> AM </div>
+            <div> 2:30 </div>
+            <div> <span> 3:00 </span> AM </div>
+            <div> 3:30 </div>
+            <div> <span> 4:00 </span> AM </div>
+            <div> 4:30 </div>
+            <div> <span> 5:00 </span> AM </div>
+            <div> 5:30 </div>
+            <div> <span> 6:00 </span> AM </div>
+            <div> 6:30 </div>
+            <div> <span> 7:00 </span> AM </div>
+            <div> 7:30 </div>
+            <div> <span> 8:00 </span> AM </div>
+            <div> 8:30 </div>
+            <div> <span> 9:00 </span> AM </div>
+            <div> 9:30 </div>
+            <div> <span> 10:00 </span>AM </div>
+            <div> 10:30 </div>
+            <div> <span> 11:00 </span>AM </div>
+            <div> 11:30 </div>
+            <div> <span> 12:00 </span>PM </div>
+            <div> 12:30 </div>
+            <div> <span> 1:00 </span>PM </div>
+            <div> 1:30 </div>
+            <div> <span> 2:00 </span>PM </div>
+            <div> 2:30 </div>
+            <div> <span> 3:00 </span>PM </div>
+            <div> 3:30 </div>
+            <div> <span> 4:00 </span>PM </div>
+            <div> 4:30 </div>
+            <div> <span> 5:00 </span>PM </div>
+            <div> 5:30 </div>
+            <div> <span> 6:00 </span>PM </div>
+            <div> 6:30 </div>
+            <div> <span> 7:00 </span>PM </div>
+            <div> 7:30 </div>
+            <div> <span> 8:00 </span>PM </div>
+            <div> 8:30 </div>
+            <div> <span> 9:00 </span>PM </div>
+            <div> 9:30 </div>
+            <div> <span> 10:00 </span>PM </div>
+            <div> 10:30 </div>
+            <div> <span> 11:00 </span>PM </div>
+            <div> 11:30 </div>
+        
+        </div>
+
+    </div>
+</div>
 
 @endsection
 
@@ -884,6 +1011,8 @@
 @push("footer")
 <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.20/lodash.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.3/jspdf.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.min.js"></script>
 <script src="{{asset('assets/plugins/clockpicker/dist/jquery-clockpicker.js')}}"></script>
 <script src="{{asset('assets/plugins/datepicker-new/js/bootstrap-datepicker.js')}}"></script>
 
@@ -892,7 +1021,14 @@
 
     let foods = '<?php echo $foods ?>';
     foods = JSON.parse(foods);
+
+    let userInfo = '<?php echo $user ?>';
+    userInfo = JSON.parse(userInfo)
+    $('.name').html(userInfo.name)
+
+
     let row = 0;
+
 
 
 
@@ -1083,6 +1219,15 @@
             let dateShow = date.getFullYear() + "-" + (month) + "-" + (day);
 
             $('.date-show').html(dateShow);
+
+            let months = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+            let weekDay = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
+            
+            let d = new Date(dateShow)
+            $('.date-pdf-month').html(months[month-1]);
+            $('.date-pdf-day').html(day);
+            $('.date-pdf-year').html(date.getFullYear());
+            $('.week-day').html(weekDay[d.getDay()])
 
             days.clearState();
             getActivities();
@@ -1431,6 +1576,19 @@
 
         })
 
+        $('.mode-switcher-button').click(function() {
+            $('#cont').css('display', 'block')
+            var pdf = new jsPDF('p', 'pt', 'a4');
+            pdf.addHTML(document.getElementById("cont"), function() {
+
+            ps_filename = $('.date-show').html() + '-report';
+                pdf.save(ps_filename+'.pdf');
+            });
+           setTimeout(() => {
+            $('#cont').css('display', 'none')
+           }, 500);
+        })
+
 
     });
 </script>
@@ -1761,11 +1919,76 @@
                     };
 
                     days.addMeals(waterObj)
+                    days.addWater(waterObj)
                 }
 
                 days.createTimeGraphic();
                 days.createMealGraphic();
                 days.createStatusGraphic();
+
+
+                //default events given
+                const actions = [ 
+                ];
+                const waterEvents = [
+                ]
+                const meal = [
+                ]
+
+                for(let i=0; i<activities.length; i++) {
+
+                    let startTime = activities[i].from.split(':');
+                    let endTime = activities[i].to.split(':');
+
+                    let start = (parseInt(startTime[0]) * 60) + parseInt(startTime[1])
+                    let end = (parseInt(endTime[0]) * 60) + parseInt(endTime[1])
+                    let name = activities[i].get_activity.name
+
+                    let timeObj = {
+                        start, end, name
+                    }
+
+                    actions.push(timeObj)
+                }
+
+                for(let i=0; i<meals.length; i++) {
+                    let startTime = meals[i].from.split(':');
+                    let name = meals[i].get_meals.name
+
+                    let start =(parseInt(startTime[0]) * 60) + parseInt(startTime[1])
+
+                    let timeObj = {
+                        start, 
+                        end: start + 60,
+                        name
+                    }
+
+                    meal.push(timeObj)
+                }
+                
+                for(let i=0; i<water.length; i++) {
+                    console.log('WATER I', water[i])
+                    let startTime = water[i].from.split(':');
+                    let name = water[i].quantity + ' ml'
+
+                    let start = (parseInt(startTime[0]) * 60) + parseInt(startTime[1])
+
+                    let timeObj = {
+                        start,
+                        end: start + 60,
+                        name
+                    }
+
+                    waterEvents.push(timeObj)
+                }
+
+                layOutDay(actions, 'actions-pdf');
+                layOutDay(waterEvents, 'water-pdf');
+                layOutDay(meal, 'meal-pdf');
+
+                console.log('actions 777777777777777777777 = ', actions)
+                console.log('water 777777777777777777777 = ', waterEvents)
+                console.log('meal 777777777777777777777 = ', meal)
 
             }
         })
@@ -1780,6 +2003,7 @@
                 mealGraphic: [],
                 actions: [],
                 meal: [],
+                water: [],
                 color: 0,
 
                 editWater: false,
@@ -2386,6 +2610,9 @@
             addMeals(mealObj){
                 this.meal.push(mealObj);
             },
+            addWater(waterObj) {
+                this.water.push(waterObj);
+            },
             clearState() {
                 this.staticTimes = []
                 this.mealGraphic = []
@@ -2558,8 +2785,10 @@
             this.createMealGraphic();
 
             setTimeout(() => {
-                this.createStatusGraphic()
-            }, 1000);
+                console.log('Actions', this.actions)
+                console.log('Water', this.water)
+                console.log('meals', this.meal)
+            }, 3000);
         }
     })
 
@@ -2905,6 +3134,156 @@
         });
 
     })
+</script>
+
+<script>
+    const containerHeight  = 1100;
+    const containerWidth = 195;
+    const minutesinDay = 60 * 24;
+
+    let collisions = [];
+    let width = [];
+    let leftOffSet = [];
+
+    // append one event to calendar
+    var createEvent = (height, top, left, units, parentId, name) => {
+
+        let node = document.createElement("DIV");
+        
+
+        if(parentId == 'actions-pdf') {
+            node.className = "event green-event";
+            node.innerHTML = "<span class='title'> " + name + " </span>";
+        }
+        if(parentId == 'water-pdf') {
+            node.className = "event blue-event";
+            node.innerHTML = "<span class='title'>" + name + "</span>";
+        }
+        if(parentId == 'meal-pdf') {
+            node.className = "event red-event";
+            node.innerHTML = "<span class='title'>" + name + "</span>";
+        }
+
+
+        // Customized CSS to position each event
+        node.style.width = (containerWidth/units) + "px";
+        node.style.height = height + "px";
+        node.style.top = top + "px";
+        // node.style.left = 100 + left + "px";
+
+        document.getElementById(parentId).appendChild(node);
+    }
+
+    /* 
+    collisions is an array that tells you which events are in each 30 min slot
+    - each first level of array corresponds to a 30 minute slot on the calendar 
+    - [[0 - 30mins], [ 30 - 60mins], ...]
+    - next level of array tells you which event is present and the horizontal order
+    - [0,0,1,2] 
+    ==> event 1 is not present, event 2 is not present, event 3 is at order 1, event 4 is at order 2
+    */
+
+    function getCollisions (events) {
+
+        //resets storage
+        collisions = [];
+
+        for (var i = 0; i < 24; i ++) {
+            var time = [];
+            for (var j = 0; j < events.length; j++) {
+            time.push(0);
+            }
+            collisions.push(time);
+        }
+
+        events.forEach((event, id) => {
+            let end = event.end;
+            let start = event.start;
+            let order = 1;
+
+            while (start < end) {
+            timeIndex = Math.floor(start/30);
+
+            while (order < events.length) {
+                if (collisions[timeIndex].indexOf(order) === -1) {
+                break;
+                }
+                order ++;
+            }
+
+            collisions[timeIndex][id] = order;
+            start = start + 30;
+            }
+
+            collisions[Math.floor((end-1)/30)][id] = order;
+        });
+    };
+
+    /*
+    find width and horizontal position
+
+    width - number of units to divide container width by
+    horizontal position - pixel offset from left
+    */
+    function getAttributes (events) {
+        //resets storage
+        width = [];
+        leftOffSet = [];
+
+        for (var i = 0; i < events.length; i++) {
+            width.push(0);
+            leftOffSet.push(0);
+        }
+
+        collisions.forEach((period) => {
+
+            // number of events in that period
+            let count = period.reduce((a,b) => {
+                return b ? a + 1 : a;
+            })
+
+            if (count > 1) {
+                period.forEach((event, id) => {
+                    // max number of events it is sharing a time period with determines width
+                    if (period[id]) {
+                        if (count > width[id]) {
+                            width[id] = count;
+                        }
+                    }
+
+                    if (period[id] && !leftOffSet[id]) {
+                    leftOffSet[id] = period[id];
+                    }
+                })
+            }
+        });
+    };
+
+    var layOutDay = (events, parentId) => {
+
+        // clear any existing nodes
+        var myNode = document.getElementById(parentId);
+        myNode.innerHTML = '';
+
+        // getCollisions(events);
+        getAttributes(events);
+
+        events.forEach((event, id) => {
+            event.start += 9.5
+            let name = event.name
+            let height = (event.end - event.start) / minutesinDay * containerHeight;
+            console.log(event.end, event.start, minutesinDay, containerHeight)
+            let top = event.start / minutesinDay * containerHeight; 
+            let end = event.end;
+            let start = event.start;
+            let units = width[id];
+            if (!units) {units = 1};
+            let left = (containerWidth / width[id]) * (leftOffSet[id] - 1) + 10;
+            if (!left || left < 0) {left = 10};
+
+            createEvent(height+9.5, top, left, units, parentId, name);
+        });
+    }
 </script>
 
 @endpush

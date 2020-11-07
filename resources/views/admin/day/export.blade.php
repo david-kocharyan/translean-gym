@@ -6,67 +6,141 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 <body>
-<div style="width: 100%; max-width: 960px; margin: auto">
-    <table width="100%">
-        <tr style="border-bottom: 1px solid #000000">
-            <td><h2>Invoice</h2></td>
-            <td style="text-align: right"><h3>Order # 12345</h3></td>
-        </tr>
-        <tr>
-            <td style="padding-bottom: 16px;">
-                <strong>Billed To:</strong><br>
-                John Smith<br>
-                1234 Victory Avenue<br>
-                Apt. 5D<br>
-                Sunfield, ST 54321
-            </td>
-            <td style="text-align: right; padding-bottom: 16px;">
-                <strong>Shipped To:</strong><br>
-                John Smith<br>
-                1234 Victory Avenue<br>
-                Apt. 5D<br>
-                Sunfield, ST 54321
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <strong>Payment Method:</strong><br>
-                Visa ending **** 4242<br>
-                jsmith@email.com
-            </td>
-            <td style="text-align: right">
-                <strong>Order Date:</strong><br>
-                March 7, 2014<br><br>
-            </td>
-        </tr>
-        <tr>
-            <td colspan="2">
-                <h3>Order summary</h3>
-            </td>
-        </tr>
-        <tr>
-            <td colspan="2">
-                <table width="100%" cellpadding="0" cellspacing="0" border="1">
-                    <thead>
-                    <tr style="background-color: #eee">
-                        <th style="text-align: left; padding: 5px 10px;">Item</th>
-                        <th style="text-align: center; padding: 5px 10px;">Price</strong></th>
-                        <th style="text-align: center; padding: 5px 10px;">Quantity</th>
-                        <th style="text-align: right; padding: 5px 10px;">Totals</th>
-                    </tr>
-                    </thead>
-                    <tbody>
+<div  id="cont">
+    <div class="report-head">
+        <div class="logo-parent"></div>
+        <div class="info-parent">
+            <div class="name"></div>
+            <div class="date-pdf">
+                <span class="date-pdf-month"></span> 
+                <span class="date-pdf-day"></span>, 
+                <span class="date-pdf-year"></span>
+            </div>
+            <div class="week-day"></div>
+        </div>
+    </div>
+    <div class ="container-pdf">
 
-                    <tr>
-                        <td colspan="2"></td>
-                        <td style="text-align: center; padding: 5px 10px;"><strong>Totals</strong></td>
-                        <td style="text-align: right; padding: 5px 10px;"></td>
-                    </tr>
-                    </tbody>
-                </table>
-            </td>
-        </tr>
-    </table>
+        <div class="timings">
+            <div> <span> 00:00 </span> AM </div>
+            <div> 00:30 </div>
+            <div> <span> 1:00 </span> AM </div>
+            <div> 1:30 </div>
+            <div> <span> 2:00 </span> AM </div>
+            <div> 2:30 </div>
+            <div> <span> 3:00 </span> AM </div>
+            <div> 3:30 </div>
+            <div> <span> 4:00 </span> AM </div>
+            <div> 4:30 </div>
+            <div> <span> 5:00 </span> AM </div>
+            <div> 5:30 </div>
+            <div> <span> 6:00 </span> AM </div>
+            <div> 6:30 </div>
+            <div> <span> 7:00 </span> AM </div>
+            <div> 7:30 </div>
+            <div> <span> 8:00 </span> AM </div>
+            <div> 8:30 </div>
+            <div> <span> 9:00 </span> AM </div>
+            <div> 9:30 </div>
+            <div> <span> 10:00 </span>AM </div>
+            <div> 10:30 </div>
+            <div> <span> 11:00 </span>AM </div>
+            <div> 11:30 </div>
+            <div> <span> 12:00 </span>PM </div>
+            <div> 12:30 </div>
+            <div> <span> 1:00 </span>PM </div>
+            <div> 1:30 </div>
+            <div> <span> 2:00 </span>PM </div>
+            <div> 2:30 </div>
+            <div> <span> 3:00 </span>PM </div>
+            <div> 3:30 </div>
+            <div> <span> 4:00 </span>PM </div>
+            <div> 4:30 </div>
+            <div> <span> 5:00 </span>PM </div>
+            <div> 5:30 </div>
+            <div> <span> 6:00 </span>PM </div>
+            <div> 6:30 </div>
+            <div> <span> 7:00 </span>PM </div>
+            <div> 7:30 </div>
+            <div> <span> 8:00 </span>PM </div>
+            <div> 8:30 </div>
+            <div> <span> 9:00 </span>PM </div>
+            <div> 9:30 </div>
+            <div> <span> 10:00 </span>PM </div>
+            <div> 10:30 </div>
+            <div> <span> 11:00 </span>PM </div>
+            <div> 11:30 </div>
+        </div>
+
+        <div class="days" id="actions-pdf">
+        </div>
+        <div class="water" id="water-pdf">
+        </div>
+        <div class="meal" id="meal-pdf">
+        </div>
+
+        <div class="timings right-timing">
+            <div> <span> 00:00 </span> AM </div>
+            <div> 00:30 </div>
+            <div> <span> 1:00 </span> AM </div>
+            <div> 1:30 </div>
+            <div> <span> 2:00 </span> AM </div>
+            <div> 2:30 </div>
+            <div> <span> 3:00 </span> AM </div>
+            <div> 3:30 </div>
+            <div> <span> 4:00 </span> AM </div>
+            <div> 4:30 </div>
+            <div> <span> 5:00 </span> AM </div>
+            <div> 5:30 </div>
+            <div> <span> 6:00 </span> AM </div>
+            <div> 6:30 </div>
+            <div> <span> 7:00 </span> AM </div>
+            <div> 7:30 </div>
+            <div> <span> 8:00 </span> AM </div>
+            <div> 8:30 </div>
+            <div> <span> 9:00 </span> AM </div>
+            <div> 9:30 </div>
+            <div> <span> 10:00 </span>AM </div>
+            <div> 10:30 </div>
+            <div> <span> 11:00 </span>AM </div>
+            <div> 11:30 </div>
+            <div> <span> 12:00 </span>PM </div>
+            <div> 12:30 </div>
+            <div> <span> 1:00 </span>PM </div>
+            <div> 1:30 </div>
+            <div> <span> 2:00 </span>PM </div>
+            <div> 2:30 </div>
+            <div> <span> 3:00 </span>PM </div>
+            <div> 3:30 </div>
+            <div> <span> 4:00 </span>PM </div>
+            <div> 4:30 </div>
+            <div> <span> 5:00 </span>PM </div>
+            <div> 5:30 </div>
+            <div> <span> 6:00 </span>PM </div>
+            <div> 6:30 </div>
+            <div> <span> 7:00 </span>PM </div>
+            <div> 7:30 </div>
+            <div> <span> 8:00 </span>PM </div>
+            <div> 8:30 </div>
+            <div> <span> 9:00 </span>PM </div>
+            <div> 9:30 </div>
+            <div> <span> 10:00 </span>PM </div>
+            <div> 10:30 </div>
+            <div> <span> 11:00 </span>PM </div>
+            <div> 11:30 </div>
+        
+        </div>
+
+    </div>
 </div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.3/jspdf.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.min.js"></script>
+<script>
+    let userInfo = '<?php echo $user ?>';
+    userInfo = JSON.parse(userInfo)
+    $('.name').html(userInfo.name)
+
+</script>
 </body>
 </html>
