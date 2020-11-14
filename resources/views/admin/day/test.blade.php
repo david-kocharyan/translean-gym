@@ -35,7 +35,7 @@
                         </div>
                         <div>
                             <button
-                                class="mode-switcher-button"
+                                class="mode-switcher-button exportExcel"
                                 data-toggle="modal"
                                 data-target="">
                                 <i class="fas fa-cloud-download-alt"></i>
@@ -106,7 +106,22 @@
             <table class="medium-table table table-striped">
                 <thead>
                     <tr>
-                        <th scope="col">&nbsp;</th>
+                        <th colspan="1" class="position-relative text-right">
+                            <span>&nbsp;</span>
+                            <button
+                                class="mode-switcher-button"
+                                data-toggle="modal"
+                                data-target="#clearAllActivityPopup">
+                                <i class="fas fa-minus"></i>
+                            </button>
+                            <button
+                                class="mode-switcher-button "
+                                data-toggle="modal"
+                                data-target="#duplicateActivity"
+                            >
+                                <i class="fas fa-clone"></i>
+                            </button>
+                        </th>
                     </tr>
                     <tr>
                         <th class="d-flex justify-content-between align-items-center">
@@ -554,7 +569,6 @@
                                     </div>
                                 </div>
 
-                                <!-- grigor -->
                                 <div class="form-row">
                                     <div class="form-group col-md-3">
                                         <label for="meal_from">Time</label>
@@ -820,6 +834,21 @@
         </div>
     </div>
 
+    <div id="clearAllActivityPopup" class="modal fade" role="dialog">
+        <div class="modal-dialog modal-sm" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Are you sure you want to clear all Activities?</h4>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
+                    <button type="button" class="btn btn-danger clear-all-activity">Yes, clear</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div id="water" class="modal fade" role="dialog">
         <div class="modal-dialog modal-sm" role="document">
             <div class="modal-content">
@@ -831,6 +860,9 @@
                 <div class="modal-body">
 
                     <div class="row">
+                        <div class="col-md-12">
+                            <p class="edit-water-error text-danger"></p>
+                        </div>
                         <form>
                             <div class="form-row">
                                 <div class="form-group col-md-12">
@@ -872,6 +904,26 @@
             </div>
         </div>
     </div>
+
+    <div id="duplicateActivity" class="modal fade" role="dialog">
+        <div class="modal-dialog modal-sm" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Duplicate activity</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="copyMeal">&nbsp;</div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button"
+                    class="btn btn-success duplicate-activity">Duplicate</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    
 
 </div>
 
@@ -1342,6 +1394,38 @@
 
         });
 
+        $('.duplicate-activity').click(function () {
+
+            console.log(finalDatesArr)
+            
+
+            let data = {
+                user_id: $('.user_id').val(),
+                date_from: $('.date-show').html(),
+                date_to: finalDatesArr
+            };
+
+            $.ajax({
+                type: "POST",
+                headers: {
+                    'X-CSRF-TOKEN': '{{csrf_token()}}'
+                },
+                url: '{{ url('/day/duplicate-activities') }}',
+                data: data,
+                success: function (res) {
+                    let alert =
+                        $('<div class="alert alert-success alert-dismissable" style="width: 25%;">' +
+                        '<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>' +
+                        res.msg + '</div>');
+                    alert.appendTo("#alerts");
+                    alert.slideDown("slow").delay(3000).fadeOut(2000, function(){
+                        $(this).remove();
+                    });
+                }
+            });
+
+        });
+
         $('.date-plus').click(function () {
             let dateString = $('.date-show').html();
             show_date(1, dateString)
@@ -1372,8 +1456,8 @@
                     $('.m_errors').empty()
                     $('.m_success').empty()
                     if (reject.status === 422) {
-                        var err = $.parseJSON(reject.responseText)
-                        $('.m_errors').append(`<li>Please choose a meal!</li>`)
+                        let err = $.parseJSON(reject.responseText)
+                        $('.m_errors').append('<li>' + err.msg + '</li>')
                     }
                     setTimeout(function () {
                         $('.m_errors').empty()
@@ -1409,8 +1493,8 @@
                     $('.m_errors').empty()
                     $('.m_success').empty()
                     if (reject.status === 422) {
-                        var err = $.parseJSON(reject.responseText)
-                        $('.m_errors').append(`<li>Please choose a meal!</li>`)
+                        let err = $.parseJSON(reject.responseText)
+                        $('.m_errors').append('<li>' + err.msg + '</li>')
                     }
                     setTimeout(function () {
                         $('.m_errors').empty()
@@ -1441,6 +1525,29 @@
                     days.createTimeGraphic()
                     days.createMealGraphic()
                     days.createStatusGraphic()
+                }
+            });
+        })
+
+        $('.clear-all-activity').click(function() {
+
+            let data = {
+                user_id: $('.user_id').val(),
+                date: $('.date-show').html()
+            };
+
+            $.ajax({
+                type: "POST",
+                headers: {
+                    'X-CSRF-TOKEN': '{{csrf_token()}}'
+                },
+                url: '{{ url('/day/clear-all-activities') }}',
+                data: data,
+                success: function (res) {
+                    $('#clearAllActivityPopup').modal('toggle');
+                    days.meal = []
+
+                    getActivities()
                 }
             });
         })
@@ -1479,6 +1586,16 @@
                     days.createMealGraphic();
                     days.createStatusGraphic();
 
+                },
+                error: function (reject) {
+                    if (reject.status === 422) {
+                        let err = $.parseJSON(reject.responseText)
+                        console.log(err.msg)
+                        $('.edit-water-error').html(err.msg)
+                    }
+                    setTimeout(function () {
+                        $('.edit-water-error').empty()
+                    }, 10000)
                 }
             });
         })
@@ -1510,6 +1627,16 @@
 
                     getActivities();
 
+                },
+                error: function (reject) {
+                    if (reject.status === 422) {
+                        let err = $.parseJSON(reject.responseText)
+                        console.log(err.msg)
+                        $('.edit-water-error').html(err.msg)
+                    }
+                    setTimeout(function () {
+                        $('.edit-water-error').empty()
+                    }, 10000)
                 }
             });
         })
@@ -1576,7 +1703,7 @@
 
         })
 
-        $('.mode-switcher-button').click(function() {
+        $('.exportExcel').click(function() {
             $('#cont').css('display', 'block')
             var pdf = new jsPDF('p', 'pt', 'a4');
             pdf.addHTML(document.getElementById("cont"), function() {
@@ -1588,7 +1715,6 @@
             $('#cont').css('display', 'none')
            }, 500);
         })
-
 
     });
 </script>
@@ -1990,6 +2116,10 @@
                 console.log('water 777777777777777777777 = ', waterEvents)
                 console.log('meal 777777777777777777777 = ', meal)
 
+                if(localStorage.getItem('hide-zero-to-eight') == 'true') {
+                    days.hideTimeGraphic()
+                }
+
             }
         })
     }
@@ -2051,17 +2181,31 @@
                     }
                 }
             },
-            hideZeroToEight() {
+            hideTimeGraphic() {
                 let times = this.staticTimes,
                     meals = this.mealGraphic;
-
-                    console.log('times',times)
-                    console.log('meals',meals)
 
                 for(let k=0; k < 8; k++) {
                     times[k].show ? times[k].show = false : times[k].show = true
                     meals[k].show ? meals[k].show = false : meals[k].show = true
                 }
+            },
+            hideZeroToEight() {
+                this.hideTimeGraphic()
+
+                let showHideZero = localStorage.getItem('hide-zero-to-eight');
+                
+                console.log(showHideZero)
+                
+                if(showHideZero == null) {
+                    localStorage.setItem('hide-zero-to-eight', true)
+                } 
+                if(showHideZero == 'true') {
+                    localStorage.setItem('hide-zero-to-eight', false)
+                }else {
+                    localStorage.setItem('hide-zero-to-eight', true)
+                }
+                
 
             },
             toggleTimes(i) {
