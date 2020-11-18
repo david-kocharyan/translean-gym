@@ -158,7 +158,16 @@
                             :key="activity_info.minute"
                             class="d-flex justify-content-between align-items-center"
                             v-if="activity_info.show"
+                            :class="{ hoverBox: !activity_info.borderColor, 'edit-activity' : activity_info.borderColor }"
+                            @click="!activity_info.borderColor ? openHoveredAddActivity(activity_info) : openEditActionPopup(activity_info.minuteActivityPopover)"
+                            
+                            data-toggle="modal" data-target="#activity"
                         >
+                        <!-- :data-toggle=" !activity_info.borderColor && 'modal' "
+                            :data-target=" !activity_info.borderColor && '#activity' " -->
+
+
+                            <span v-show="!activity_info.borderColor"><i class="fas fa-plus"></i></span>
                             <div v-if="activity_info.name"
                                  class="w-100 green d-flex justify-content-between align-items-center"
                             >
@@ -173,10 +182,12 @@
                                         </div>
                                     </span>
                                 </div>
+
                                 <div class="edit-activity"
                                     @click="openEditActionPopup(activity_info.minuteActivityPopover)"
                                     data-toggle="modal" data-target="#activity"> <i class="fas fa-edit"></i>
                                 </div>
+
                             </div>
                         </td>
 
@@ -2284,7 +2295,8 @@
                     color = this.returnRandomColor(),
                     
                     // totalCount = 0,
-                    minuteExpenditure = {};
+                    minuteExpenditure = {}
+                    popoverParent = {};
 
                 for(let i=0; i<=23; i++) {
 
@@ -2363,7 +2375,7 @@
                                     activity_id: this.actions[k].activity_id,
                                     total: ((finalResult / 10) * totalCal).toFixed(2),
                                 }
-
+                                popoverParent = popover 
                                 timeObj.activityPopover.push(popover)
                                 minute.minuteActivityPopover = popover
 
@@ -2379,6 +2391,8 @@
 
                                     minute.borderColor = color
                                     minute.actionType = 1
+
+                                    minute.minuteActivityPopover = popoverParent
 
                                     if( !minute.energyExpenditure ) {
                                         // totalCount++;
@@ -2777,6 +2791,13 @@
             openEditActionPopup(activity) {
                 this.id = activity.id
                 this.selectedActivity = activity
+                console.log('activity', activity)
+            },
+            openHoveredAddActivity(activity) {
+                $('.activity_from').clockpicker({
+                    autoclose: true,
+                    placement: 'bottom',
+                }).val(activity.minute);
             },
             openEditMealPopup(meal) {
                 this.editMeal = true
@@ -3178,6 +3199,8 @@
             let to =   days.selectedActivity.end
             let id = days.selectedActivity.activity_id
 
+            console.log(from, to, id)
+
             $('.activity_from').clockpicker({
                 autoclose: true,
                 placement: 'bottom',
@@ -3515,6 +3538,21 @@
     .form-control[disabled], .form-control[readonly], fieldset[disabled] .form-control {
         background-color: #fff;
         opacity: 1;
+    }
+
+    .hoverBox:hover {
+        cursor: pointer;
+        border: 1px solid green;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .hoverBox i {
+        display: none;
+        color: green;
+    }
+    .hoverBox:hover i {
+        display: block;
     }
 
 </style>
