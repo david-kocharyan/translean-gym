@@ -249,8 +249,8 @@ class DayController extends Controller
 
         DB::beginTransaction();
 
-        DayMeal::where('user_id', $request->user_id)->whereIn('date', $request->date_to)->delete();
-        DayMeal::insert($arr_activity);
+        DayActivity::where('user_id', $request->user_id)->whereIn('date', $request->date_to)->delete();
+        DayActivity::insert($arr_activity);
 
         DB::commit();
 
