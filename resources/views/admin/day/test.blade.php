@@ -44,13 +44,44 @@
                         </div>
 
                     </div>
-                    <div style="position:absolute; right: 0%;">
-                        <h5>Protein` </h5>
+                    <div class="right-section-total">
+
                         <div>
-                            <span class="protein_eat">0</span>
-                            /
-                            <span class="protein_must">0</span>
+                            <h5>Calories` </h5>
+                            <div>
+                                <span>@{{ dayTotals.energyExpenditure.totalCal }}</span>
+                                <!-- /
+                                <span class="protein_must">0</span> -->
+                            </div>
                         </div>
+
+                        <div>
+                            <h5>Carb` </h5>
+                            <div>
+                                <span>@{{ dayTotals.energyExpenditure.totalCarbG }}</span>
+                                /
+                                <span>@{{ dayTotals.intake.totalCarb }}</span>
+                            </div>
+                        </div>
+
+                        <div>
+                            <h5>Fat` </h5>
+                            <div>
+                                <span>@{{ dayTotals.energyExpenditure.totalFatG }}</span>
+                                /
+                                <span>@{{ dayTotals.intake.totalFat }}</span>
+                            </div>
+                        </div>
+
+                        <div>
+                            <h5>Protein` </h5>
+                            <div>
+                                <span class="protein_eat">0</span>
+                                /
+                                <span class="protein_must">0</span>
+                            </div>
+                        </div>
+ 
                     </div>
                 </div>
             </div>
@@ -77,7 +108,11 @@
                         </th>
                     </tr>
                 </thead>
-
+                <tbody>
+                    <tr>
+                       
+                    </tr>
+                </tbody>
                 <tbody v-for="(time, i) in staticTimes" :key="time.time" v-if="time.show">
                     <tr>
                         <th class="parent-time"
@@ -132,6 +167,11 @@
                         </th>
                     </tr>
                 </thead>
+                <tbody>
+                    <tr>
+                      
+                    </tr>
+                </tbody>
                 <tbody class="font-sm">
                     <tr v-for="(activity, i) in staticTimes" :key="activity.time" v-if="activity.show">
 
@@ -158,16 +198,14 @@
                             :key="activity_info.minute"
                             class="d-flex justify-content-between align-items-center"
                             v-if="activity_info.show"
-                            :class="{ hoverBox: !activity_info.borderColor, 'edit-activity' : activity_info.borderColor }"
+                            :class="{ hoverBox: !activity_info.borderColor, 'edit-activity' : activity_info.borderColor, 'hoverEdit' : !activity_info.name }"
                             @click="!activity_info.borderColor ? openHoveredAddActivity(activity_info) : openEditActionPopup(activity_info.minuteActivityPopover)"
-                            
                             data-toggle="modal" data-target="#activity"
                         >
-                        <!-- :data-toggle=" !activity_info.borderColor && 'modal' "
-                            :data-target=" !activity_info.borderColor && '#activity' " -->
-
 
                             <span v-show="!activity_info.borderColor"><i class="fas fa-plus"></i></span>
+                            <span v-show="activity_info.borderColor && !activity_info.name"> Edit </span>
+
                             <div v-if="activity_info.name"
                                  class="w-100 green d-flex justify-content-between align-items-center"
                             >
@@ -182,10 +220,8 @@
                                         </div>
                                     </span>
                                 </div>
-
-                                <div class="edit-activity"
-                                    @click="openEditActionPopup(activity_info.minuteActivityPopover)"
-                                    data-toggle="modal" data-target="#activity"> <i class="fas fa-edit"></i>
+                                <!-- @click="openEditActionPopup(activity_info.minuteActivityPopover)" -->
+                                <div> <i class="fas fa-edit"></i>
                                 </div>
 
                             </div>
@@ -220,6 +256,18 @@
                         <td>Carb&nbsp;(g)</td>
                     </tr>
                 </thead>
+                <tbody>
+                <!-- energyExpenditure -->
+                    <tr class="white-bg-table-tr">
+                        <td><b>@{{ dayTotals.energyExpenditure.totalCal }}</b></td>
+                        <td v-if='energyExpendedMode'></td>
+                        <td v-if='energyExpendedMode'><b>@{{ dayTotals.energyExpenditure.totalFatC }}</b></td>
+                        <td><b>@{{ dayTotals.energyExpenditure.totalFatG }}</b></td>
+                        <td v-if='energyExpendedMode'></td>
+                        <td v-if='energyExpendedMode'><b>@{{ dayTotals.energyExpenditure.totalCarbC }}</b></td>
+                        <td><b>@{{ dayTotals.energyExpenditure.totalCarbG }}</b></td>
+                    </tr>
+                </tbody>
                 <tbody v-for="(time, i) in staticTimes" :key="time.time" v-if="time.show">
                     <tr  @click="toggleTimes(i)" >
                         <td><b>@{{ time.totals.totalCal }}</b></td>
@@ -283,6 +331,9 @@
                     </tr>
                 </thead>
                 <tbody>
+                    <tr></tr>
+                </tbody>
+                <tbody>
 
                     <tr v-for="(meal, i) in mealGraphic" :key="meal.time" v-if="meal.show">
 
@@ -342,6 +393,16 @@
                         <td>Protein&nbsp;Dig.</td>
                     </tr>
                 </thead>
+                <tbody>
+                    <tr class="white-bg-table-tr">
+                        <td><b>@{{ dayTotals.intake.totalFat }}</b></td>
+                        <td></td>
+                        <td><b>@{{ dayTotals.intake.totalCarb }}</b></td>
+                        <td></td>
+                        <td><b>@{{ dayTotals.intake.totalProteinG }}</b></td>
+                        <td></td>
+                    </tr>
+                </tbody>
                 <tbody v-for="(meal, i) in mealGraphic" :key="meal.time" v-if="meal.show">
                     <tr  @click="toggleTimes(i)" >
                         <td><b>@{{ meal.totals.totalFat }}</b></td>
@@ -385,6 +446,11 @@
                         <td class="text-center">Carb</td>
                     </tr>
                 </thead>
+                <tbody>
+                    <tr>
+                        
+                    </tr>
+                </tbody>
                 <tbody v-for="(status, i) in mealGraphic" :key="status.time" v-if="status.show">
                     <tr  @click="toggleTimes(i)" >
                         <td class="bg-dark-p"></td>
@@ -1139,6 +1205,17 @@
 
         return time;
     }
+    function timePlusOneHour(time) {
+        let timePart = time.split(":")
+        let firstPart =  parseInt(timePart[0])+1;
+
+        if(firstPart < 10) {
+            firstPart = '0' + firstPart
+        }
+
+        let newTime = firstPart + ':' + timePart[1]
+        return newTime
+    }
     // return plus 4 time
     function returnPlus4Time(time) {
 
@@ -1146,10 +1223,12 @@
         let start = parseInt(roundedTime.substring(0, 2));
         let startEveryHour = start
         let startsEnd = roundedTime.substring(3);
-        start += 4;
+        start += 3;
         let final = start + ":" + startsEnd;
+        console.log('ddddd', start)
+        console.log('fffff', startsEnd)
 
-        console.log('Start time : ', time)
+        console.log('Start time : ', start)
         console.log('Final time : ', final)
 
         let _finalArr = []
@@ -1163,14 +1242,12 @@
             let _minutes = days.staticTimes[i].minutes
 
             for(let j=0; j<_minutes.length; j++) {
-
                 if(_minutes[j].minute == time) {
 
                     doing = true
                     concatArr.push(_minutes[j])
                     
                 }
-                
                 if(_minutes[j].minute == final) {
 
                     doing = false
@@ -1178,11 +1255,9 @@
 
                     break firstLoop
                 }
-
                 if(doing && _minutes[j].minute != time) {
                     concatArr.push(_minutes[j])
                 }
-
             }
             
         }
@@ -1321,7 +1396,8 @@
             autoclose: true,
             placement: 'top',
         }).change(function(){
-            let finTime = returnPlus4Time($(this).val())
+            let onePlusHour = timePlusOneHour($(this).val())
+            let finTime = returnPlus4Time(onePlusHour)
             let roundedTime = roundTime($(this).val())
             $(this).val(roundedTime)
         });
@@ -1593,9 +1669,7 @@
                     days.addMeals(waterObj)
 
 
-                    days.createTimeGraphic();
-                    days.createMealGraphic();
-                    days.createStatusGraphic();
+                    getActivities();
 
                 },
                 error: function (reject) {
@@ -2162,6 +2236,11 @@
                 mealPopupData: [],
                 mealGraphicPopup: [],
                 mealStatusPopup: [],
+
+                dayTotals: {
+                    energyExpenditure: {},
+                    intake: {}
+                }
             }
         },
         methods: {
@@ -2296,7 +2375,14 @@
                     
                     // totalCount = 0,
                     minuteExpenditure = {}
-                    popoverParent = {};
+                    popoverParent = {},
+                    energyExpenditureDayTotal = {
+                        totalCal: 0, 
+                        totalFatC: 0, 
+                        totalFatG: 0, 
+                        totalCarbC: 0, 
+                        totalCarbG: 0
+                    };
 
                 for(let i=0; i<=23; i++) {
 
@@ -2436,9 +2522,20 @@
                     timeObj.totals.totalCarbG = _totalCarbG != 0 ? _totalCarbG.toFixed(2) : ""
 
                     timeArr.push(timeObj)
+
+                    
+
+                    if(timeObj.totals.totalCal != "") {
+                        energyExpenditureDayTotal.totalCal += parseFloat(timeObj.totals.totalCal)
+                        energyExpenditureDayTotal.totalFatC += parseFloat(timeObj.totals.totalFatC)
+                        energyExpenditureDayTotal.totalFatG += parseFloat(timeObj.totals.totalFatG)
+                        energyExpenditureDayTotal.totalCarbC += parseFloat(timeObj.totals.totalCarbC)
+                        energyExpenditureDayTotal.totalCarbG += parseFloat(timeObj.totals.totalCarbG)
+                    }
                 }
 
                 this.staticTimes = timeArr
+                this.dayTotals.energyExpenditure = energyExpenditureDayTotal
                 console.log('Static Times : ', this.staticTimes)
 
             },
@@ -2449,7 +2546,12 @@
                 end = null,
                 minuteIntake = {},
                 sw = false;
-                let x = {}
+                let x = {},
+                    intakeDayTotal = {
+                        totalCarb: 0,
+                        totalFat: 0,
+                        totalProteinG: 0
+                    }
 
                 for(let i=0; i<=23; i++) {
 
@@ -2611,9 +2713,16 @@
                     timeObj.totals.proteinHourlyLimit = proteinHLFinal != 0 ? proteinHLFinal.toFixed(2) : ""
 
                     mealArr.push(timeObj)
+
+                    if(timeObj.totals.totalFat != "") {
+                        intakeDayTotal.totalFat += parseFloat(timeObj.totals.totalFat)
+                        intakeDayTotal.totalCarb += parseFloat(timeObj.totals.totalCarb)
+                        intakeDayTotal.totalProteinG += parseFloat(timeObj.totals.totalProteinG)
+                    }
                 }
 
                 this.mealGraphic = mealArr
+                this.dayTotals.intake = intakeDayTotal
                 console.log('Meal graphic : ', this.mealGraphic)
             },
             createStatusGraphic() {
@@ -2661,7 +2770,7 @@
                 console.log('obj =', mealObj)
 
                 let fArr = []
-                for(let i=0; i<5; i++) {
+                for(let i=0; i<4; i++) {
                     let obj = {
                         minutes: [],
                         totals: {
@@ -2985,6 +3094,12 @@
          // detect when meal popup closed
          $('#meal').on('hidden.bs.modal', function () {
             days.editMeal = false
+            $("#meal_list").val(0);
+            $('.m_foods').html('')
+            $('.meal_from').val("00:00")
+            days.mealPopupData = []
+            days.mealGraphicPopup = []
+            days.mealStatusPopup = []
         });
 
         let foods = '<?php echo $foods ?>';
@@ -3233,7 +3348,6 @@
             }).val(days.selectedMeal.minute);
 
             let finTime = returnPlus4Time(days.selectedMeal.minute)
-
 
             let getMeals = days.selectedMeal.get_meals
 
@@ -3551,8 +3665,49 @@
         display: none;
         color: green;
     }
+
     .hoverBox:hover i {
         display: block;
+    }
+
+    td.edit-activity {
+        cursor: pointer;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    td.d-flex.justify-content-between.align-items-center.edit-activity.hoverEdit:hover {
+        border: 1px solid #f9c402;
+    }
+
+    td.edit-activity span {
+        display: none;
+        font-size: 1.4rem;
+        font-weight: 500;
+    }
+
+    td.edit-activity:hover span {
+        display: block;
+        color: #f9c402 !important;
+    }
+
+
+    tr.white-bg-table-tr td {
+        background: #fff !important;
+        color: #929292;
+    }
+
+    .right-section-total {
+        position: absolute;
+        right: 0%;
+        width: 30%;
+        display: flex;
+        justify-content: flex-end;
+    }
+
+    .right-section-total > div {
+        margin-left: 25px;
     }
 
 </style>
