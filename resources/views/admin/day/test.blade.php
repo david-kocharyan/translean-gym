@@ -237,7 +237,7 @@
             <table class="energy-table table table-striped border-green">
                 <thead>
                     <tr>
-                        <th colspan="7" class="text-center position-relative">
+                        <th colspan="8" class="text-center position-relative">
                             Energy Expenditure
                             <button
                                 class="mode-switcher-button mode-switcher-button-absolute"
@@ -247,6 +247,7 @@
                         </th>
                     </tr>
                     <tr>
+                        <td v-if='energyExpendedMode'>Met</td>
                         <td >Total&nbsp;cal</td>
                         <td v-if='energyExpendedMode'>Fat&nbsp;%</td>
                         <td v-if='energyExpendedMode'>Fat&nbsp;(c)</td>
@@ -259,6 +260,7 @@
                 <tbody>
                 <!-- energyExpenditure -->
                     <tr class="white-bg-table-tr">
+                        <td v-if='energyExpendedMode'></td>
                         <td><b>@{{ dayTotals.energyExpenditure.totalCal }}</b></td>
                         <td v-if='energyExpendedMode'></td>
                         <td v-if='energyExpendedMode'><b>@{{ dayTotals.energyExpenditure.totalFatC }}</b></td>
@@ -270,6 +272,7 @@
                 </tbody>
                 <tbody v-for="(time, i) in staticTimes" :key="time.time" v-if="time.show">
                     <tr  @click="toggleTimes(i)" >
+                        <td v-if='energyExpendedMode'></td>
                         <td><b>@{{ time.totals.totalCal }}</b></td>
                         <td v-if='energyExpendedMode'></td>
                         <td v-if='energyExpendedMode'><b>@{{ time.totals.totalFatC }}</b></td>
@@ -282,7 +285,8 @@
                     <tr v-for="(minute, j) in time.minutes" :key="j"
                         v-if="minute.show"
                     >
-                        <td><span class="green" v-if="minute.borderColor">@{{ parseFloat(minute.energyExpenditure.totalCal).toFixed(2) }}</span></td>
+                        <td v-if='energyExpendedMode'><span v-if="minute.borderColor">@{{ minute.energyExpenditure.met }}</span></td>
+                        <td><span v-if="minute.borderColor">@{{ parseFloat(minute.energyExpenditure.totalCal).toFixed(2) }}</span></td>
                         <td v-if='energyExpendedMode'><span v-if="minute.borderColor">@{{ minute.energyExpenditure.fatPercentage }}</span></td>
                         <td v-if='energyExpendedMode'><span class="green" v-if="minute.borderColor">@{{ parseFloat(minute.energyExpenditure.fatC).toFixed(2) }}</span></td>
                         <td><span v-if="minute.borderColor">@{{ parseFloat(minute.energyExpenditure.fatG).toFixed(2) }}</span></td>
@@ -2420,13 +2424,14 @@
                                 carbG = this.carbGFormula(carbC);
 
                             let expenditure = {
+                                met: this.actions[k].met,
                                 totalCal: totalCal,
                                 fatPercentage: this.actions[k].fatPercentage,
                                 fatC: fatC,
                                 fatG: fatG,
                                 carbPercentage: this.actions[k].carbPercentage,
                                 carbC: carbC,
-                                carbG: carbG
+                                carbG: carbG,
                             }
 
                             if(fm == this.actions[k].start) {
