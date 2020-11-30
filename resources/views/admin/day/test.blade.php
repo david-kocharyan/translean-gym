@@ -261,18 +261,16 @@
                 <!-- energyExpenditure -->
                     <tr class="white-bg-table-tr">
                         <td v-if='energyExpendedMode'></td>
-                        <td><b>@{{ dayTotals.energyExpenditure.totalCal }}</b></td>
+                        <td v-if='energyExpendedMode'><b>@{{ (dayTotals.energyExpenditure.totalFatC).toFixed(2) }}</b></td>
+                        <td><b>@{{ (dayTotals.energyExpenditure.totalFatG).toFixed(2) }}</b></td>
                         <td v-if='energyExpendedMode'></td>
-                        <td v-if='energyExpendedMode'><b>@{{ dayTotals.energyExpenditure.totalFatC }}</b></td>
-                        <td><b>@{{ dayTotals.energyExpenditure.totalFatG }}</b></td>
-                        <td v-if='energyExpendedMode'></td>
-                        <td v-if='energyExpendedMode'><b>@{{ dayTotals.energyExpenditure.totalCarbC }}</b></td>
-                        <td><b>@{{ dayTotals.energyExpenditure.totalCarbG }}</b></td>
+                        <td v-if='energyExpendedMode'><b>@{{ (dayTotals.energyExpenditure.totalCarbC).toFixed(2) }}</b></td>
+                        <td><b>@{{ (dayTotals.energyExpenditure.totalCarbG).toFixed(2) }}</b></td>
                     </tr>
                 </tbody>
                 <tbody v-for="(time, i) in staticTimes" :key="time.time" v-if="time.show">
                     <tr  @click="toggleTimes(i)" >
-                        <td v-if='energyExpendedMode'></td>
+                        <td v-if='energyExpendedMode'><b>@{{ time.totals.totalMet }}</b></td>
                         <td><b>@{{ time.totals.totalCal }}</b></td>
                         <td v-if='energyExpendedMode'></td>
                         <td v-if='energyExpendedMode'><b>@{{ time.totals.totalFatC }}</b></td>
@@ -2396,6 +2394,7 @@
                         activityPopover: [],
                         show: true,
                         totals: {
+                            totalMet: null,
                             totalCal: null,
                             totalFatC: null,
                             totalFatG: null,
@@ -2504,7 +2503,8 @@
                         timeObj.minutes.push(minute)
                     }
 
-                    let _totalCal = 0,
+                    let _totalMet = 0,
+                        _totalCal = 0,
                         _totalFatC = 0,
                         _totalFatG = 0,
                         _totalCarbC = 0,
@@ -2512,6 +2512,7 @@
 
                     for(let i=0; i<timeObj.minutes.length; i++) {
                         if(timeObj.minutes[i].energyExpenditure) {
+                            _totalMet += parseFloat (timeObj.minutes[i].energyExpenditure.met)
                             _totalCal += parseFloat (timeObj.minutes[i].energyExpenditure.totalCal)
                             _totalFatC += parseFloat (timeObj.minutes[i].energyExpenditure.fatC)
                             _totalFatG += parseFloat (timeObj.minutes[i].energyExpenditure.fatG)
@@ -2520,6 +2521,7 @@
                         }
                     }
 
+                    timeObj.totals.totalMet = _totalMet != 0 ? _totalMet.toFixed(2) : ""
                     timeObj.totals.totalCal = _totalCal != 0 ? _totalCal.toFixed(2) : ""
                     timeObj.totals.totalFatC = _totalFatC != 0 ? _totalFatC.toFixed(2) : ""
                     timeObj.totals.totalFatG = _totalFatG != 0 ? _totalFatG.toFixed(2) : ""
@@ -2527,6 +2529,7 @@
                     timeObj.totals.totalCarbG = _totalCarbG != 0 ? _totalCarbG.toFixed(2) : ""
 
                     timeArr.push(timeObj)
+                    console.log('TIME OBJ', timeObj)
 
                     
 
