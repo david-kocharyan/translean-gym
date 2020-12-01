@@ -51,7 +51,7 @@ class FoodController extends Controller
             "proteins" => "required|numeric",
             "calories" => "required|numeric",
             "fiber" => "required|numeric",
-            "glycemic_index" => "required|numeric",
+            "glycemic_index" => "nullable|numeric",
             "glycemic_load" => "required|numeric",
             "ph" => "required|numeric",
         ]);
@@ -64,7 +64,7 @@ class FoodController extends Controller
         $food->proteins = $request->proteins;
         $food->calories = $request->calories;
         $food->fiber = $request->fiber;
-        $food->glycemic_index = $request->glycemic_index;
+        $food->glycemic_index = $request->glycemic_index ?? 0;
         $food->glycemic_load = $request->glycemic_load;
         $food->ph = $request->ph;
         $food->save();
@@ -111,7 +111,7 @@ class FoodController extends Controller
             "proteins" => "required|numeric",
             "calories" => "required|numeric",
             "fiber" => "required|numeric",
-            "glycemic_index" => "required|numeric",
+            "glycemic_index" => "nullable|numeric",
             "glycemic_load" => "required|numeric",
             "ph" => "required|numeric",
         ]);
@@ -123,7 +123,7 @@ class FoodController extends Controller
         $food->proteins = $request->proteins;
         $food->calories = $request->calories;
         $food->fiber = $request->fiber;
-        $food->glycemic_index = $request->glycemic_index;
+        $food->glycemic_index = $request->glycemic_index ?? 0;
         $food->glycemic_load = $request->glycemic_load;
         $food->ph = $request->ph;
         $food->save();
