@@ -748,6 +748,11 @@
 
     <script>
 
+        if(!localStorage.getItem('graphCheckboxArr')) {
+            let arr = []
+            localStorage.setItem('graphCheckboxArr', JSON.stringify(arr))
+        }
+
         let existingValue;
 
         $('.graph-popup-checkbox').click(function(){
@@ -826,7 +831,7 @@
 
         $('#allGraphConfig').on('hidden.bs.modal', function () {
             $('.max-six-error').css('color', 'inherit')
-            
+
             $('#choose-parent').css('display', 'block')
             $('.choose-parent-header').css('display', 'block')
             $('.modal-footer').css('display', 'block')
