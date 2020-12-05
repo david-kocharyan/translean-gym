@@ -13,7 +13,7 @@
             </button>
         </div>
         <div class="col-md-2 text-center summ">
-            <span> Summary All</span>
+            <span>Summary All</span>
             <label class="switch">
                 <input type="checkbox" class="summary">
                 <span class="slider round"></span>
@@ -26,54 +26,60 @@
             <div class="white-box">
                 {{--table--}}
                 <div class="table-responsive">
-                    <table id="datatable" class="display table table-hover table-striped nowrap" cellspacing="0"
-                           width="100%">
+
+                    <button class="btn btn-light open-graph-config-popup" data-toggle="modal"  data-target="#allGraphConfig">
+                        All graphs 
+                        <i class="fas fa-chart-bar fat m-l-10"></i>
+                    </button>
+
+                    <table id="datatable" class="display table table-hover table-striped nowrap" cellspacing="0" width="100%">
+                        
                         <thead>
-                        <tr>
-                            <th>Activity Level</th>
-                            <th>Date</th>
-                            <th>Weight (kg) <i class="fas fa-chart-bar weight m-l-10" data-toggle="modal"
-                                               data-target="#graffModal"></i></th>
-                            <th>Total Fat (%) <i class="fas fa-chart-bar fat m-l-10" data-toggle="modal"
-                                                 data-target="#graffModal"></i></th>
-                            <th>Metabolic Age <i class="fas fa-chart-bar age m-l-10" data-toggle="modal"
-                                                 data-target="#graffModal"></i></th>
-                            <th>Visceral Fat (rating) <i class="fas fa-chart-bar visceral m-l-10" data-toggle="modal"
-                                                         data-target="#graffModal"></i></th>
-                            <th>Muscle Mass (kg) <i class="fas fa-chart-bar muscle m-l-10" data-toggle="modal"
+                            <tr>
+                                <th>Activity Level</th>
+                                <th>Date</th>
+                                <th>Weight (kg) <i class="fas fa-chart-bar weight m-l-10" data-toggle="modal"
+                                                data-target="#graffModal"></i></th>
+                                <th>Total Fat (%) <i class="fas fa-chart-bar fat m-l-10" data-toggle="modal"
                                                     data-target="#graffModal"></i></th>
-                            <th>Lean Mass (kg) <i class="fas fa-chart-bar lean m-l-10" data-toggle="modal"
-                                                  data-target="#graffModal"></i></th>
-                            <th>Assessments Type</th>
-                            <th>Options</th>
-                        </tr>
+                                <th>Metabolic Age <i class="fas fa-chart-bar age m-l-10" data-toggle="modal"
+                                                    data-target="#graffModal"></i></th>
+                                <th>Visceral Fat (rating) <i class="fas fa-chart-bar visceral m-l-10" data-toggle="modal"
+                                                            data-target="#graffModal"></i></th>
+                                <th>Muscle Mass (kg) <i class="fas fa-chart-bar muscle m-l-10" data-toggle="modal"
+                                                        data-target="#graffModal"></i></th>
+                                <th>Lean Mass (kg) <i class="fas fa-chart-bar lean m-l-10" data-toggle="modal"
+                                                    data-target="#graffModal"></i></th>
+                                <th>Assessments Type</th>
+                                <th>Options</th>
+                            </tr>
                         </thead>
 
                         <tbody>
-                        @foreach($assessments as $key=>$val)
-                            <tr>
-                                <td>{{$val->activity_level}}</td>
-                                <td>{{$val->date}}</td>
-                                <td>{{$val->weight}}</td>
-                                <td>{{$val->total_fat}}</td>
-                                <td>{{$val->metabolic_age}}</td>
-                                <td>{{$val->visceral_fat}}</td>
-                                <td>{{$val->muscle_mass}}</td>
-                                <td>{{$val->lean_mass}}</td>
-                                <td class="ass_type" data-type="{{$val->type}}">
-                                    @if($val->type == 0 AND $key == 0)
-                                        First Assessment
-                                    @elseif($val->type == 2)
-                                        Projection
-                                    @elseif($val->type == 1)
-                                        Current Assessment
-                                    @else
+                            @foreach($assessments as $key=>$val)
+                                <tr>
+                                    <td>{{$val->activity_level}}</td>
+                                    <td>{{$val->date}}</td>
+                                    <td>{{$val->weight}}</td>
+                                    <td>{{$val->total_fat}}</td>
+                                    <td>{{$val->metabolic_age}}</td>
+                                    <td>{{$val->visceral_fat}}</td>
+                                    <td>{{$val->muscle_mass}}</td>
+                                    <td>{{$val->lean_mass}}</td>
+                                    <td class="ass_type" data-type="{{$val->type}}">
+                                        @if($val->type == 0 AND $key == 0)
+                                            First Assessment
+                                        @elseif($val->type == 2)
+                                            Projection
+                                        @elseif($val->type == 1)
+                                            Current Assessment
+                                        @else
 
-                                    @endif
-                                </td>
-                                <td></td>
-                            </tr>
-                        @endforeach
+                                        @endif
+                                    </td>
+                                    <td></td>
+                                </tr>
+                            @endforeach
                         </tbody>
                     </table>
                 </div>
@@ -262,6 +268,124 @@
         </div>
     </div>
 
+    <div class="modal fade" id="allGraphConfig" tabindex="-1" role="dialog" aria-labelledby="allGraphConfig" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <div class="choose-parent-header">
+                        <h4>Select the fields for the graphs to display</h4>
+                        <span class="max-six-error">You can select max 6.</span>
+                    </div>
+                    <div class="six-cols-parent-header">
+                        <div> <i class="fas fa-arrow-left"></i> Back </div>
+                    </div>
+                </div>
+                <div class="modal-body">
+
+                    <div class="row" id="choose-parent">
+
+                        <div class="col-md-6">
+                        
+                            <label class="all-graphs-popup-titles">
+                                Weight (kg) <input type="checkbox" class="graph-popup-checkbox" value="weight">
+                            </label>
+                        
+                            <label class="all-graphs-popup-titles">
+                                Total Fat (%) <input type="checkbox" class="graph-popup-checkbox" value="total_fat">
+                            </label>
+
+                            <label class="all-graphs-popup-titles">
+                                Right Arm (%) <input type="checkbox" class="graph-popup-checkbox" value="right_arm">
+                            </label>
+
+                            <label class="all-graphs-popup-titles">
+                                Left Arm (%) <input type="checkbox" class="graph-popup-checkbox" value="left_arm">
+                            </label>
+
+                            <label class="all-graphs-popup-titles">
+                                Right Leg (%) <input type="checkbox" class="graph-popup-checkbox" value="right_leg">
+                            </label>
+
+                            <label class="all-graphs-popup-titles">
+                                Left Leg (%) <input type="checkbox" class="graph-popup-checkbox" value="left_leg">
+                            </label>
+
+                            <label class="all-graphs-popup-titles">
+                            Trunk (%) <input type="checkbox" class="graph-popup-checkbox" value="trunk">
+                            </label>
+
+                        </div>
+                        <div class="col-md-6">
+                            
+                            <label class="all-graphs-popup-titles">
+                                Muscle Mass (kg) <input type="checkbox" class="graph-popup-checkbox" value="muscle_mass">
+                            </label>
+
+                            <label class="all-graphs-popup-titles">
+                                Right Arm Mass (kg) <input type="checkbox" class="graph-popup-checkbox" value="right_arm_mass">
+                            </label>
+
+                            <label class="all-graphs-popup-titles">
+                                Left Arm Mass (kg) <input type="checkbox" class="graph-popup-checkbox" value="left_arm_mass">
+                            </label>
+
+                            <label class="all-graphs-popup-titles">
+                                Right Leg Mass (kg) <input type="checkbox" class="graph-popup-checkbox" value="right_leg_mass">
+                            </label>
+
+                            <label class="all-graphs-popup-titles">
+                                Left Leg Mass (kg) <input type="checkbox" class="graph-popup-checkbox" value="left_leg_mass">
+                            </label>
+
+                            <label class="all-graphs-popup-titles">
+                                Trunk Mass (kg) <input type="checkbox" class="graph-popup-checkbox" value="trunk_mass">
+                            </label>
+
+                            <label class="all-graphs-popup-titles">
+                                Lean Mass (kg) <input type="checkbox" class="graph-popup-checkbox" value="lean_mass">
+                            </label>
+
+                        </div>
+
+                        <div class="col-md-12">
+                           <hr>
+                        </div>
+
+                        <div class="col-md-6">
+
+                            <label class="all-graphs-popup-titles">
+                                Bone Mass (kg) <input type="checkbox" class="graph-popup-checkbox" value="bone_mass">
+                            </label>
+
+                            <label class="all-graphs-popup-titles">
+                                Metabolic age <input type="checkbox" class="graph-popup-checkbox" value="metabolic_age">
+                            </label>
+
+                        </div>
+                        <div class="col-md-6">
+
+                            <label class="all-graphs-popup-titles">
+                                Body Water (%) <input type="checkbox" class="graph-popup-checkbox" value="body_water">
+                            </label>
+
+                            <label class="all-graphs-popup-titles">
+                                Visceral Fat <input type="checkbox" class="graph-popup-checkbox" value="visceral_fat">
+                            </label>
+
+                        </div>
+                    </div>
+
+                    <div class="row" id="six-cols-parent"></div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary done-graph-popup">Done</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 @endsection
 
 @push('footer')
@@ -269,6 +393,7 @@
     <script src="{{asset('assets/plugins/chart.js/Chart.min.js')}}"></script>
     <script !src="">
         var res = JSON.parse('<?php echo json_encode($assessments); ?>');
+        console.log('assessments : ', res)
 
         $('#datatable').DataTable({
             dom: "Bfrtip",
@@ -480,45 +605,45 @@
             $('.modal-title-graff').html('Weight');
             $('.body-graff').empty();
             $('.body-graff').append(`<canvas id="myChart" width="400" height="400"></canvas>`);
-            chartCreate('weight');
+            chartCreate('weight', 'myChart');
         });
 
         $('.fat').click(function () {
             $('.modal-title-graff').html('Total Fat');
             $('.body-graff').empty();
             $('.body-graff').append(`<canvas id="myChart" width="400" height="400"></canvas>`);
-            chartCreate('total_fat');
+            chartCreate('total_fat', 'myChart');
         });
 
         $('.age').click(function () {
             $('.modal-title-graff').html('Metabolic Age');
             $('.body-graff').empty();
             $('.body-graff').append(`<canvas id="myChart" width="400" height="400"></canvas>`);
-            chartCreate('age');
+            chartCreate('age', 'myChart');
         });
 
         $('.visceral').click(function () {
             $('.modal-title-graff').html('Visceral Fat');
             $('.body-graff').empty();
             $('.body-graff').append(`<canvas id="myChart" width="400" height="400"></canvas>`);
-            chartCreate('visceral_fat');
+            chartCreate('visceral_fat', 'myChart');
         });
 
         $('.muscle').click(function () {
             $('.modal-title-graff').html('Muscle Mass');
             $('.body-graff').empty();
             $('.body-graff').append(`<canvas id="myChart" width="400" height="400"></canvas>`);
-            chartCreate('muscle');
+            chartCreate('muscle', 'myChart');
         });
 
         $('.lean').click(function () {
             $('.modal-title-graff').html('Lean Mass');
             $('.body-graff').empty();
             $('.body-graff').append(`<canvas id="myChart" width="400" height="400"></canvas>`);
-            chartCreate('lean');
+            chartCreate('lean', 'myChart');
         });
 
-        function chartCreate(type) {
+        function chartCreate(type, _id) {
             let id = $("input[name=id]").val();
 
             $.ajax({
@@ -529,6 +654,8 @@
                     let labels = [];
                     let data = [];
                     let projection_data = [];
+
+
 
                     for (let i = 0; i < res.length; i++) {
                         labels.push(res[i].date);
@@ -563,8 +690,9 @@
                         }
 
                     }
+                    
 
-                    new Chart(document.getElementById("myChart"),
+                    new Chart(document.getElementById(_id),
                         {
                             "type": "line",
                             "data": {
@@ -615,7 +743,135 @@
                 }
             });
         }
+
     </script>
+
+    <script>
+
+        let existingValue;
+
+        $('.graph-popup-checkbox').click(function(){
+
+            let length = existingValue.length + 1
+
+            if( length > 6 ) {
+
+                $('.max-six-error').css('color', 'red')
+                $(this).prop('checked', false)
+            
+            }
+
+            if( existingValue.includes( $(this).val()) ) {
+
+                const index = existingValue.indexOf( $(this).val() )
+                existingValue.splice(index, 1)
+
+            }else {
+                if(length <= 6) {
+                    existingValue.push( $(this).val() )
+                }
+            }
+
+        });
+
+        $('.done-graph-popup').click(function() {
+
+            $('#choose-parent').css('display', 'none')
+            $('.choose-parent-header').css('display', 'none')
+            $('.modal-footer').css('display', 'none')
+            
+            $('#six-cols-parent').css('display', 'block')
+            $('.six-cols-parent-header').css('display', 'block')
+
+            localStorage.setItem('graphCheckboxArr', JSON.stringify(existingValue))
+            drawChart(existingValue)
+        })
+
+        $('.six-cols-parent-header').click(function() {
+            $('#choose-parent').css('display', 'block')
+            $('.choose-parent-header').css('display', 'block')
+            $('.modal-footer').css('display', 'block')
+            $('#six-cols-parent').css('display', 'none')
+            $('.six-cols-parent-header').css('display', 'none')
+        })
+
+        function drawChart(arr) {
+            $('#six-cols-parent').empty();
+            console.log(arr)
+
+            for(let i=0; i<arr.length; i++) {
+                let html =  '<div class="col-md-4 mb-2">' +
+                                '<h4><b>' + arr[i] + '</b></h4>' +
+                                ' <div class="chart-container">' +
+                                    '<canvas id="myChart'+i+'" width="400" height="400"></canvas>' +
+                                '</div>' +
+                            '</div>';
+                $('#six-cols-parent').append( html )
+                let id = 'myChart'+i
+                chartCreate(arr[i], id);
+            }
+        }
+
+        $('.open-graph-config-popup').click(function() {
+
+            $('.graph-popup-checkbox').prop('checked', false);
+
+            existingValue = JSON.parse(localStorage.getItem('graphCheckboxArr'))
+
+            for(let i=0; i<existingValue.length; i++) {
+                $('.graph-popup-checkbox[value="' + existingValue[i] +'"]').prop('checked', true);
+            }
+
+        })
+
+        $('#allGraphConfig').on('hidden.bs.modal', function () {
+            $('.max-six-error').css('color', 'inherit')
+            
+            $('#choose-parent').css('display', 'block')
+            $('.choose-parent-header').css('display', 'block')
+            $('.modal-footer').css('display', 'block')
+            $('#six-cols-parent').css('display', 'none')
+            $('.six-cols-parent-header').css('display', 'none')
+        });
+
+
+
+    </script>
+
+<style>
+.mb-2 {
+    margin-bottom: 2rem;
+}
+
+    button.btn.btn-light i {
+        color: #fb9905;
+    }
+    .all-graphs-popup-titles {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 60% !important;
+        cursor: pointer;
+        margin-bottom: 15px;
+    }
+
+    .all-graphs-popup-titles input[type="checkbox"] {
+        margin: 0;
+        width: 15px;
+        height: 15px;
+        cursor: pointer;
+    }
+    
+    #six-cols-parent, .six-cols-parent-header {
+        display: none
+    }
+
+    .six-cols-parent-header {
+        cursor: pointer;
+    }
+
+</style>
+
 @endpush
 
 @push('header')
@@ -718,5 +974,6 @@
         </style>
     @endif
 @endpush
+
 
 
