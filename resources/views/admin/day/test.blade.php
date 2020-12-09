@@ -2018,7 +2018,8 @@
             url: "{{ url('/day/calculate-protein-limit') }}",
             data: data,
             success: function (res) {
-                $('.protein_must').html(res.protein_must_eat);
+                let pr = (res.protein_must_eat).toFixed(2)
+                $('.protein_must').html(pr);
             }
         });
     }
