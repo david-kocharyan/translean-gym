@@ -619,7 +619,7 @@
             $('.modal-title-graff').html('Metabolic Age');
             $('.body-graff').empty();
             $('.body-graff').append(`<canvas id="myChart" width="400" height="400"></canvas>`);
-            chartCreate('age', 'myChart');
+            chartCreate('metabolic_age', 'myChart');
         });
 
         $('.visceral').click(function () {
@@ -645,8 +645,8 @@
 
         function chartCreate(type, _id) {
 
-            console.log(type, _id)
-            
+            console.log('Type ===== ', type, 'ID',  _id)
+
             let id = $("input[name=id]").val();
 
             $.ajax({
@@ -662,34 +662,118 @@
 
                     for (let i = 0; i < res.length; i++) {
                         labels.push(res[i].date);
+
                         if (type === 'weight' && res[i].type != 2) {
                             data.push(res[i].weight);
-                        } else if (type === 'total_fat' && res[i].type != 2) {
+                        } 
+                        else if (type === 'total_fat' && res[i].type != 2) {
                             data.push(res[i].total_fat);
-                        } else if (type === 'age' && res[i].type != 2) {
+                        } 
+                        else if (type === 'right_arm' && res[i].type != 2) {
+                            data.push(res[i].right_arm);
+                        }
+                        else if (type === 'left_arm' && res[i].type != 2) {
+                            data.push(res[i].left_arm);
+                        }
+                        else if (type === 'right_leg' && res[i].type != 2) {
+                            data.push(res[i].right_leg);
+                        }
+                        else if (type === 'left_leg' && res[i].type != 2) {
+                            data.push(res[i].left_leg);
+                        }
+                        else if (type === 'trunk' && res[i].type != 2) {
+                            data.push(res[i].trunk);
+                        }
+                        else if (type === 'bone_mass' && res[i].type != 2) {
+                            data.push(res[i].bone_mass);
+                        }
+                        else if (type === 'metabolic_age' && res[i].type != 2) {
                             data.push(res[i].metabolic_age);
-                        } else if (type === 'visceral_fat' && res[i].type != 2) {
-                            data.push(res[i].visceral_fat);
-                        } else if (type === 'muscle' && res[i].type != 2) {
+                        }
+                        else if (type === 'muscle_mass' && res[i].type != 2) {
                             data.push(res[i].muscle_mass);
-                        } else if (type === 'lean' && res[i].type != 2) {
+                        }
+                        else if (type === 'right_arm_mass' && res[i].type != 2) {
+                            data.push(res[i].right_arm_mass);
+                        }
+                        else if (type === 'left_arm_mass' && res[i].type != 2) {
+                            data.push(res[i].left_arm_mass);
+                        }
+                        else if (type === 'right_leg_mass' && res[i].type != 2) {
+                            data.push(res[i].right_leg_mass);
+                        }
+                        else if (type === 'left_leg_mass' && res[i].type != 2) {
+                            data.push(res[i].left_leg_mass);
+                        }
+                        else if (type === 'trunk_mass' && res[i].type != 2) {
+                            data.push(res[i].trunk_mass);
+                        }
+                        else if (type === 'lean_mass' && res[i].type != 2) {
                             data.push(res[i].lean_mass);
                         }
+                        else if (type === 'body_water' && res[i].type != 2) {
+                            data.push(res[i].body_water);
+                        }
+                        else if (type === 'visceral_fat' && res[i].type != 2) {
+                            data.push(res[i].visceral_fat);
+                        }
+                        
 
                         for (var j = 0; j < 6; j++) {
-                            if (type === 'weight' && res[i].type == 2) {
+                            if (type === 'weight' && res[i].type != 2) {
                                 projection_data.push(res[i].weight);
-                            } else if (type === 'total_fat' && res[i].type == 2) {
-                                projection_data.push(res[i].total_fat);
-                            } else if (type === 'age' && res[i].type == 2) {
-                                projection_data.push(res[i].metabolic_age);
-                            } else if (type === 'visceral_fat' && res[i].type == 2) {
-                                projection_data.push(res[i].visceral_fat);
-                            } else if (type === 'muscle' && res[i].type == 2) {
-                                projection_data.push(res[i].muscle_mass);
-                            } else if (type === 'lean' && res[i].type == 2) {
-                                projection_data.push(res[i].lean_mass);
-                            }
+                        } 
+                        else if (type === 'total_fat' && res[i].type != 2) {
+                            projection_data.push(res[i].total_fat);
+                        } 
+                        else if (type === 'right_arm' && res[i].type != 2) {
+                            projection_data.push(res[i].right_arm);
+                        }
+                        else if (type === 'left_arm' && res[i].type != 2) {
+                            projection_data.push(res[i].left_arm);
+                        }
+                        else if (type === 'right_leg' && res[i].type != 2) {
+                            projection_data.push(res[i].right_leg);
+                        }
+                        else if (type === 'left_leg' && res[i].type != 2) {
+                            projection_data.push(res[i].left_leg);
+                        }
+                        else if (type === 'trunk' && res[i].type != 2) {
+                            projection_data.push(res[i].trunk);
+                        }
+                        else if (type === 'bone_mass' && res[i].type != 2) {
+                            projection_data.push(res[i].bone_mass);
+                        }
+                        else if (type === 'metabolic_age' && res[i].type != 2) {
+                            projection_data.push(res[i].metabolic_age);
+                        }
+                        else if (type === 'muscle_mass' && res[i].type != 2) {
+                            projection_data.push(res[i].muscle_mass);
+                        }
+                        else if (type === 'right_arm_mass' && res[i].type != 2) {
+                            projection_data.push(res[i].right_arm_mass);
+                        }
+                        else if (type === 'left_arm_mass' && res[i].type != 2) {
+                            projection_data.push(res[i].left_arm_mass);
+                        }
+                        else if (type === 'right_leg_mass' && res[i].type != 2) {
+                            projection_data.push(res[i].right_leg_mass);
+                        }
+                        else if (type === 'left_leg_mass' && res[i].type != 2) {
+                            projection_data.push(res[i].left_leg_mass);
+                        }
+                        else if (type === 'trunk_mass' && res[i].type != 2) {
+                            projection_data.push(res[i].trunk_mass);
+                        }
+                        else if (type === 'lean_mass' && res[i].type != 2) {
+                            projection_data.push(res[i].lean_mass);
+                        }
+                        else if (type === 'body_water' && res[i].type != 2) {
+                            projection_data.push(res[i].body_water);
+                        }
+                        else if (type === 'visceral_fat' && res[i].type != 2) {
+                            projection_data.push(res[i].visceral_fat);
+                        }
                         }
 
                     }
@@ -804,8 +888,8 @@
         })
 
         function drawChart(arr) {
+
             $('#six-cols-parent').empty();
-            console.log(arr)
 
             for(let i=0; i<arr.length; i++) {
                 let html =  '<div class="col-md-4 mb-2">' +

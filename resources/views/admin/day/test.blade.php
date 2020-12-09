@@ -258,14 +258,23 @@
                     </tr>
                 </thead>
                 <tbody>
-                <!-- energyExpenditure -->
                     <tr class="white-bg-table-tr">
+
+                        <td v-if='energyExpendedMode'><b>@{{ (dayTotals.energyExpenditure.totalMet).toFixed(2) }}</b></td>
+                        <td ><b>@{{ (dayTotals.energyExpenditure.totalCal).toFixed(2) }}</b></td>
                         <td v-if='energyExpendedMode'></td>
                         <td v-if='energyExpendedMode'><b>@{{ (dayTotals.energyExpenditure.totalFatC).toFixed(2) }}</b></td>
                         <td><b>@{{ (dayTotals.energyExpenditure.totalFatG).toFixed(2) }}</b></td>
                         <td v-if='energyExpendedMode'></td>
                         <td v-if='energyExpendedMode'><b>@{{ (dayTotals.energyExpenditure.totalCarbC).toFixed(2) }}</b></td>
                         <td><b>@{{ (dayTotals.energyExpenditure.totalCarbG).toFixed(2) }}</b></td>
+
+                        <!-- <td v-if='energyExpendedMode'></td>
+                        <td><b>@{{ (dayTotals.energyExpenditure.totalFatC).toFixed(2) }}</b></td>
+                        <td><b>@{{ (dayTotals.energyExpenditure.totalFatG).toFixed(2) }}</b></td>
+                        <td v-if='energyExpendedMode'></td>
+                        <td v-if='energyExpendedMode'><b>@{{ (dayTotals.energyExpenditure.totalCarbC).toFixed(2) }}</b></td>
+                        <td><b>@{{ (dayTotals.energyExpenditure.totalCarbG).toFixed(2) }}</b></td> -->
                     </tr>
                 </tbody>
                 <tbody v-for="(time, i) in staticTimes" :key="time.time" v-if="time.show">
@@ -2380,6 +2389,7 @@
                     minuteExpenditure = {}
                     popoverParent = {},
                     energyExpenditureDayTotal = {
+                        totalMet: 0,
                         totalCal: 0, 
                         totalFatC: 0, 
                         totalFatG: 0, 
@@ -2522,6 +2532,8 @@
                         }
                     }
 
+                    
+
                     timeObj.totals.totalMet = _totalMet != 0 ? _totalMet.toFixed(2) : ""
                     timeObj.totals.totalCal = _totalCal != 0 ? _totalCal.toFixed(2) : ""
                     timeObj.totals.totalFatC = _totalFatC != 0 ? _totalFatC.toFixed(2) : ""
@@ -2529,23 +2541,27 @@
                     timeObj.totals.totalCarbC = _totalCarbC != 0 ? _totalCarbC.toFixed(2) : ""
                     timeObj.totals.totalCarbG = _totalCarbG != 0 ? _totalCarbG.toFixed(2) : ""
 
+                    console.log('MET', _totalMet)
                     timeArr.push(timeObj)
                     console.log('TIME OBJ', timeObj)
 
                     
 
                     if(timeObj.totals.totalCal != "") {
+                        energyExpenditureDayTotal.totalMet += parseFloat(timeObj.totals.totalMet)
                         energyExpenditureDayTotal.totalCal += parseFloat(timeObj.totals.totalCal)
                         energyExpenditureDayTotal.totalFatC += parseFloat(timeObj.totals.totalFatC)
                         energyExpenditureDayTotal.totalFatG += parseFloat(timeObj.totals.totalFatG)
                         energyExpenditureDayTotal.totalCarbC += parseFloat(timeObj.totals.totalCarbC)
                         energyExpenditureDayTotal.totalCarbG += parseFloat(timeObj.totals.totalCarbG)
                     }
+                    console.log('4444444444444444444444', energyExpenditureDayTotal)
                 }
 
                 this.staticTimes = timeArr
                 this.dayTotals.energyExpenditure = energyExpenditureDayTotal
                 console.log('Static Times : ', this.staticTimes)
+                console.log('asdasdasd',this.dayTotals.energyExpenditure )
 
             },
             createMealGraphic() {
