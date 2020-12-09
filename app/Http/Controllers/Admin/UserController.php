@@ -52,7 +52,6 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-
         $request->validate([
             "name" => "required",
             "username" => "required|unique:users,username",
@@ -76,6 +75,11 @@ class UserController extends Controller
         $user->height = $request->height;
         $user->dimmer = $request->dimmer;
         $user->protein_hourly_limit = $request->protein_hourly_limit;
+        if ($request->wake_up_time != null){
+            $user->wake_up_time = $request->wake_up_time;
+        }else{
+            $user->wake_up_time = "08:00";
+        }
 
         if ($request->image) {
             $image_name = Storage::disk('public')->put('users/', $request->image);
@@ -155,6 +159,11 @@ class UserController extends Controller
         $user->height = $request->height;
         $user->dimmer = $request->dimmer;
         $user->protein_hourly_limit = $request->protein_hourly_limit;
+        if ($request->wake_up_time != null){
+            $user->wake_up_time = $request->wake_up_time;
+        }else{
+            $user->wake_up_time = "08:00";
+        }
         $user->save();
 
         return redirect(self::ROUTE);

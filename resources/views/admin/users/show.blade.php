@@ -65,7 +65,10 @@
                                         <td>Protein hourly limit</td>
                                         <td>{{$user->protein_hourly_limit}}</td>
                                     </tr>
-
+                                    <tr>
+                                        <td>Wake Up Time</td>
+                                        <td>{{$user->wake_up_time}}</td>
+                                    </tr>
 
                                     </tbody>
                                 </table>

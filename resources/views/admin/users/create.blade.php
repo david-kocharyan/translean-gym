@@ -95,12 +95,33 @@
                             </div>
 
                             <div class="form-group">
-                                <label for="protein_hourly_limit">Protein Hourly Limit <span class="text-danger">*</span></label>
+                                <label for="protein_hourly_limit">Protein Hourly Limit <span
+                                        class="text-danger">*</span></label>
                                 @error('protein_hourly_limit')
                                 <p class="invalid-feedback text-danger" role="alert"><strong>{{ $message }}</strong></p>
                                 @enderror
                                 <input type="number" class="form-control" id="protein_hourly_limit" step="any"
-                                       placeholder="Protein Hourly Limit" name="protein_hourly_limit" value="{{old('protein_hourly_limit')}}">
+                                       placeholder="Protein Hourly Limit" name="protein_hourly_limit"
+                                       value="{{old('protein_hourly_limit')}}">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="wake_up_time">Wake Up Time</label>
+                                @error('wake_up_time')
+                                <p class="invalid-feedback text-danger" role="alert"><strong>{{ $message }}</strong></p>
+                                @enderror
+                                <select name="wake_up_time" id="wake_up_time" class="form-control">
+                                    <option value="">Choose</option>
+                                    @for($i = 1; $i <= 24; $i++)
+                                        @if($i == 24)
+                                            <option value="{{'00:00'}}"  @if(old('wake_up_time') == '00:00') selected @endif>{{'00:00'}}</option>
+                                        @elseif($i < 10)
+                                            <option value="{{'0'.$i.':00'}}" @if(old('wake_up_time') == '0'.$i.':00') selected @endif>{{'0'.$i.':00'}}</option>
+                                        @else
+                                            <option value="{{$i.':00'}}" @if(old('wake_up_time') == $i.':00') selected @endif>{{$i.':00'}}</option>
+                                        @endif
+                                    @endfor
+                                </select>
                             </div>
 
                             <div class="form-group">
