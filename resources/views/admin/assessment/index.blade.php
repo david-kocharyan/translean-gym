@@ -644,6 +644,9 @@
         });
 
         function chartCreate(type, _id) {
+
+            console.log(type, _id)
+            
             let id = $("input[name=id]").val();
 
             $.ajax({

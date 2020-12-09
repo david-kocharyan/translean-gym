@@ -49,7 +49,7 @@
                         <div>
                             <h5>Calories` </h5>
                             <div>
-                                <span>@{{ dayTotals.energyExpenditure.totalCal }}</span>
+                                <span>@{{ (dayTotals.energyExpenditure.totalCal).toFixed(2) }}</span>
                                 <!-- /
                                 <span class="protein_must">0</span> -->
                             </div>
@@ -58,18 +58,18 @@
                         <div>
                             <h5>Carb` </h5>
                             <div>
-                                <span>@{{ dayTotals.energyExpenditure.totalCarbG }}</span>
+                                <span>@{{ (dayTotals.energyExpenditure.totalCarbG).toFixed(2) }}</span>
                                 /
-                                <span>@{{ dayTotals.intake.totalCarb }}</span>
+                                <span>@{{ (dayTotals.intake.totalCarb).toFixed(2) }}</span>
                             </div>
                         </div>
 
                         <div>
                             <h5>Fat` </h5>
                             <div>
-                                <span>@{{ dayTotals.energyExpenditure.totalFatG }}</span>
+                                <span>@{{ (dayTotals.energyExpenditure.totalFatG).toFixed(2) }}</span>
                                 /
-                                <span>@{{ dayTotals.intake.totalFat }}</span>
+                                <span>@{{ (dayTotals.intake.totalFat).toFixed(2) }}</span>
                             </div>
                         </div>
 
