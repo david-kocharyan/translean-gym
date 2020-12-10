@@ -62,6 +62,7 @@ class UserController extends Controller
             "height" => "required|numeric",
             "dimmer" => "required|numeric",
             "protein_hourly_limit" => "required|numeric",
+            "phone" => "required",
         ]);
 
         $user = new User;
@@ -136,6 +137,7 @@ class UserController extends Controller
             "height" => "required|numeric",
             "dimmer" => "required|numeric",
             "protein_hourly_limit" => "required|numeric",
+            "phone" => "required",
         ]);
 
         if ($request->password != null) {
