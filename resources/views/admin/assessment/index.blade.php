@@ -28,7 +28,7 @@
                 <div class="table-responsive">
 
                     <button class="btn btn-light open-graph-config-popup" data-toggle="modal"  data-target="#allGraphConfig">
-                        All graphs 
+                        All graphs
                         <i class="fas fa-chart-bar fat m-l-10"></i>
                     </button>
 
@@ -105,7 +105,7 @@
                     <div class="row form-inline">
                         <div class="col-md-6">
                             <div class="form-group col-md-12 m-b-20">
-                                <label>User Height (cm)</label>
+                                <label>User Height (cm) </label>
                                 <input type="text" class="form-control" disabled value="{{$user->height}}">
                             </div>
                         </div>
@@ -141,41 +141,49 @@
                     </div>
 
                     <hr>
+                    <!-- grigor -->
                     <div class="row form-inline">
                         <div class="col-md-6">
                             <div class="form-group col-md-12 m-b-20">
                                 <label>Weight (kg)</label>
-                                <input type="number" class="form-control" name="weight" required>
+                                <input disabled type="number" class="form-control" name="weight" required>
                             </div>
 
                             <div class="form-group col-md-12 m-b-20">
                                 <label>Total Fat (%)</label>
-                                <input type="number" class="form-control" name="total_fat" required>
+                                <input 
+                                    type="number" 
+                                    class="form-control"
+                                    id="totalFatId" 
+                                    name="total_fat" 
+                                    required 
+                                    oninput="calculatePercentages()"
+                                >
                             </div>
 
                             <div class="form-group col-md-12 m-b-20">
                                 <label>Right Arm (%)</label>
-                                <input type="number" class="form-control" name="right_arm" required>
+                                <input id="rightArmId" type="number" disabled class="form-control" name="right_arm" required>
                             </div>
 
                             <div class="form-group col-md-12 m-b-20">
                                 <label>Left Arm (%)</label>
-                                <input type="number" class="form-control" name="left_arm" required>
+                                <input id="leftArmId" type="number" disabled class="form-control" name="left_arm" required>
                             </div>
 
                             <div class="form-group col-md-12 m-b-20">
                                 <label>Right Leg (%)</label>
-                                <input type="number" class="form-control" name="right_leg" required>
+                                <input id="rightLegId" type="number" disabled class="form-control" name="right_leg" required>
                             </div>
 
                             <div class="form-group col-md-12 m-b-20">
                                 <label>Left Leg (%)</label>
-                                <input type="number" class="form-control" name="left_leg" required>
+                                <input id="leftLegId" type="number" disabled class="form-control" name="left_leg" required>
                             </div>
 
                             <div class="form-group col-md-12 m-b-20">
                                 <label>Trunk (%)</label>
-                                <input type="number" class="form-control" name="trunk" required>
+                                <input id="trunkId" type="number" disabled class="form-control" name="trunk" required>
                             </div>
                         </div>
                         {{--right--}}
@@ -393,7 +401,71 @@
     <script src="{{asset('assets/plugins/chart.js/Chart.min.js')}}"></script>
     <script !src="">
         var res = JSON.parse('<?php echo json_encode($assessments); ?>');
+
         console.log('assessments : ', res)
+
+        let arr = []
+        for(let i=0; i<res.length; i++) {
+
+            let obj = {
+                right_arm: res[i].total_fat / res[i].right_arm,
+                left_arm: res[i].total_fat / res[i].left_arm,
+                right_leg: res[i].total_fat / res[i].right_leg,
+                left_leg: res[i].total_fat / res[i].left_leg,
+                trunk: res[i].total_fat / res[i].trunk,
+            }
+
+            arr.push(obj)
+        }
+
+        let right_arm = 0, 
+            left_arm = 0,
+            right_leg = 0,
+            left_leg = 0, 
+            trunk = 0,
+            finalObj = {};
+
+        for(let i=0; i<arr.length; i++) {
+
+            right_arm += arr[i].right_arm; 
+            left_arm += arr[i].left_arm; 
+            right_leg += arr[i].right_leg; 
+            left_leg += arr[i].left_leg; 
+            trunk += arr[i].trunk; 
+
+            finalObj = {
+                right_arm: right_arm / arr.length,
+                left_arm: left_arm / arr.length,
+                right_leg: right_leg / arr.length,
+                left_leg: left_leg / arr.length,
+                trunk: trunk / arr.length
+            }
+        }
+
+        console.log('FinalObj = ', finalObj)
+
+        function calculatePercentages() {
+            let totalFat = document.getElementById('totalFatId').value
+            console.log('Onchange value', totalFat)
+
+            console.log('right_arm', (totalFat * finalObj.right_arm) / 100)
+            console.log('left_arm',  (totalFat * finalObj.left_arm) / 100)
+            console.log('right_leg', (totalFat * finalObj.right_leg) / 100)
+            console.log('left_leg', (totalFat * finalObj.left_leg) / 100)
+            console.log('trunk',  (totalFat * finalObj.trunk) / 100)
+
+            let ra = ((totalFat * finalObj.right_arm) / 100).toFixed(2),
+                la = ((totalFat * finalObj.left_arm) / 100).toFixed(2),
+                rl = ((totalFat * finalObj.right_leg) / 100).toFixed(2),
+                ll = ((totalFat * finalObj.left_leg) / 100).toFixed(2),
+                tr = ((totalFat * finalObj.trunk) / 100).toFixed(2);
+
+            $('#rightArmId').val(ra)
+            $('#leftArmId').val(la)
+            $('#rightLegId').val(rl)
+            $('#leftLegId').val(ll)
+            $('#trunkId').val(tr)
+        }
 
         $('#datatable').DataTable({
             dom: "Bfrtip",
@@ -931,9 +1003,10 @@
     </script>
 
 <style>
-.mb-2 {
-    margin-bottom: 2rem;
-}
+
+    .mb-2 {
+        margin-bottom: 2rem;
+    }
 
     button.btn.btn-light i {
         color: #fb9905;
