@@ -256,6 +256,10 @@
                                 <label>Visceral Fat (rating)</label>
                                 <input type="number" class="form-control" name="visceral_fat" required>
                             </div>
+                            <div class="form-group col-md-12 m-b-20">
+                                <label>Glycogen Store (gr)</label>
+                                <input type="number" class="form-control" name="glycogen_store" disabled>
+                            </div>
                         </div>
                     </div>
 
@@ -386,9 +390,10 @@
                             </label>
 
                             <label class="all-graphs-popup-titles">
-                                Visceral Fat <input type="checkbox" class="graph-popup-checkbox" value="visceral_fat">
+                                Visceral Fat<input type="checkbox" class="graph-popup-checkbox" value="visceral_fat">
                             </label>
-
+                            
+                          
                         </div>
                     </div>
 
