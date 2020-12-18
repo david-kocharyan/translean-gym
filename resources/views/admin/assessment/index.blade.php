@@ -5,7 +5,8 @@
 
     <div class="row">
         <div class="col-md-10 text-left">
-            <button class="btn btn-success m-b-30 assessment" data-toggle="modal" data-target="#largeModal">New
+            <button class="btn btn-success m-b-30 assessment" 
+            data-toggle="modal" data-target="#largeModal">New
                 Assessments
             </button>
             <button class="btn btn-success m-b-30 projection" data-toggle="modal" data-target="#largeModal">Add
@@ -146,7 +147,7 @@
                         <div class="col-md-6">
                             <div class="form-group col-md-12 m-b-20">
                                 <label>Weight (kg)</label>
-                                <input disabled type="number" class="form-control" name="weight" required>
+                                <input id="weightId" disabled type="number" class="form-control" name="weight" required>
                             </div>
 
                             <div class="form-group col-md-12 m-b-20">
@@ -189,38 +190,45 @@
                         {{--right--}}
                         <div class="col-md-6">
                             <div class="form-group col-md-12 m-b-20">
-                                <label>Muscle Mass (kg)</label>
-                                <input type="number" class="form-control" name="muscle_mass" required>
+                                <label>Muscle Mass (kg) </label>
+                                <input 
+                                    type="number" 
+                                    class="form-control" 
+                                    id="muscleMassId"
+                                    name="muscle_mass" 
+                                    required 
+                                    oninput="calculateKilograms()"
+                                >
                             </div>
 
                             <div class="form-group col-md-12 m-b-20">
                                 <label>Right Arm Mass (kg)</label>
-                                <input type="number" class="form-control" name="right_arm_mass" required>
+                                <input id="rightArmMassId" type="number" disabled class="form-control" name="right_arm_mass" required>
                             </div>
 
                             <div class="form-group col-md-12 m-b-20">
                                 <label>Left Arm Mass (kg)</label>
-                                <input type="number" class="form-control" name="left_arm_mass" required>
+                                <input id="leftArmMassId" type="number" disabled class="form-control" name="left_arm_mass" required>
                             </div>
 
                             <div class="form-group col-md-12 m-b-20">
                                 <label>Right Leg Mass (kg)</label>
-                                <input type="number" class="form-control" name="right_leg_mass" required>
+                                <input id="rightLegMassId" type="number" disabled disabled class="form-control" name="right_leg_mass" required>
                             </div>
 
                             <div class="form-group col-md-12 m-b-20">
                                 <label>Left Leg Mass (kg)</label>
-                                <input type="number" class="form-control" name="left_leg_mass" required>
+                                <input id="leftLegMassId" type="number" disabled class="form-control" name="left_leg_mass" required>
                             </div>
 
                             <div class="form-group col-md-12 m-b-20">
                                 <label>Trunk Mass (kg)</label>
-                                <input type="number" class="form-control" name="trunk_mass" required>
+                                <input id="trunkMassId" type="number" disabled class="form-control" name="trunk_mass" required>
                             </div>
 
                             <div class="form-group col-md-12 m-b-20">
                                 <label>Lean Mass (kg)</label>
-                                <input type="number" class="form-control" name="lean_mass" disabled required>
+                                <input id="leanMassId34" type="number" disabled class="form-control" name="trunk_mass" required>
                             </div>
 
                         </div>
@@ -400,11 +408,13 @@
     <script src="{{asset('assets/plugins/swal/sweetalert.min.js')}}"></script>
     <script src="{{asset('assets/plugins/chart.js/Chart.min.js')}}"></script>
     <script !src="">
+
         var res = JSON.parse('<?php echo json_encode($assessments); ?>');
 
         console.log('assessments : ', res)
 
-        let arr = []
+        let arr = [], arrKg = []
+
         for(let i=0; i<res.length; i++) {
 
             let obj = {
@@ -415,7 +425,17 @@
                 trunk: res[i].total_fat / res[i].trunk,
             }
 
+            let objKg = {
+                right_arm_mass: res[i].muscle_mass / res[i].right_arm_mass,
+                left_arm_mass: res[i].muscle_mass / res[i].left_arm_mass,
+                right_leg_mass: res[i].muscle_mass / res[i].right_leg_mass,
+                left_leg_mass: res[i].muscle_mass / res[i].left_leg_mass,
+                trunk_mass: res[i].muscle_mass / res[i].trunk_mass,
+                lean_mass: res[i].muscle_mass / res[i].lean_mass
+            }
+
             arr.push(obj)
+            arrKg.push(objKg)
         }
 
         let right_arm = 0, 
@@ -423,7 +443,15 @@
             right_leg = 0,
             left_leg = 0, 
             trunk = 0,
-            finalObj = {};
+            finalObj = {},
+
+            right_arm_mass = 0,
+            left_arm_mass = 0,
+            right_leg_mass= 0,
+            left_leg_mass = 0,
+            trunk_mass = 0,
+            lean_mass = 0,
+            finalObjKg ={};
 
         for(let i=0; i<arr.length; i++) {
 
@@ -442,17 +470,30 @@
             }
         }
 
-        console.log('FinalObj = ', finalObj)
+        for(let i=0; i<arrKg.length; i++) {
 
+            right_arm_mass += arrKg[i].right_arm_mass; 
+            left_arm_mass += arrKg[i].left_arm_mass; 
+            right_leg_mass += arrKg[i].right_leg_mass; 
+            left_leg_mass += arrKg[i].left_leg_mass; 
+            trunk_mass += arrKg[i].trunk_mass;
+            lean_mass += arrKg[i].lean_mass;  
+
+            finalObjKg = {
+                right_arm_mass: right_arm_mass / arrKg.length,
+                left_arm_mass: left_arm_mass / arrKg.length,
+                right_leg_mass: right_leg_mass / arrKg.length,
+                left_leg_mass: left_leg_mass / arrKg.length,
+                trunk_mass: trunk_mass / arrKg.length,
+                lean_mass: lean_mass / arrKg.length
+            }
+        }
+
+        
         function calculatePercentages() {
+
             let totalFat = document.getElementById('totalFatId').value
             console.log('Onchange value', totalFat)
-
-            console.log('right_arm', (totalFat * finalObj.right_arm) / 100)
-            console.log('left_arm',  (totalFat * finalObj.left_arm) / 100)
-            console.log('right_leg', (totalFat * finalObj.right_leg) / 100)
-            console.log('left_leg', (totalFat * finalObj.left_leg) / 100)
-            console.log('trunk',  (totalFat * finalObj.trunk) / 100)
 
             let ra = ((totalFat * finalObj.right_arm) / 100).toFixed(2),
                 la = ((totalFat * finalObj.left_arm) / 100).toFixed(2),
@@ -465,7 +506,47 @@
             $('#rightLegId').val(rl)
             $('#leftLegId').val(ll)
             $('#trunkId').val(tr)
+
+            calculateWeight()
         }
+
+        function calculateKilograms() {
+            let muscleMass = document.getElementById('muscleMassId').value
+            console.log('==', typeof( muscleMass ) )
+            console.log('Onchange value', finalObjKg)
+
+            let ram = ((muscleMass *  finalObjKg.right_arm_mass) / 100).toFixed(2),
+                lam = ((muscleMass *  finalObjKg.left_arm_mass) / 100).toFixed(2),
+                rlm = ((muscleMass *  finalObjKg.right_leg_mass) / 100).toFixed(2),
+                llm = ((muscleMass *  finalObjKg.left_leg_mass) / 100).toFixed(2),
+                tm = (( muscleMass *  finalObjKg.trunk_mass) / 100).toFixed(2),
+                lm = (( muscleMass *  finalObjKg.lean_mass) / 100).toFixed(2);
+
+            
+                // alert(lm)
+
+            $('#rightArmMassId').val(ram);
+            $('#leftArmMassId').val(lam);
+            $('#rightLegMassId').val(rlm);
+            $('#leftLegMassId').val(llm);
+            $('#trunkMassId').val(tm);
+            $('#leanMassId34').val(lm);
+
+            calculateWeight()
+
+        }
+
+        function calculateWeight() {
+            let totalFat = document.getElementById('totalFatId').value
+            let leanMassPerc = 100 - totalFat 
+            let weight = ((finalObjKg.lean_mass * 100) / leanMassPerc).toFixed(2)
+            console.log('weight', weight)
+            $('#weightId').val(weight)
+        }
+
+        $('.assessment').click(function() {
+            
+        })
 
         $('#datatable').DataTable({
             dom: "Bfrtip",
