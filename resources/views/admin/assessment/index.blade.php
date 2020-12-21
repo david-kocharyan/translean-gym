@@ -142,12 +142,12 @@
                     </div>
 
                     <hr>
-                    <!-- grigor -->
+   
                     <div class="row form-inline">
                         <div class="col-md-6">
                             <div class="form-group col-md-12 m-b-20">
                                 <label>Weight (kg)</label>
-                                <input id="weightId" disabled type="number" class="form-control" name="weight" required>
+                                <input id="weightId" type="number" class="form-control" name="weight" required>
                             </div>
 
                             <div class="form-group col-md-12 m-b-20">
@@ -164,27 +164,27 @@
 
                             <div class="form-group col-md-12 m-b-20">
                                 <label>Right Arm (%)</label>
-                                <input id="rightArmId" type="number" disabled class="form-control" name="right_arm" required>
+                                <input id="rightArmId" type="number"  class="form-control" name="right_arm" required>
                             </div>
 
                             <div class="form-group col-md-12 m-b-20">
                                 <label>Left Arm (%)</label>
-                                <input id="leftArmId" type="number" disabled class="form-control" name="left_arm" required>
+                                <input id="leftArmId" type="number"  class="form-control" name="left_arm" required>
                             </div>
 
                             <div class="form-group col-md-12 m-b-20">
                                 <label>Right Leg (%)</label>
-                                <input id="rightLegId" type="number" disabled class="form-control" name="right_leg" required>
+                                <input id="rightLegId" type="number"  class="form-control" name="right_leg" required>
                             </div>
 
                             <div class="form-group col-md-12 m-b-20">
                                 <label>Left Leg (%)</label>
-                                <input id="leftLegId" type="number" disabled class="form-control" name="left_leg" required>
+                                <input id="leftLegId" type="number"  class="form-control" name="left_leg" required>
                             </div>
 
                             <div class="form-group col-md-12 m-b-20">
                                 <label>Trunk (%)</label>
-                                <input id="trunkId" type="number" disabled class="form-control" name="trunk" required>
+                                <input id="trunkId" type="number"  class="form-control" name="trunk" required>
                             </div>
                         </div>
                         {{--right--}}
@@ -203,32 +203,32 @@
 
                             <div class="form-group col-md-12 m-b-20">
                                 <label>Right Arm Mass (kg)</label>
-                                <input id="rightArmMassId" type="number" disabled class="form-control" name="right_arm_mass" required>
+                                <input id="rightArmMassId" type="number"  class="form-control" name="right_arm_mass" required>
                             </div>
 
                             <div class="form-group col-md-12 m-b-20">
                                 <label>Left Arm Mass (kg)</label>
-                                <input id="leftArmMassId" type="number" disabled class="form-control" name="left_arm_mass" required>
+                                <input id="leftArmMassId" type="number"  class="form-control" name="left_arm_mass" required>
                             </div>
 
                             <div class="form-group col-md-12 m-b-20">
                                 <label>Right Leg Mass (kg)</label>
-                                <input id="rightLegMassId" type="number" disabled disabled class="form-control" name="right_leg_mass" required>
+                                <input id="rightLegMassId" type="number"  class="form-control" name="right_leg_mass" required>
                             </div>
 
                             <div class="form-group col-md-12 m-b-20">
                                 <label>Left Leg Mass (kg)</label>
-                                <input id="leftLegMassId" type="number" disabled class="form-control" name="left_leg_mass" required>
+                                <input id="leftLegMassId" type="number"  class="form-control" name="left_leg_mass" required>
                             </div>
 
                             <div class="form-group col-md-12 m-b-20">
                                 <label>Trunk Mass (kg)</label>
-                                <input id="trunkMassId" type="number" disabled class="form-control" name="trunk_mass" required>
+                                <input id="trunkMassId" type="number"  class="form-control" name="trunk_mass" required>
                             </div>
 
                             <div class="form-group col-md-12 m-b-20">
                                 <label>Lean Mass (kg)</label>
-                                <input id="leanMassId34" type="number" disabled class="form-control" name="trunk_mass" required>
+                                <input id="leanMassId34" type="number"  class="form-control" name="trunk_mass" required>
                             </div>
 
                         </div>
@@ -418,9 +418,11 @@
 
         console.log('assessments : ', res)
 
-        let arr = [], arrKg = []
+        let arr = [], arrKg = [];
 
         for(let i=0; i<res.length; i++) {
+
+            console.log('total fat % right arm = ', res[i].total_fat / res[i].right_arm)
 
             let obj = {
                 right_arm: res[i].total_fat / res[i].right_arm,
@@ -458,6 +460,8 @@
             lean_mass = 0,
             finalObjKg ={};
 
+            console.log('arr', arr)
+
         for(let i=0; i<arr.length; i++) {
 
             right_arm += arr[i].right_arm; 
@@ -465,6 +469,8 @@
             right_leg += arr[i].right_leg; 
             left_leg += arr[i].left_leg; 
             trunk += arr[i].trunk; 
+
+            console.log('right arm ==', right_arm / arr.length)
 
             finalObj = {
                 right_arm: right_arm / arr.length,
@@ -474,6 +480,8 @@
                 trunk: trunk / arr.length
             }
         }
+
+        console.log(finalObj)
 
         for(let i=0; i<arrKg.length; i++) {
 
@@ -506,7 +514,10 @@
                 ll = ((totalFat * finalObj.left_leg) / 100).toFixed(2),
                 tr = ((totalFat * finalObj.trunk) / 100).toFixed(2);
 
-            $('#rightArmId').val(ra)
+
+            console.log('right arm final ============',(totalFat * finalObj.right_arm) / 100)
+            
+            $('#rightArmId').val(ra) 
             $('#leftArmId').val(la)
             $('#rightLegId').val(rl)
             $('#leftLegId').val(ll)
@@ -549,9 +560,29 @@
             $('#weightId').val(weight)
         }
 
-        $('.assessment').click(function() {
-            
-        })
+        function inputSwitcher(bool) {
+            console.log(bool)
+            $( "#weightId" ).prop( "disabled", bool );
+            $( "#rightArmId" ).prop( "disabled", bool );
+            $( "#leftArmId" ).prop( "disabled", bool );
+            $( "#rightLegId" ).prop( "disabled", bool );
+            $( "#leftLegId" ).prop( "disabled", bool );
+            $( "#trunkId" ).prop( "disabled", bool );
+
+            $( "#rightArmMassId" ).prop( "disabled", bool );
+            $( "#leftArmMassId" ).prop( "disabled", bool );
+            $( "#rightLegMassId" ).prop( "disabled", bool );
+            $( "#leftLegMassId" ).prop( "disabled", bool );
+            $( "#trunkMassId" ).prop( "disabled", bool );
+            $( "#leanMassId34" ).prop( "disabled", bool );
+        }
+
+
+        // detect when big popup closed
+        $('#largeModal').on('hidden.bs.modal', function () {
+            inputSwitcher(false)
+            // $('.down').html('')
+        });
 
         $('#datatable').DataTable({
             dom: "Bfrtip",
@@ -647,13 +678,16 @@
             });
 
             $('.projection').click(function () {
+
+                inputSwitcher(true)
+                
                 $('.modal-title').html('Projection');
                 $('.type').val(2);
                 $('.form-control').removeClass('error');
-                $('.down').append(`<div class="form-group col-md-12 m-b-20 glycogen_store">
-                                        <label>Glycogen Store (gr)</label>
-                                        <input type="number" class="form-control" name="glycogen_store" disabled>
-                                    </div>`)
+                // $('.down').append(`<div class="form-group col-md-12 m-b-20 glycogen_store">
+                //                         <label>Glycogen Store (gr)</label>
+                //                         <input type="number" class="form-control" name="glycogen_store" disabled>
+                //                     </div>`)
             });
 
             $('input[name=bone_mass]').on('input', function () {
