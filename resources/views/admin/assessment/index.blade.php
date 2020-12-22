@@ -502,53 +502,64 @@
             }
         }
 
+        let calculations = false
+
         
         function calculatePercentages() {
 
-            let totalFat = document.getElementById('totalFatId').value
-            console.log('Onchange value', totalFat)
+            if(calculations) {
 
-            let ra = ((totalFat * finalObj.right_arm) / 100).toFixed(2),
-                la = ((totalFat * finalObj.left_arm) / 100).toFixed(2),
-                rl = ((totalFat * finalObj.right_leg) / 100).toFixed(2),
-                ll = ((totalFat * finalObj.left_leg) / 100).toFixed(2),
-                tr = ((totalFat * finalObj.trunk) / 100).toFixed(2);
+                let totalFat = document.getElementById('totalFatId').value
+                console.log('Onchange value', totalFat)
+
+                let ra = ((totalFat * finalObj.right_arm) / 100).toFixed(2),
+                    la = ((totalFat * finalObj.left_arm) / 100).toFixed(2),
+                    rl = ((totalFat * finalObj.right_leg) / 100).toFixed(2),
+                    ll = ((totalFat * finalObj.left_leg) / 100).toFixed(2),
+                    tr = ((totalFat * finalObj.trunk) / 100).toFixed(2);
 
 
-            console.log('right arm final ============',(totalFat * finalObj.right_arm) / 100)
-            
-            $('#rightArmId').val(ra) 
-            $('#leftArmId').val(la)
-            $('#rightLegId').val(rl)
-            $('#leftLegId').val(ll)
-            $('#trunkId').val(tr)
+                console.log('right arm final ============',(totalFat * finalObj.right_arm) / 100)
+                
+                $('#rightArmId').val(ra) 
+                $('#leftArmId').val(la)
+                $('#rightLegId').val(rl)
+                $('#leftLegId').val(ll)
+                $('#trunkId').val(tr)
 
-            calculateWeight()
+                calculateWeight()
+            }
+
+
         }
 
         function calculateKilograms() {
-            let muscleMass = document.getElementById('muscleMassId').value
-            console.log('==', typeof( muscleMass ) )
-            console.log('Onchange value', finalObjKg)
 
-            let ram = ((muscleMass *  finalObjKg.right_arm_mass) / 100).toFixed(2),
-                lam = ((muscleMass *  finalObjKg.left_arm_mass) / 100).toFixed(2),
-                rlm = ((muscleMass *  finalObjKg.right_leg_mass) / 100).toFixed(2),
-                llm = ((muscleMass *  finalObjKg.left_leg_mass) / 100).toFixed(2),
-                tm = (( muscleMass *  finalObjKg.trunk_mass) / 100).toFixed(2),
-                lm = (( muscleMass *  finalObjKg.lean_mass) / 100).toFixed(2);
+            if(calculations) {
+                let muscleMass = document.getElementById('muscleMassId').value
+                console.log('==', typeof( muscleMass ) )
+                console.log('Onchange value', finalObjKg)
 
-            
-                // alert(lm)
+                let ram = ((muscleMass *  finalObjKg.right_arm_mass) / 100).toFixed(2),
+                    lam = ((muscleMass *  finalObjKg.left_arm_mass) / 100).toFixed(2),
+                    rlm = ((muscleMass *  finalObjKg.right_leg_mass) / 100).toFixed(2),
+                    llm = ((muscleMass *  finalObjKg.left_leg_mass) / 100).toFixed(2),
+                    tm = (( muscleMass *  finalObjKg.trunk_mass) / 100).toFixed(2),
+                    lm = (( muscleMass *  finalObjKg.lean_mass) / 100).toFixed(2);
 
-            $('#rightArmMassId').val(ram);
-            $('#leftArmMassId').val(lam);
-            $('#rightLegMassId').val(rlm);
-            $('#leftLegMassId').val(llm);
-            $('#trunkMassId').val(tm);
-            $('#leanMassId34').val(lm);
+                
+                    // alert(lm)
 
-            calculateWeight()
+                $('#rightArmMassId').val(ram);
+                $('#leftArmMassId').val(lam);
+                $('#rightLegMassId').val(rlm);
+                $('#leftLegMassId').val(llm);
+                $('#trunkMassId').val(tm);
+                $('#leanMassId34').val(lm);
+
+                calculateWeight()
+            }
+
 
         }
 
@@ -581,6 +592,7 @@
         // detect when big popup closed
         $('#largeModal').on('hidden.bs.modal', function () {
             inputSwitcher(false)
+            calculations = false
             // $('.down').html('')
         });
 
@@ -678,6 +690,8 @@
             });
 
             $('.projection').click(function () {
+
+                calculations = true
 
                 inputSwitcher(true)
                 
