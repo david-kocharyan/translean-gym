@@ -588,11 +588,31 @@
             $( "#leanMassId34" ).prop( "disabled", bool );
         }
 
+        function clearInputValues() {
+
+            $( "#totalFatId" ).val("");
+            $( "#muscleMassId" ).val("");
+
+            $( "#weightId" ).val("");
+            $( "#rightArmId" ).val("");
+            $( "#leftArmId" ).val("");
+            $( "#rightLegId" ).val("");
+            $( "#leftLegId" ).val("");
+            $( "#trunkId" ).val("");
+
+            $( "#rightArmMassId" ).val("");
+            $( "#leftArmMassId" ).val("");
+            $( "#rightLegMassId" ).val("");
+            $( "#leftLegMassId" ).val("");
+            $( "#trunkMassId" ).val("");
+            $( "#leanMassId34" ).val("");
+        }
 
         // detect when big popup closed
         $('#largeModal').on('hidden.bs.modal', function () {
             inputSwitcher(false)
             calculations = false
+            clearInputValues()
             // $('.down').html('')
         });
 
