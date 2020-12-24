@@ -1026,6 +1026,8 @@
 
                     }
 
+                    console.log('Projection Data', projection_data)
+
                     new Chart(document.getElementById(_id),
                         {
                             "type": "line",
@@ -1043,7 +1045,7 @@
                                         "data": projection_data,
                                         "fill": false,
                                         "borderColor": '#8e5804',
-                                        "lineTension": 0.04,
+                                        "lineTension": 0.01,
                                     }
                                 ],
                                 annotation: {
