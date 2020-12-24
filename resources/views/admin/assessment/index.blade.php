@@ -968,7 +968,7 @@
                         }
 
                      
-                        for (var j = 0; j < 6; j++) {
+                        for (var j = 0; j < res.length; j++) {
                             if (type === 'weight' && res[i].type === '2') {
                                 projection_data.push(res[i].weight);
                             } 
