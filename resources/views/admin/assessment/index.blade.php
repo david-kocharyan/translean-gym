@@ -243,7 +243,7 @@
 
                             <div class="form-group col-md-12 m-b-20">
                                 <label>Lean Mass (kg)</label>
-                                <input id="leanMassId34" type="number"  class="form-control" name="trunk_mass" required>
+                                <input id="leanMassId34" type="number" disabled class="form-control" name="trunk_mass" required>
                             </div>
 
                         </div>
@@ -447,7 +447,6 @@
             $( "#rightLegMassId" ).prop( "disabled", bool );
             $( "#leftLegMassId" ).prop( "disabled", bool );
             $( "#trunkMassId" ).prop( "disabled", bool );
-            $( "#leanMassId34" ).prop( "disabled", bool );
         }
 
         let arr = [], arrKg = [];
@@ -567,8 +566,7 @@
 
         function calculateKilograms() {
 
-            if(calculations) {
-                let muscleMass = document.getElementById('muscleMassId').value
+            let muscleMass = document.getElementById('muscleMassId').value
                 console.log('==', typeof( muscleMass ) )
                 console.log('Onchange value', finalObjKg)
 
@@ -579,15 +577,22 @@
                     tm = (( muscleMass *  finalObjKg.trunk_mass) / 100).toFixed(2),
                     lm = (( muscleMass *  finalObjKg.lean_mass) / 100).toFixed(2);
 
+                    $('#leanMassId34').val(lm);
+
+
+            if(calculations) {
+
+
                 
                     // alert(lm)
 
+                
                 $('#rightArmMassId').val(ram);
                 $('#leftArmMassId').val(lam);
                 $('#rightLegMassId').val(rlm);
                 $('#leftLegMassId').val(llm);
                 $('#trunkMassId').val(tm);
-                $('#leanMassId34').val(lm);
+                
 
                 calculateWeight()
             }
