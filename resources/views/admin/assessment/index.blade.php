@@ -964,10 +964,10 @@
                         else if (type === 'visceral_fat' && res[i].type != 2) {
                             data.push(res[i].visceral_fat);
                         }
+                    }
 
-                     
-                        // for (var j = 0; j < 6; j++) {
-                            if (type === 'weight' && res[i].type == 2) {
+                    for (let i = 0; i < res.length; i++) {
+                        if (type === 'weight' && res[i].type == 2) {
                                 projection_data.push(res[i].weight);
                             } 
                             else if (type === 'total_fat' && res[i].type == 2) {
@@ -1021,13 +1021,10 @@
                             else if (type === 'visceral_fat' && res[i].type == 2) {
                                 projection_data.push(res[i].visceral_fat);
                             }
-                        // }
-                        
-
-                    }
+                        }
 
                     console.log('Projection Data', parseFloat(projection_data[0] - 1))
-                    
+
                     projection_data[0] = parseFloat(projection_data[0] - 1)
 
                     new Chart(document.getElementById(_id),
