@@ -716,7 +716,7 @@
                 }
             });
         })
-
+        
     </script>
 
     <script>
@@ -892,6 +892,8 @@
 
         function chartCreate(type, _id) {
 
+            console.log('Type ===== ', type, 'ID',  _id)
+
             let id = $("input[name=id]").val();
 
             $.ajax({
@@ -907,7 +909,7 @@
                     for (let i = 0; i < res.length; i++) {
 
                         console.log('type = 44445555566666 ', res[i])
-                        
+
                         labels.push(res[i].date);
 
                         if (type === 'weight' && res[i].type != 2) {
@@ -964,84 +966,82 @@
                         else if (type === 'visceral_fat' && res[i].type != 2) {
                             data.push(res[i].visceral_fat);
                         }
-                    }
 
-                    for (let i = 0; i < res.length; i++) {
-                        if (type === 'weight' && res[i].type === '2') {
+                     
+                        for (var j = 0; j < 6; j++) {
+                            if (type === 'weight' && res[i].type != 2) {
                                 projection_data.push(res[i].weight);
                             } 
-                            else if (type === 'total_fat' && res[i].type === '2') {
+                            else if (type === 'total_fat' && res[i].type != 2) {
                                 projection_data.push(res[i].total_fat);
                             } 
-                            else if (type === 'right_arm' && res[i].type === '2') {
+                            else if (type === 'right_arm' && res[i].type != 2) {
                                 projection_data.push(res[i].right_arm);
                             }
-                            else if (type === 'left_arm' && res[i].type === '2') {
+                            else if (type === 'left_arm' && res[i].type != 2) {
                                 projection_data.push(res[i].left_arm);
                             }
-                            else if (type === 'right_leg' && res[i].type === '2') {
+                            else if (type === 'right_leg' && res[i].type != 2) {
                                 projection_data.push(res[i].right_leg);
                             }
-                            else if (type === 'left_leg' && res[i].type === '2') {
+                            else if (type === 'left_leg' && res[i].type != 2) {
                                 projection_data.push(res[i].left_leg);
                             }
-                            else if (type === 'trunk' && res[i].type === '2') {
+                            else if (type === 'trunk' && res[i].type != 2) {
                                 projection_data.push(res[i].trunk);
                             }
-                            else if (type === 'bone_mass' && res[i].type === '2') {
+                            else if (type === 'bone_mass' && res[i].type != 2) {
                                 projection_data.push(res[i].bone_mass);
                             }
-                            else if (type === 'metabolic_age' && res[i].type === '2') {
+                            else if (type === 'metabolic_age' && res[i].type != 2) {
                                 projection_data.push(res[i].metabolic_age);
                             }
-                            else if (type === 'muscle_mass' && res[i].type === '2') {
+                            else if (type === 'muscle_mass' && res[i].type != 2) {
                                 projection_data.push(res[i].muscle_mass);
                             }
-                            else if (type === 'right_arm_mass' && res[i].type === '2') {
+                            else if (type === 'right_arm_mass' && res[i].type != 2) {
                                 projection_data.push(res[i].right_arm_mass);
                             }
-                            else if (type === 'left_arm_mass' && res[i].type === '2') {
+                            else if (type === 'left_arm_mass' && res[i].type != 2) {
                                 projection_data.push(res[i].left_arm_mass);
                             }
-                            else if (type === 'right_leg_mass' && res[i].type === '2') {
+                            else if (type === 'right_leg_mass' && res[i].type != 2) {
                                 projection_data.push(res[i].right_leg_mass);
                             }
-                            else if (type === 'left_leg_mass' && res[i].type === '2') {
+                            else if (type === 'left_leg_mass' && res[i].type != 2) {
                                 projection_data.push(res[i].left_leg_mass);
                             }
-                            else if (type === 'trunk_mass' && res[i].type === '2') {
+                            else if (type === 'trunk_mass' && res[i].type != 2) {
                                 projection_data.push(res[i].trunk_mass);
                             }
-                            else if (type === 'lean_mass' && res[i].type === '2') {
+                            else if (type === 'lean_mass' && res[i].type != 2) {
                                 projection_data.push(res[i].lean_mass);
                             }
-                            else if (type === 'body_water' && res[i].type === '2') {
+                            else if (type === 'body_water' && res[i].type != 2) {
                                 projection_data.push(res[i].body_water);
                             }
-                            else if (type === 'visceral_fat' && res[i].type === '2') {
+                            else if (type === 'visceral_fat' && res[i].type != 2) {
                                 projection_data.push(res[i].visceral_fat);
                             }
                         }
+                        
 
-                    // console.log('Projection Data', parseFloat(projection_data[0] - 1))
-
-                    // projection_data[0] = parseFloat(projection_data[0] - 1)
+                    }
 
                     new Chart(document.getElementById(_id),
                         {
                             "type": "line",
                             "data": {
                                 "labels": labels,
-                                "datasets": [
+                                "datasets": [{
+                                    "data": data,
+                                    "fill": true,
+                                    "borderColor": '#3b8e34',
+                                    "backgroundColor": '#e5e5e57d',
+                                    "lineTension": 0.01,
+                                },
                                     {
-                                        "data": data,
-                                        "fill": true,
-                                        "borderColor": '#3b8e34',
-                                        "backgroundColor": '#e5e5e57d',
-                                        "lineTension": 0.01,
-                                    },
-                                    {
-                                        "data": projection_data,
+                                        data: projection_data,
                                         "fill": false,
                                         "borderColor": '#8e5804',
                                         "lineTension": 0.01,
