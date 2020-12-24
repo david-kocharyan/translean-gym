@@ -892,8 +892,6 @@
 
         function chartCreate(type, _id) {
 
-            console.log('Type ===== ', type, 'ID',  _id)
-
             let id = $("input[name=id]").val();
 
             $.ajax({
@@ -910,8 +908,6 @@
 
                         console.log('type = 44445555566666 ', res[i])
                         
-                
-
                         labels.push(res[i].date);
 
                         if (type === 'weight' && res[i].type != 2) {
@@ -1035,18 +1031,19 @@
                             "type": "line",
                             "data": {
                                 "labels": labels,
-                                "datasets": [{
-                                    "data": data,
-                                    "fill": true,
-                                    "borderColor": '#3b8e34',
-                                    "backgroundColor": '#e5e5e57d',
-                                    "lineTension": 0.01,
-                                },
+                                "datasets": [
                                     {
-                                        data: projection_data,
+                                        "data": data,
+                                        "fill": true,
+                                        "borderColor": '#3b8e34',
+                                        "backgroundColor": '#e5e5e57d',
+                                        "lineTension": 0.01,
+                                    },
+                                    {
+                                        "data": projection_data,
                                         "fill": false,
                                         "borderColor": '#8e5804',
-                                        "lineTension": 0.01,
+                                        "lineTension": 0.04,
                                     }
                                 ],
                                 annotation: {
