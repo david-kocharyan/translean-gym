@@ -1027,6 +1027,8 @@
                     }
 
                     console.log('Projection Data', parseFloat(projection_data[0] - 1))
+                    
+                    projection_data[0] = parseFloat(projection_data[0] - 1)
 
                     new Chart(document.getElementById(_id),
                         {
