@@ -243,7 +243,7 @@
 
                             <div class="form-group col-md-12 m-b-20">
                                 <label>Lean Mass (kg)</label>
-                                <input id="leanMassId34" type="number" disabled class="form-control" name="trunk_mass" required>
+                                <input id="leanMassId34" type="number" disabled class="form-control" name="lean_mass" required>
                             </div>
 
                         </div>
@@ -254,7 +254,7 @@
                         <div class="col-md-6">
                             <div class="form-group col-md-12 m-b-20">
                                 <label>Bone Mass (kg)</label>
-                                <input type="number" class="form-control" name="bone_mass" required>
+                                <input type="number" id="boneMassId" class="form-control" name="bone_mass" required disabled>
                             </div>
                             <div class="form-group col-md-12 m-b-20">
                                 <label>Metabolic age</label>
@@ -433,6 +433,13 @@
 
         console.log('assessments : ', res)
 
+        if(res[0]) {
+            $('#boneMassId').val(res[0].bone_mass)
+            console.log('res 0', res[0].bone_mass)
+        }
+
+        
+
         function inputSwitcher(bool) {
             $( "#weightId" ).prop( "disabled", bool );
             $( "#totalFatMassId" ).prop( "disabled", bool );
@@ -577,7 +584,8 @@
                     tm = (( muscleMass *  finalObjKg.trunk_mass) / 100).toFixed(2),
                     lm = (( muscleMass *  finalObjKg.lean_mass) / 100).toFixed(2);
 
-                    $('#leanMassId34').val(lm);
+                    let bm = $('#bone_mass').val()
+                    $('#leanMassId34').val(bm + muscleMass);
 
 
             if(calculations) {
@@ -774,6 +782,7 @@
                 let id = $("input[name=id]").val();
                 let data = {};
                 data = {
+
                     'id': id,
                     'activity_level': $('select[name=activity_level] option').filter(':selected').val(),
                     'date': $("input[name=date]").val(),
@@ -797,7 +806,10 @@
                     'lean_mass': $("input[name=lean_mass]").val(),
                     'glycogen_store': $("input[name=glycogen_store]").val(),
                     'type': $("input[name=type]").val()
+
                 };
+
+                // console.log(data)
 
                 let validate = true;
                 for (let i in data) {
