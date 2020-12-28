@@ -1173,12 +1173,6 @@
 
 
 
-
-
-
-
-
-
     function roundTime(time) {
         let timePart = time.split(':');
 
@@ -2442,7 +2436,7 @@
                                 carbG = this.carbGFormula(carbC);
 
                             let expenditure = {
-                                met: this.actions[k].met,
+                                met: this.actions[k].met * 10,
                                 totalCal: totalCal,
                                 fatPercentage: this.actions[k].fatPercentage,
                                 fatC: fatC,
