@@ -172,6 +172,7 @@
                                             id="totalFatMassId" 
                                             name="total_fat_mass" 
                                             required 
+                                            disabled
                                         >
                                     </div>
                                 </div>
@@ -254,7 +255,7 @@
                         <div class="col-md-6">
                             <div class="form-group col-md-12 m-b-20">
                                 <label>Bone Mass (kg)</label>
-                                <input type="number" id="boneMassId" class="form-control" name="bone_mass" required disabled>
+                                <input type="number" id="boneMassId" class="form-control" name="bone_mass" required>
                             </div>
                             <div class="form-group col-md-12 m-b-20">
                                 <label>Metabolic age</label>
@@ -435,14 +436,17 @@
 
         if(res[0]) {
             $('#boneMassId').val(res[0].bone_mass)
-            console.log('res 0', res[0].bone_mass)
+            $('#boneMassId').prop( "disabled", true );
+            // console.log('res 0', res[0].bone_mass)
+        }else {
+            $('.projection').prop( "disabled", true );
+            $('#boneMassId').prop( "disabled", false );
+
         }
 
-        
-
         function inputSwitcher(bool) {
+
             $( "#weightId" ).prop( "disabled", bool );
-            $( "#totalFatMassId" ).prop( "disabled", bool );
             $( "#rightArmId" ).prop( "disabled", bool );
             $( "#leftArmId" ).prop( "disabled", bool );
             $( "#rightLegId" ).prop( "disabled", bool );
@@ -454,6 +458,7 @@
             $( "#rightLegMassId" ).prop( "disabled", bool );
             $( "#leftLegMassId" ).prop( "disabled", bool );
             $( "#trunkMassId" ).prop( "disabled", bool );
+
         }
 
         let arr = [], arrKg = [];
@@ -490,6 +495,7 @@
             trunk = 0,
             finalObj = {},
 
+
             right_arm_mass = 0,
             left_arm_mass = 0,
             right_leg_mass= 0,
@@ -508,8 +514,6 @@
             left_leg += arr[i].left_leg; 
             trunk += arr[i].trunk; 
 
-            console.log('right arm ==', right_arm / arr.length)
-
             finalObj = {
                 right_arm: right_arm / arr.length,
                 left_arm: left_arm / arr.length,
@@ -519,7 +523,7 @@
             }
         }
 
-        console.log(finalObj)
+        console.log('Final Object = ', finalObj)
 
         for(let i=0; i<arrKg.length; i++) {
 
@@ -540,24 +544,22 @@
             }
         }
 
+        console.log('Final Object KG = ', finalObjKg)
+
         let calculations = false
 
-        
         function calculatePercentages() {
-
             if(calculations) {
 
                 let totalFat = document.getElementById('totalFatId').value
                 console.log('Onchange value', totalFat)
 
-                let ra = ((totalFat * finalObj.right_arm) / 100).toFixed(2),
-                    la = ((totalFat * finalObj.left_arm) / 100).toFixed(2),
-                    rl = ((totalFat * finalObj.right_leg) / 100).toFixed(2),
-                    ll = ((totalFat * finalObj.left_leg) / 100).toFixed(2),
-                    tr = ((totalFat * finalObj.trunk) / 100).toFixed(2);
+                let ra = (totalFat * finalObj.right_arm).toFixed(2),
+                    la = (totalFat * finalObj.left_arm).toFixed(2),
+                    rl = (totalFat * finalObj.right_leg).toFixed(2),
+                    ll = (totalFat * finalObj.left_leg).toFixed(2),
+                    tr = (totalFat * finalObj.trunk).toFixed(2);
 
-
-                console.log('right arm final ============',(totalFat * finalObj.right_arm) / 100)
                 
                 $('#rightArmId').val(ra) 
                 $('#leftArmId').val(la)
@@ -565,10 +567,9 @@
                 $('#leftLegId').val(ll)
                 $('#trunkId').val(tr)
 
-                calculateWeight()
+                
             }
-
-
+            calculateWeight()
         }
 
         function calculateKilograms() {
@@ -608,17 +609,23 @@
 
         }
 
-        function calculateWeight() {
-            let totalFat = document.getElementById('totalFatId').value
-            let leanMassPerc = 100 - totalFat 
-            let weight = ((finalObjKg.lean_mass * 100) / leanMassPerc).toFixed(2);
-            
-            let totalFatMass = parseFloat(weight) * parseFloat(totalFat);
-            $('#totalFatMassId').val(totalFatMass);
+        function calculateWeight() { 
+
+            let totalFatPerc = document.getElementById('totalFatId').value
+
+            let leanMassPerc = 100 - totalFatPerc // 85 
+
+            let leanMass = document.getElementById('leanMassId34').value;
+
+            let weight = ((leanMass * 100) / leanMassPerc).toFixed(2);
+
+            let totalFatMass = parseFloat(weight) * ( parseFloat(totalFatPerc) / 100 );
+
+            $('#totalFatMassId').val( totalFatMass.toFixed(2) );
 
             $('#weightId').val(weight);
-        }
 
+        }
 
         function clearInputValues() {
 
