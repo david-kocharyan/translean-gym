@@ -476,12 +476,12 @@
             }
 
             let objKg = {
-                right_arm_mass: res[i].muscle_mass / res[i].right_arm_mass,
-                left_arm_mass: res[i].muscle_mass / res[i].left_arm_mass,
-                right_leg_mass: res[i].muscle_mass / res[i].right_leg_mass,
-                left_leg_mass: res[i].muscle_mass / res[i].left_leg_mass,
-                trunk_mass: res[i].muscle_mass / res[i].trunk_mass,
-                lean_mass: res[i].muscle_mass / res[i].lean_mass
+                right_arm_mass: res[i].right_arm_mass / res[i].muscle_mass ,
+                left_arm_mass: res[i].left_arm_mass /res[i].muscle_mass,
+                right_leg_mass: res[i].right_leg_mass / res[i].muscle_mass,
+                left_leg_mass: res[i].left_leg_mass / res[i].muscle_mass,
+                trunk_mass: res[i].trunk_mass / res[i].muscle_mass,
+                lean_mass: res[i].lean_mass / res[i].muscle_mass
             }
 
             arr.push(obj)
@@ -548,6 +548,32 @@
 
         let calculations = false
 
+        function calculateWeight() {
+            setTimeout(() => {
+                
+                let totalFatPerc = document.getElementById('totalFatId').value
+
+                let leanMassPerc = 100 - totalFatPerc // 85 
+
+                let leanMass = document.getElementById('leanMassId34').value;
+
+                let weight = ((leanMass * 100) / leanMassPerc).toFixed(2);
+
+                let totalFatMass = parseFloat(weight) * ( parseFloat(totalFatPerc) / 100 );
+
+                $('#totalFatMassId').val( totalFatMass.toFixed(2) );
+                
+                if( $('#muscleMassId').val() !== '' && $('#totalFatId').val() !== '' ) {
+                    $('#weightId').val(weight);
+                }
+
+                
+
+            }, 300);
+        }
+
+        
+        
         function calculatePercentages() {
             if(calculations) {
 
@@ -575,57 +601,38 @@
         function calculateKilograms() {
 
             let muscleMass = document.getElementById('muscleMassId').value
-                console.log('==', typeof( muscleMass ) )
-                console.log('Onchange value', finalObjKg)
 
-                let ram = ((muscleMass *  finalObjKg.right_arm_mass) / 100).toFixed(2),
-                    lam = ((muscleMass *  finalObjKg.left_arm_mass) / 100).toFixed(2),
-                    rlm = ((muscleMass *  finalObjKg.right_leg_mass) / 100).toFixed(2),
-                    llm = ((muscleMass *  finalObjKg.left_leg_mass) / 100).toFixed(2),
-                    tm = (( muscleMass *  finalObjKg.trunk_mass) / 100).toFixed(2),
-                    lm = (( muscleMass *  finalObjKg.lean_mass) / 100).toFixed(2);
+            console.log('calculateKilograms', muscleMass)
 
-                    let bm = $('#bone_mass').val()
-                    $('#leanMassId34').val(bm + muscleMass);
+            let ram = ((muscleMass *  finalObjKg.right_arm_mass) / 100).toFixed(2),
+                lam = ((muscleMass *  finalObjKg.left_arm_mass) / 100).toFixed(2),
+                rlm = ((muscleMass *  finalObjKg.right_leg_mass) / 100).toFixed(2),
+                llm = ((muscleMass *  finalObjKg.left_leg_mass) / 100).toFixed(2),
+                tm = (( muscleMass *  finalObjKg.trunk_mass) / 100).toFixed(2),
+                lm = (( muscleMass *  finalObjKg.lean_mass) / 100).toFixed(2);
 
-
+                let bm = $('#bone_mass').val()
+                $('#leanMassId34').val(bm + muscleMass);
+            
+            
             if(calculations) {
 
-
-                
-                    // alert(lm)
-
-                
                 $('#rightArmMassId').val(ram);
                 $('#leftArmMassId').val(lam);
                 $('#rightLegMassId').val(rlm);
                 $('#leftLegMassId').val(llm);
                 $('#trunkMassId').val(tm);
-                
 
                 calculateWeight()
+
             }
 
+           
+
 
         }
 
-        function calculateWeight() { 
 
-            let totalFatPerc = document.getElementById('totalFatId').value
-
-            let leanMassPerc = 100 - totalFatPerc // 85 
-
-            let leanMass = document.getElementById('leanMassId34').value;
-
-            let weight = ((leanMass * 100) / leanMassPerc).toFixed(2);
-
-            let totalFatMass = parseFloat(weight) * ( parseFloat(totalFatPerc) / 100 );
-
-            $('#totalFatMassId').val( totalFatMass.toFixed(2) );
-
-            $('#weightId').val(weight);
-
-        }
 
         function clearInputValues() {
 
