@@ -550,8 +550,6 @@
 
         function calculateWeight() {
 
-         
-
                 setTimeout(() => {
                 
                     let totalFatPerc = document.getElementById('totalFatId').value
@@ -576,8 +574,26 @@
     
 
         }
+
+        function calculateFatMass() {
+            setTimeout(() => {
+                let totalFatPerc = document.getElementById('totalFatId').value
+
+                let leanMassPerc = 100 - totalFatPerc
+
+                let leanMass = document.getElementById('leanMassId34').value;
+
+                let weight = ((leanMass * 100) / leanMassPerc).toFixed(2);
+
+                let totalFatMass = parseFloat(weight) * ( parseFloat(totalFatPerc) / 100 );
+
+                $('#totalFatMassId').val( totalFatMass.toFixed(2) );
+
+            }, 300);
+        }
         
         function calculatePercentages() {
+
             if(calculations) {
 
                 let totalFat = document.getElementById('totalFatId').value
@@ -598,6 +614,8 @@
 
                 calculateWeight()
             }
+
+            calculateFatMass()
             
         }
 
@@ -629,6 +647,8 @@
                 calculateWeight()
 
             }
+
+            calculateFatMass()
 
            
 
