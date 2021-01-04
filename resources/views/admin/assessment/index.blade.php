@@ -549,26 +549,32 @@
         let calculations = false
 
         function calculateWeight() {
-            setTimeout(() => {
+
+         
+
+                setTimeout(() => {
                 
-                let totalFatPerc = document.getElementById('totalFatId').value
+                    let totalFatPerc = document.getElementById('totalFatId').value
 
-                let leanMassPerc = 100 - totalFatPerc
+                    let leanMassPerc = 100 - totalFatPerc
 
-                let leanMass = document.getElementById('leanMassId34').value;
+                    let leanMass = document.getElementById('leanMassId34').value;
 
-                let weight = ((leanMass * 100) / leanMassPerc).toFixed(2);
+                    let weight = ((leanMass * 100) / leanMassPerc).toFixed(2);
 
-                let totalFatMass = parseFloat(weight) * ( parseFloat(totalFatPerc) / 100 );
+                    let totalFatMass = parseFloat(weight) * ( parseFloat(totalFatPerc) / 100 );
 
-                $('#totalFatMassId').val( totalFatMass.toFixed(2) );
-                
-                if( $('#muscleMassId').val() !== '' && $('#totalFatId').val() !== '' ) {
-                    $('#weightId').val(weight);
-                }
-                
+                    $('#totalFatMassId').val( totalFatMass.toFixed(2) );
+                    
+                    if( $('#muscleMassId').val() !== '' && $('#totalFatId').val() !== '' ) {
+                        $('#weightId').val(weight);
+                    }
+                    
 
-            }, 300);
+                }, 300);
+
+    
+
         }
         
         function calculatePercentages() {
@@ -590,9 +596,9 @@
                 $('#leftLegId').val(ll)
                 $('#trunkId').val(tr)
 
-                
+                calculateWeight()
             }
-            calculateWeight()
+            
         }
 
         function calculateKilograms() {
@@ -751,6 +757,7 @@
                 $('.type').val(1);
                 $('.form-control').removeClass('error');
                 $('.glycogen_store').remove();
+                calculations = false
             });
 
             $('.projection').click(function () {
