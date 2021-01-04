@@ -147,7 +147,13 @@
                         <div class="col-md-6">
                             <div class="form-group col-md-12 m-b-20">
                                 <label>Weight (kg)</label>
-                                <input id="weightId" type="number" class="form-control" name="weight" required>
+                                <input id="weightId" 
+                                type="number" 
+                                class="form-control" 
+                                name="weight" 
+                                required
+                                oninput="calculateTotalFatMass()"
+                                >
                             </div>
 
                             
@@ -523,7 +529,6 @@
             
         }
 
-        console.log('Final Object = ', finalObj)
 
         for(let i=0; i<arrKg.length; i++) {
 
@@ -544,7 +549,6 @@
             }
         }
 
-        console.log('Final Object KG = ', finalObjKg)
 
         let calculations = false
 
@@ -577,19 +581,16 @@
 
         function calculateFatMass() {
             setTimeout(() => {
+
                 let totalFatPerc = document.getElementById('totalFatId').value
 
-                let leanMassPerc = 100 - totalFatPerc
-
-                let leanMass = document.getElementById('leanMassId34').value;
-
-                let weight = ((leanMass * 100) / leanMassPerc).toFixed(2);
+                let weight = document.getElementById('weightId').value;
 
                 let totalFatMass = parseFloat(weight) * ( parseFloat(totalFatPerc) / 100 );
 
                 $('#totalFatMassId').val( totalFatMass.toFixed(2) );
 
-            }, 300);
+            }, 400);
         }
         
         function calculatePercentages() {
@@ -613,9 +614,11 @@
                 $('#trunkId').val(tr)
 
                 calculateWeight()
+            }else {
+                calculateFatMass()
             }
 
-            calculateFatMass()
+            
             
         }
 
@@ -646,13 +649,17 @@
 
                 calculateWeight()
 
+            }else {
+                calculateFatMass()
             }
 
-            calculateFatMass()
+        }
 
-           
-
-
+        function calculateTotalFatMass() {
+            console.log('calculateTotalFatMass')
+            if(!calculations) {
+                calculateFatMass()
+            }
         }
 
 
