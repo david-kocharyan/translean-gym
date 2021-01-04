@@ -465,14 +465,13 @@
 
         for(let i=0; i<res.length; i++) {
 
-            console.log('total fat % right arm = ', res[i].total_fat / res[i].right_arm)
 
             let obj = {
-                right_arm: res[i].total_fat / res[i].right_arm,
-                left_arm: res[i].total_fat / res[i].left_arm,
-                right_leg: res[i].total_fat / res[i].right_leg,
-                left_leg: res[i].total_fat / res[i].left_leg,
-                trunk: res[i].total_fat / res[i].trunk,
+                right_arm: res[i].right_arm / res[i].total_fat,
+                left_arm: res[i].left_arm / res[i].total_fat,
+                right_leg: res[i].right_leg / res[i].total_fat ,
+                left_leg: res[i].left_leg / res[i].total_fat ,
+                trunk: res[i].trunk / res[i].total_fat,
             }
 
             let objKg = {
@@ -504,8 +503,7 @@
             lean_mass = 0,
             finalObjKg ={};
 
-            console.log('arr', arr)
-
+        
         for(let i=0; i<arr.length; i++) {
 
             right_arm += arr[i].right_arm; 
@@ -521,18 +519,20 @@
                 left_leg: left_leg / arr.length,
                 trunk: trunk / arr.length
             }
+
+            
         }
 
         console.log('Final Object = ', finalObj)
 
         for(let i=0; i<arrKg.length; i++) {
 
-            right_arm_mass += arrKg[i].right_arm_mass; 
-            left_arm_mass += arrKg[i].left_arm_mass; 
-            right_leg_mass += arrKg[i].right_leg_mass; 
-            left_leg_mass += arrKg[i].left_leg_mass; 
-            trunk_mass += arrKg[i].trunk_mass;
-            lean_mass += arrKg[i].lean_mass;  
+            right_arm_mass += arrKg[i].right_arm_mass * 100; 
+            left_arm_mass += arrKg[i].left_arm_mass  * 100; 
+            right_leg_mass += arrKg[i].right_leg_mass * 100; 
+            left_leg_mass += arrKg[i].left_leg_mass  * 100; 
+            trunk_mass += arrKg[i].trunk_mass  * 100;
+            lean_mass += arrKg[i].lean_mass  * 100;  
 
             finalObjKg = {
                 right_arm_mass: right_arm_mass / arrKg.length,
@@ -553,7 +553,7 @@
                 
                 let totalFatPerc = document.getElementById('totalFatId').value
 
-                let leanMassPerc = 100 - totalFatPerc // 85 
+                let leanMassPerc = 100 - totalFatPerc
 
                 let leanMass = document.getElementById('leanMassId34').value;
 
@@ -566,13 +566,10 @@
                 if( $('#muscleMassId').val() !== '' && $('#totalFatId').val() !== '' ) {
                     $('#weightId').val(weight);
                 }
-
                 
 
             }, 300);
         }
-
-        
         
         function calculatePercentages() {
             if(calculations) {
