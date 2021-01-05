@@ -784,6 +784,7 @@
         $(document).ready(function () {
 
             function drawFirstCurrentAssessments() {
+
                 let html = '<table class="table table-sm table-dark">' +
                             '<thead>' +
                                '<tr>'+
@@ -801,8 +802,8 @@
                               '  <tr>'+
                                     '<th scope="row">First Assessment</th>'+
                                     '<th scope="row">' + firstAss.weight + '</th>'+
-                                   ' <th scope="row">' + 'N/A' + '</th>'+
-                                  '  <th scope="row">' + firstAss.total_fat + '</th>'+
+                                   ' <th scope="row">' + firstAss.total_fat + '</th>'+
+                                  '  <th scope="row">' + (firstAss.weight * (firstAss.total_fat / 100)).toFixed(2)  + '</th>'+
                                   '  <th scope="row">' + firstAss.muscle_mass + '</th>'+
                                    ' <th scope="row">' + firstAss.body_water + '</th>'+
                                   '  <th scope="row">' + firstAss.visceral_fat + '</th>'+
@@ -811,8 +812,8 @@
                                ' <tr>'+
                                    ' <th scope="row">Current Assessment</th>'+
                                    '<th scope="row">' + currentAss.weight + '</th>'+
-                                   ' <th scope="row">' + 'N/A' + '</th>'+
-                                  '  <th scope="row">' + currentAss.total_fat + '</th>'+
+                                   ' <th scope="row">' + currentAss.total_fat + '</th>'+
+                                  '  <th scope="row">' + (currentAss.weight * (currentAss.total_fat / 100)).toFixed(2) + '</th>'+
                                   '  <th scope="row">' + currentAss.muscle_mass + '</th>'+
                                    ' <th scope="row">' + currentAss.body_water + '</th>'+
                                   '  <th scope="row">' + currentAss.visceral_fat + '</th>'+
