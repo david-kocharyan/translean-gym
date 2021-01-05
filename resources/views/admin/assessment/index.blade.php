@@ -437,7 +437,11 @@
     <script !src="">
 
         var res = JSON.parse('<?php echo json_encode($assessments); ?>');
+        var firstAss = JSON.parse('<?php echo json_encode($firstAss); ?>');
+        var currentAss = JSON.parse('<?php echo json_encode($currentAss); ?>');
 
+        console.log('first : ', firstAss)
+        console.log('currentAss : ', currentAss)
         console.log('assessments : ', res)
 
         if(res[0]) {
