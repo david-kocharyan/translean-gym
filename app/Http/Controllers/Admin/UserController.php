@@ -81,6 +81,10 @@ class UserController extends Controller
         }else{
             $user->wake_up_time = "08:00";
         }
+		
+		if ($request->sleep_time != null){
+            $user->sleep_time = $request->sleep_time;
+        }
 
         if ($request->image) {
             $image_name = Storage::disk('public')->put('users/', $request->image);
@@ -166,6 +170,11 @@ class UserController extends Controller
         }else{
             $user->wake_up_time = "08:00";
         }
+		
+		if ($request->sleep_time != null){
+            $user->sleep_time = $request->sleep_time;
+        }
+		
         $user->save();
 
         return redirect(self::ROUTE);
