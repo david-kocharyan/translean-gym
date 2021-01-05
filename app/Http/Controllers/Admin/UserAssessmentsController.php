@@ -24,9 +24,12 @@ class UserAssessmentsController extends Controller
         $user = User::find($id);
         $assessmentsByCreated = UserAssessments::where('user_id', $id)->orderBy('created_at', 'DESC')->get();
         $assessments = UserAssessments::where('user_id', $id)->orderBy('date', 'DESC')->orderBy('type', 'ASC')->get();
-
-        $currentAss = $assessmentsByCreated[0];
-        $firstAss = $assessmentsByCreated[count($assessmentsByCreated) - 1];
+        $currentAss = '';
+        $firstAss = '';
+        if(isset($assessmentsByCreated[0])) {
+            $currentAss = $assessmentsByCreated[0];
+            $firstAss = $assessmentsByCreated[count($assessmentsByCreated) - 1];
+        }
 
 
         $title = self::TITLE;
