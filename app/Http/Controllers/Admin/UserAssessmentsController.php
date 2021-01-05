@@ -22,16 +22,11 @@ class UserAssessmentsController extends Controller
     public function index($id)
     {
         $user = User::find($id);
+        $assessmentsByCreated = UserAssessments::where('user_id', $id)->orderBy('created_at', 'DESC')->get();
         $assessments = UserAssessments::where('user_id', $id)->orderBy('date', 'DESC')->orderBy('type', 'ASC')->get();
-        $clonedAss = $assessments;
-        usort($clonedAss, function($a, $b) {
-            $first = $this->convertToNumber($a['created_at']);
-            $second = $this->convertToNumber($b['created_at']);
-            return $first - $second;
-        });
 
-        $firstAss = $clonedAss[0];
-        $currentAss = $clonedAss[count($clonedAss) - 1];
+        $currentAss = $assessmentsByCreated[0];
+        $firstAss = $assessmentsByCreated[count($assessmentsByCreated) - 1];
 
 
         $title = self::TITLE;
