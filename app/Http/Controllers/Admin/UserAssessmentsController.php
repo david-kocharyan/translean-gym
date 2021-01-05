@@ -23,10 +23,26 @@ class UserAssessmentsController extends Controller
     {
         $user = User::find($id);
         $assessments = UserAssessments::where('user_id', $id)->orderBy('date', 'DESC')->orderBy('type', 'ASC')->get();
+        $clonedAss = $assessments;
+        usort($clonedAss, function($a, $b) {
+            $first = $this->convertToNumber($a['created_at']);
+            $second = $this->convertToNumber($b['created_at']);
+            return $first - $second;
+        });
+
+        $firstAss = $clonedAss[0];
+        $currentAss = $clonedAss[count($clonedAss) - 1];
+
+
         $title = self::TITLE;
         $user_name = $user->name;
 
-        return view(self::FOLDER . ".index", compact('user', 'assessments', 'title', 'user_name'));
+        return view(self::FOLDER . ".index", compact('user', 'assessments', 'title', 'user_name','firstAss','currentAss'));
+    }
+
+    public function convertToNumber($a)
+    {
+        return strtotime($a);
     }
 
     /**
