@@ -1164,7 +1164,7 @@
 
     let userInfo = '<?php echo $user ?>';
     userInfo = JSON.parse(userInfo)
-    console.log('user info ====================== ', userInfo.wake_up_time)
+    console.log('user info ====================== ', userInfo.sleep_time)
     $('.name').html(userInfo.name)
 
 
@@ -2279,19 +2279,36 @@
                 }
             },
             hideTimeGraphic() {
+
                 let times = this.staticTimes,
                     meals = this.mealGraphic;
 
-                
-                let wakeUp = userInfo.wake_up_time.split(":")
-                let wakeUpTime = parseInt(wakeUp[0])
-      
+                // ----------------------------------------------------------------
 
+                let wakeUp = userInfo.wake_up_time.split(":");
+                let wakeUpTime = parseInt(wakeUp[0]);
+
+                
 
                 for(let k=0; k < wakeUpTime; k++) {
                     times[k].show ? times[k].show = false : times[k].show = true
                     meals[k].show ? meals[k].show = false : meals[k].show = true
                 }
+
+                // ----------------------------------------------------------------
+
+                let sleep = userInfo.sleep_time.split(":");
+                let sleepTime = parseInt(sleep[0]);
+
+                for(let k=0; k <= 23; k++) {
+                    if(k>sleepTime) {
+                        console.log('k', k)
+                        times[k].show ? times[k].show = false : times[k].show = true
+                        meals[k].show ? meals[k].show = false : meals[k].show = true
+                    }
+                }
+
+
             },
             hideZeroToEight() {
 

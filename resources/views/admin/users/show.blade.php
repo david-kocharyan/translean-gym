@@ -23,7 +23,8 @@
                                 <a href="javascript:void(0);" data-text="User" class="delForm"
                                    data-id="{{$user->id}}">
                                     <button class="btn btn-danger tooltip-danger">Delete
-                                        <i class="fas fa-trash"></i></button>
+                                        <i class="fas fa-trash"></i>
+                                    </button>
                                 </a>
                             </form>
                         </div>
@@ -31,6 +32,7 @@
                     <div class="row">
                         <div class="col-lg-12 col-md-12 col-sm-12">
                             <div class="table-responsive">
+                            <h3>asdasd</h3>
                                 <table class="table">
                                     <tbody>
                                     <tr>
@@ -69,6 +71,10 @@
                                         <td>Wake Up Time</td>
                                         <td>{{$user->wake_up_time}}</td>
                                     </tr>
+                                    <tr>
+                                        <td>Sleep time</td>
+                                        <td>{{$user->sleep_time}}</td>
+                                    </tr>
 
                                     </tbody>
                                 </table>
@@ -83,4 +89,8 @@
 
 @push('footer')
     <script src="{{asset('assets/plugins/swal/sweetalert.min.js')}}"></script>
+    <script>
+        let user = JSON.parse('<?php echo json_encode($user); ?>');
+        console.log(user)
+    </script>
 @endpush
