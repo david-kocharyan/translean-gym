@@ -342,6 +342,10 @@
                             </label>
 
                             <label class="all-graphs-popup-titles">
+                                Fat Mass <input type="checkbox" class="graph-popup-checkbox" value="fat_mass">
+                            </label>
+
+                            <label class="all-graphs-popup-titles">
                                 Right Arm (%) <input type="checkbox" class="graph-popup-checkbox" value="right_arm">
                             </label>
 
@@ -1019,8 +1023,6 @@
 
                     for (let i = 0; i < res.length; i++) {
 
-                        console.log('type = 44445555566666 ', res[i])
-
                         labels.push(res[i].date);
 
                         if (type === 'weight' && res[i].type != 2) {
@@ -1028,6 +1030,9 @@
                         } 
                         else if (type === 'total_fat' && res[i].type != 2) {
                             data.push(res[i].total_fat);
+                        } 
+                        else if (type === 'fat_mass' && res[i].type != 2) {
+                            data.push( res[i].weight * (res[i].total_fat / 100) );
                         } 
                         else if (type === 'right_arm' && res[i].type != 2) {
                             data.push(res[i].right_arm);
@@ -1085,6 +1090,9 @@
                             } 
                             else if (type === 'total_fat' && res[i].type === '2') {
                                 projection_data.push(res[i].total_fat);
+                            } 
+                            else if (type === 'fat_mass' && res[i].type === '2' ) {
+                                projection_data.push( res[i].weight * (res[i].total_fat / 100) );
                             } 
                             else if (type === 'right_arm' && res[i].type === '2') {
                                 projection_data.push(res[i].right_arm);
