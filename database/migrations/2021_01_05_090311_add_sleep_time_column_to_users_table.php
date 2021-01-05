@@ -14,7 +14,7 @@ class AddSleepTimeColumnToUsersTable extends Migration
     public function up()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->string('wake_up_time', 191)->nullable();
+            $table->string('sleep_time', 191)->nullable();
         });
     }
 
