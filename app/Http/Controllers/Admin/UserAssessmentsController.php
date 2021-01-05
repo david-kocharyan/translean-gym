@@ -22,7 +22,7 @@ class UserAssessmentsController extends Controller
     public function index($id)
     {
         $user = User::find($id);
-        $assessments = UserAssessments::where('user_id', $id)->orderBy('type', 'ASC')->get();
+        $assessments = UserAssessments::where('user_id', $id)->orderBy('date', 'DESC')->orderBy('type', 'ASC')->get();
         $title = self::TITLE;
         $user_name = $user->name;
 
