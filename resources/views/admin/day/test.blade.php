@@ -3499,7 +3499,8 @@
                     let mealObj = {
                         glycemicLoad: total_glycemic_load,
                         carbG: total_carbs,
-                        fatG: total_fat
+                        fatG: total_fat,
+                        protein: total_proteins,
                     }
 
                     console.log('111111111111111111', mealObj)
