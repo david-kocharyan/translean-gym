@@ -300,6 +300,7 @@ tr {
     color: rgb(0, 0, 0);
     font-weight: 600;
     font-size: 1.8rem;
+    white-space: pre-line;
 }
 
 .tooltipp .tooltiptext::after {
