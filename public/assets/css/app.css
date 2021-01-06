@@ -296,6 +296,7 @@ tr {
 .tooltipp .tooltiptext h5 {
     color: rgb(0, 0, 0);
     font-weight: 600;
+    font-size: clamp(1rem, 1.5rem, 2.1rem);
 }
 
 .tooltipp .tooltiptext::after {
