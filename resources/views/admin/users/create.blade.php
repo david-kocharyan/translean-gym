@@ -125,6 +125,25 @@
                             </div>
 
                             <div class="form-group">
+                                <label for="wake_up_time">Sleep Time</label>
+                                @error('sleep_time')
+                                <p class="invalid-feedback text-danger" role="alert"><strong>{{ $message }}</strong></p>
+                                @enderror
+                                <select name="sleep_time" id="sleep_time" class="form-control">
+                                    <option value="">Choose</option>
+                                    @for($i = 1; $i <= 24; $i++)
+                                        @if($i == 24)
+                                            <option value="{{'00:00'}}"  @if(old('sleep_time') == '00:00') selected @endif>{{'00:00'}}</option>
+                                        @elseif($i < 10)
+                                            <option value="{{'0'.$i.':00'}}" @if(old('sleep_time') == '0'.$i.':00') selected @endif>{{'0'.$i.':00'}}</option>
+                                        @else
+                                            <option value="{{$i.':00'}}" @if(old('sleep_time') == $i.':00') selected @endif>{{$i.':00'}}</option>
+                                        @endif
+                                    @endfor
+                                </select>
+                            </div>
+
+                            <div class="form-group">
                                 <label for="image">Image</label>
                                 @error('image')
                                 <p class="invalid-feedback text-danger" role="alert"><strong>{{ $message }}</strong></p>
