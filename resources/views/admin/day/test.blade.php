@@ -589,7 +589,7 @@
                                 <input type="hidden" class="meal_date" name="date">
                                 <div class="form-row">
                                     <div class="form-group col-md-12">
-                                        <label for="activity_list">Choose Meal 44</label>
+                                        <label for="activity_list">Choose Meal (Test)</label>
                                         <select name="meal" id="meal_list" class="meal_list form-control">
                                             <option value="">Choose Meal</option>
                                             @foreach($meals as $key => $val)
@@ -660,7 +660,13 @@
                                 <div class="form-row">
                                     <div class="form-group col-md-3">
                                         <label for="meal_from">Time</label>
-                                        <input type="text" readonly name="from" class="clockpicker meal_from form-control">
+                                        <!-- grigortime -->
+                                        <input 
+                                            type="text" 
+                                            readonly 
+                                            name="from" 
+                                            class="clockpicker meal_from form-control"
+                                        >
                                     </div>
 
                                     <div class="col-md-9 table-of-carb-fat">
@@ -783,7 +789,6 @@
                             </form>
                         </div>
 
-
                         <div role="tabpanel" class="tab-pane fade" id="add">
 
                             <div class="success text-success"></div>
@@ -792,6 +797,7 @@
                             </div>
 
                             <form class="create_meal_form">
+                            <h3>Create meal (Test)</h3>
                                 <input type="hidden" class="user_id" name="id" value="{{$user->id}}">
                                 <input type="hidden" class="meal_date" name="date">
                                 <div class="form-group">
@@ -862,10 +868,120 @@
                                     <div class="col-md-12">
                                         <div class="form-group col-md-3">
                                             <label for="meal_from">Time</label>
-                                            <input type="text" name="from" readonly
-                                                    class="clockpicker create_meal_time form-control">
+                                            <!-- grigortime -->
+                                            <input 
+                                                type="text" 
+                                                name="from" 
+                                                readonly
+                                                class="clockpicker create_meal_time form-control"
+                                            >
                                         </div>
+
+
                                         <div class="col-md-9 table-of-carb-fat">
+
+                                            <div class="row">
+                                                <div class="col-md-1 p-0">
+                                                    <table class="firs-table table table-striped">
+                                                        <thead>
+                                                            <tr>
+                                                                <th colspan="1">&nbsp;</th>
+                                                            </tr>
+                                                            <tr>
+                                                                <th>&nbsp;</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody v-for="(time, i) in mealPopupData" :key="i">
+                                                            <tr>
+                                                                <th class="parent-time">
+                                                                    @{{ time.headTime }}
+                                                                </th>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                                <div class="col-md-3 p-0">
+                                                    <table class="energy-table table table-striped border-green">
+                                                        <thead>
+                                                            <tr>
+                                                                <th colspan="2" class="text-center position-relative">
+                                                                    Energy Expenditure
+                                                                </th>
+                                                            </tr>
+                                                            <tr>
+                                                                <th>Carb</th>
+                                                                <th>Fat</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody v-for="(time, i) in mealPopupData" :key="i">
+                                                            <tr>
+                                                                <td>@{{time.totals.totalCarb}}</td>
+                                                                <td>@{{time.totals.totalFat}}</td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                                <div class="col-md-3 p-0">
+                                                    <table class="energy-table table table-striped border-green">
+                                                        <thead>
+                                                            <tr>
+                                                                <th colspan="2" class="text-center position-relative">
+                                                                    Intake
+                                                                </th>
+                                                            </tr>
+                                                            <tr>
+                                                                <th>Carb</th>
+                                                                <th>Fat</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody v-for="(time, i) in mealGraphicPopup" :key="i">
+                                                            <tr>
+                                                                <td>@{{time.totals.totalCarb}}</td>
+                                                                <td>@{{time.totals.totalFat}}</td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                                <div class="col-md-4 p-0">
+                                                    <table class="last-table table table-striped">
+                                                        <thead>
+                                                            <tr>
+                                                                <th colspan="2" class="text-center red">Status</th>
+                                                            </tr>
+                                                            <tr>
+                                                                <th>Carb</th>
+                                                                <th>Fat</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody v-for="(status, i) in mealStatusPopup" :key="i">
+                                                            <tr>
+                                                                <td class="bg-dark-p">
+                                                                    <div>
+                                                                        @{{ Math.abs(status.carb) }}
+                                                                        <span v-if="status.carb != 0">
+                                                                            <span class="green" v-if="status.carb > 0">(loss)</span>
+                                                                            <span class="red" v-else>(access)</span>
+                                                                        </span>
+                                                                    </div>
+                                                                </td>
+                                                                <td class="bg-dark-p">
+                                                                    <div>
+                                                                        @{{ Math.abs(status.fat) }}
+                                                                        <span v-if="status.fat != 0">
+                                                                            <span class="green" v-if="status.fat > 0">(loss)</span>
+                                                                            <span class="red" v-else>(access)</span>
+                                                                        </span>
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                        
+                                        <!-- <div class="col-md-9 table-of-carb-fat">
                                             <table class="intake-table border-green table table-striped">
                                                 <thead>
                                                 <tr>
@@ -884,7 +1000,8 @@
                                                 </thead>
                                                 <tbody id="meal_carb_fat_add"></tbody>
                                             </table>
-                                        </div>
+                                        </div> -->
+
                                     </div>
                                 </div>
 
@@ -1220,6 +1337,7 @@
         }
 
         let newTime = firstPart + ':' + timePart[1]
+        console.log('timePlusOneHour : ', newTime)
         return newTime
     }
     // return plus 4 time
@@ -1230,12 +1348,13 @@
         let startEveryHour = start
         let startsEnd = roundedTime.substring(3);
         start += 3;
-        let final = start + ":" + startsEnd;
-        console.log('ddddd', start)
-        console.log('fffff', startsEnd)
 
-        console.log('Start time : ', start)
-        console.log('Final time : ', final)
+        
+
+        if(start < 10) {
+            start = "0" + start
+        }
+        let final = start + ":" + startsEnd;
 
         let _finalArr = []
         let concatArr = []
@@ -1246,31 +1365,30 @@
         for(let i=0; i<days.staticTimes.length; i++) {
             
             let _minutes = days.staticTimes[i].minutes
-
             for(let j=0; j<_minutes.length; j++) {
-                if(_minutes[j].minute == time) {
 
+                if(_minutes[j].minute == time) {
                     doing = true
                     concatArr.push(_minutes[j])
-                    
                 }
-                if(_minutes[j].minute == final) {
 
+                if(_minutes[j].minute == final) {
                     doing = false
                     concatArr.push(_minutes[j])
-
                     break firstLoop
                 }
+
                 if(doing && _minutes[j].minute != time) {
                     concatArr.push(_minutes[j])
                 }
+
             }
             
         }
 
         let x = _.chunk(concatArr, 6);
-        let ffArr = []
 
+        let ffArr = []
         for(let i=0; i<x.length; i++) {
 
             if(startEveryHour < 10) {
@@ -1286,6 +1404,7 @@
                 }
             }
 
+            startEveryHour = parseInt(startEveryHour)
             startEveryHour++;
 
             let _totalCarb = 0,
@@ -1308,19 +1427,13 @@
 
         console.log('MINUTE = ', ffArr)
         days.setMealPopupData(ffArr)
+
         setTimeout(() => {
             days.calculateStatusPopup()
         }, 1000);
 
         return final
     }
-
-
-
-
-
-
-
 
 
 
@@ -1396,7 +1509,7 @@
             $(this).val(roundedTime)
         });
 
-
+        // ######################################################
 
         $('.meal_from').clockpicker({
             autoclose: true,
@@ -1408,15 +1521,23 @@
             $(this).val(roundedTime)
         });
 
-        $('.water_time').clockpicker({
+        // ######################################################
+
+        $('.create_meal_time').clockpicker({
             autoclose: true,
             placement: 'top',
         }).change(function(){
+
+            let onePlusHour = timePlusOneHour($(this).val())
+            let finTime = returnPlus4Time(onePlusHour)
+
             let roundedTime = roundTime($(this).val())
             $(this).val(roundedTime)
         });
 
-        $('.create_meal_time').clockpicker({
+        // ######################################################
+
+        $('.water_time').clockpicker({
             autoclose: true,
             placement: 'top',
         }).change(function(){
@@ -1836,7 +1957,7 @@
                                 <select name="food[]" id="food_sel" class="form-control m-b-20">
                                     ${food}
                                 </select>
-                                <input type="number" name="mass[]" id="mass" class="form-control m-b-20" placeholder="Mass" required>
+                                <input type="number" name="mass[]" id="mass" class="form-control m-b-20 c_mass" placeholder="Mass" required>
                                 ${btn}
                             </div>`
 
@@ -1888,7 +2009,6 @@
                 if($(this).find('input').val()) {
 
                     let mass = parseFloat($(this).find("#mass").val());
-                    console.log('mass', mass)
 
                     food_mass = parseFloat($(this).find("#food_sel").find(":selected").data('quantity_measure'));
 
@@ -1920,10 +2040,22 @@
                     $('#total_ph').val(total_ph);
                     $('#total_glycemic_load').val(total_glycemic_load);
 
-                    var tr = calculateCarbDigestion(total_glycemic_load, total_carbs, total_fat);
-                    console.log(tr)
-                    $('#meal_carb_fat_add').html(tr);
+                    // var tr = calculateCarbDigestion(total_glycemic_load, total_carbs, total_fat);
+                    // console.log(tr)
+                    // $('#meal_carb_fat_add').html(tr);
+
+                    let mealObj = {
+                        glycemicLoad: total_glycemic_load,
+                        carbG: total_carbs,
+                        fatG: total_fat
+                    }
+
+                    console.log('222222222222222222222222', mealObj)
+          
+                    days.createMealPopupGraphic(mealObj)
+                    days.calculateStatusPopup()
                 }
+
             });
         }
 
@@ -2256,7 +2388,7 @@
                 this.mealPopupData = data
                 setTimeout(() => {
                     console.log('mealPopupData', this.mealPopupData)
-                }, 3000);
+                }, 2000);
             },
             returnRandomColor() {
                 this.color = this.color + 1
@@ -2808,8 +2940,7 @@
             },
             createMealPopupGraphic(mealObj) {
                 
-                console.log(' meal graphic draw started .... ')
-                console.log('obj =', mealObj)
+                console.log(' meal graphic draw started .... ', mealObj)
 
                 let fArr = []
                 for(let i=0; i<4; i++) {
@@ -3179,7 +3310,7 @@
 
                     var m_pl = `    <button type="button" class="btn btn-success col-md-2 m-b-20 m_plus" style=" height: 50px;width: 50px;">
                                         <i class="fa fa-plus" style="font-size: 25px;"></i>
-                                    </button>`
+                                    </button>`;
                     $('.m_foods').empty();
                     $('.m_foods').append(m_pl);
 
@@ -3271,15 +3402,28 @@
         });
 
         $(document).find(".food_items").each(function () {
+
             $(document).on('change', '.m_food_sel', function () {
                 m_calculate();
             });
             $(document).on('input', '.m_mass', function () {
                 m_calculate();
             });
+
+        });
+
+        $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+            var target = $(e.target).attr("href") // activated tab
+
+            if(target == '#add') {
+                console.log(2)
+            }else {
+                console.log('1')
+            }
         });
 
         function m_calculate() {
+            console.log('m_calculate')
             let total_mass = 0;
             let total_carbs = 0;
             let total_fat = 0;
@@ -3340,11 +3484,12 @@
                         fatG: total_fat
                     }
 
-                    console.log('HHHHHHHHHHHHHHHH', mealObj)
+                    console.log('111111111111111111', mealObj)
           
                     days.createMealPopupGraphic(mealObj)
                     days.calculateStatusPopup()
                 }
+
             });
         }
 
