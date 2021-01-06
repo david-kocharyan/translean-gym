@@ -424,7 +424,7 @@
                         <td><b>@{{ meal.totals.totalProteinG }}</b></td>
                         <td class="p-0">
                             <b :class="{ 'text-danger' : meal.totals.proteinHourlyLimit > 0 }">
-                                @{{ meal.totals.totalProtein }}
+                                @{{ meal.totals.totalProtein }} 
                             </b>
                             <small v-if="meal.totals.proteinHourlyLimit > 0">
                                 (+@{{ meal.totals.proteinHourlyLimit }} )
@@ -718,19 +718,21 @@
                                                 <table class="energy-table table table-striped border-green">
                                                     <thead>
                                                         <tr>
-                                                            <th colspan="2" class="text-center position-relative">
+                                                            <th colspan="3" class="text-center position-relative">
                                                                 Intake
                                                             </th>
                                                         </tr>
                                                         <tr>
                                                             <th>Carb</th>
                                                             <th>Fat</th>
+                                                            <th>Protein</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody v-for="(time, i) in mealGraphicPopup" :key="i">
                                                         <tr>
                                                             <td>@{{time.totals.totalCarb}}</td>
                                                             <td>@{{time.totals.totalFat}}</td>
+                                                            <td>@{{time.totals.totalProtein}}</td>
                                                         </tr>
                                                     </tbody>
                                                 </table>
@@ -927,19 +929,21 @@
                                                     <table class="energy-table table table-striped border-green">
                                                         <thead>
                                                             <tr>
-                                                                <th colspan="2" class="text-center position-relative">
+                                                                <th colspan="3" class="text-center position-relative">
                                                                     Intake
                                                                 </th>
                                                             </tr>
                                                             <tr>
                                                                 <th>Carb</th>
                                                                 <th>Fat</th>
+                                                                <th>{Protein}</th>
                                                             </tr>
                                                         </thead>
                                                         <tbody v-for="(time, i) in mealGraphicPopup" :key="i">
                                                             <tr>
                                                                 <td>@{{time.totals.totalCarb}}</td>
                                                                 <td>@{{time.totals.totalFat}}</td>
+                                                                <td>@{{time.totals.totalProtein}}</td>
                                                             </tr>
                                                         </tbody>
                                                     </table>
@@ -2049,7 +2053,8 @@
                     let mealObj = {
                         glycemicLoad: total_glycemic_load,
                         carbG: total_carbs,
-                        fatG: total_fat
+                        fatG: total_fat,
+                        protein: total_proteins
                     }
 
                     console.log('222222222222222222222222', mealObj)
@@ -2954,7 +2959,8 @@
                         minutes: [],
                         totals: {
                             totalCarb: null,
-                            totalFat: null
+                            totalFat: null,
+                            totalProtein: null
                         }
                     }
                     for(let j=0; j<6; j++) {
@@ -2962,11 +2968,13 @@
                         let carbs = mealObj.carbG,
                             load = mealObj.glycemicLoad,
                             carbD = this.carbDigestFormula(carbs, load),
-                            fatD = ((mealObj.fatG / 4) / 6).toFixed(2);
+                            fatD = ((mealObj.fatG / 4) / 6).toFixed(2),
+                            protein =  ((mealObj.protein / 4) / 6).toFixed(2);
 
                         let intake = {
                             carb: carbD,
-                            fat:  fatD
+                            fat:  fatD,
+                            protein: protein
                         }
 
                         let minuteObj = {
@@ -2977,17 +2985,20 @@
                     }
 
                     let _totalCarb = 0,
-                        _totalFat = 0;
+                        _totalFat = 0,
+                        _totalProtein = 0;
 
                     for(let t=0; t<obj.minutes.length; t++) {
                         // if(obj.minutes[t].intake) {
                             _totalCarb  += parseFloat(obj.minutes[t].intake.carb)
                             _totalFat   += parseFloat(obj.minutes[t].intake.fat)
+                            _totalProtein += parseFloat(obj.minutes[t].intake.protein)
                         // }
                     }
 
                     obj.totals.totalCarb =  _totalCarb != 0 ? _totalCarb.toFixed(2) : "";
                     obj.totals.totalFat =  _totalFat != 0 ? _totalFat.toFixed(2) : "";
+                    obj.totals.totalProtein =  _totalProtein != 0 ? _totalProtein.toFixed(2) : "";
 
 
                     fArr.push(obj)
@@ -3308,7 +3319,8 @@
                     let mealObj = {
                         glycemicLoad: data.glycemic_load,
                         carbG: data.carbs,
-                        fatG: data.fat
+                        fatG: data.fat,
+                        protein: data.proteins
                     }
           
                     days.createMealPopupGraphic(mealObj)
@@ -3556,7 +3568,8 @@
             let mealObj = {
                 glycemicLoad: getMeals.glycemic_load,
                 carbG: getMeals.carbs,
-                fatG: getMeals.fat
+                fatG: getMeals.fat,
+                protein: getMeals.proteins
             }
     
             days.createMealPopupGraphic(mealObj)
