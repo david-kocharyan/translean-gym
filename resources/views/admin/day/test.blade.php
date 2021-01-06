@@ -406,15 +406,16 @@
                 </thead>
                 <tbody>
                     <tr class="white-bg-table-tr">
-                        <td><b>@{{ dayTotals.intake.totalFat }}</b></td>
+                        <td><b>@{{ (dayTotals.intake.totalFat).toFixed(2) }} </b></td>
                         <td></td>
-                        <td><b>@{{ dayTotals.intake.totalCarb }}</b></td>
+                        <td><b>@{{ (dayTotals.intake.totalCarb).toFixed(2) }} </b></td>
                         <td></td>
-                        <td><b>@{{ dayTotals.intake.totalProteinG }}</b></td>
+                        <td><b>@{{ (dayTotals.intake.totalProteinG).toFixed(2) }} </b></td>
                         <td></td>
                     </tr>
                 </tbody>
                 <tbody v-for="(meal, i) in mealGraphic" :key="meal.time" v-if="meal.show">
+
                     <tr  @click="toggleTimes(i)" >
                         <td><b>@{{ meal.totals.totalFat }}</b></td>
                         <td><b>@{{ meal.totals.totalFatD }}</b></td>
@@ -441,6 +442,7 @@
                         <td><span v-if="meal_info.mealType == 2 && meal_info.name && !meal_info.water">@{{ parseFloat(meal_info.intake.proteinG).toFixed(2) }}</span></td>
                         <td><span v-if="meal_info.mealType == 2">@{{ parseFloat(meal_info.intake.proteinD).toFixed(2) }}</span></td>
                     </tr>
+                    
                 </tbody>
             </table>
         </div>
@@ -2203,7 +2205,7 @@
                     p_met += parseFloat(res.meal[z].get_meals.proteins)
                 }
 
-                $('.protein_eat').html(p_met);
+                $('.protein_eat').html(p_met.toFixed(2));
 
                 let activities = res.activity,
                     meals = res.meal,
@@ -2721,11 +2723,11 @@
                 minuteIntake = {},
                 sw = false;
                 let x = {},
-                    intakeDayTotal = {
-                        totalCarb: 0,
-                        totalFat: 0,
-                        totalProteinG: 0
-                    }
+                intakeDayTotal = {
+                    totalCarb: 0,
+                    totalFat: 0,
+                    totalProteinG: 0
+                }
 
                 for(let i=0; i<=23; i++) {
 
@@ -2889,10 +2891,14 @@
                     mealArr.push(timeObj)
 
                     if(timeObj.totals.totalFat != "") {
+
                         intakeDayTotal.totalFat += parseFloat(timeObj.totals.totalFat)
                         intakeDayTotal.totalCarb += parseFloat(timeObj.totals.totalCarb)
                         intakeDayTotal.totalProteinG += parseFloat(timeObj.totals.totalProteinG)
+                        
                     }
+
+                    // console.log(typeof('typeof typeof typeof typeof', intakeDayTotal.totalFat))
                 }
 
                 this.mealGraphic = mealArr
