@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
+
     @include('admin.users.tab')
     <div class="row">
         <div class="col-md-12">
@@ -172,6 +173,7 @@
     <!-- jQuery file upload -->
     <script src="{{asset('assets/plugins/dropify/dist/js/dropify.min.js')}}"></script>
     <script>
+    
         $('.dropify').dropify();
     </script>
 @endpush

@@ -646,8 +646,9 @@ class DayController extends Controller
         $foods = Food::all();
         $title = self::TITLE;
         $user_name = $user->name;
-
-        return view(self::FOLDER . ".test", compact('user', 'title', 'user_name', 'activity', 'meals', 'foods'));
+        $assessments = UserAssessments::where('user_id', $user->id)->get();
+        
+        return view(self::FOLDER . ".test", compact('user', 'title', 'user_name', 'activity', 'meals', 'foods',"assessments"));
     }
 
 

@@ -7,6 +7,7 @@ use App\MOdel\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
+use App\Model\UserAssessments;
 
 class UserController extends Controller
 {
@@ -21,6 +22,7 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
+        $data = [];
         if (isset($request->search)) {
             $data = User::where('name', 'LIKE', '%' . $request->search . '%')
                 ->orWhere('username', 'LIKE', '%' . $request->search . '%')
@@ -28,8 +30,10 @@ class UserController extends Controller
         } else {
             $data = User::paginate(10);
         }
+        
         $title = self::TITLE;
         $route = self::ROUTE;
+        
         return view(self::FOLDER . ".index", compact("title", "route", "data"));
     }
 
