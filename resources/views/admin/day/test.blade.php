@@ -1282,6 +1282,13 @@
 
 <script !src="">
 
+    var assessments = JSON.parse('<?php echo json_encode($assessments ?? ''); ?>');
+    console.log('assessments ======== ', assessments)
+
+    // for(let i=0; i<assessments.length; i++) {
+    //     console.log('111111111111111111111111111111111111111111111111111', assessments[i])
+    // }
+
     let foods = '<?php echo $foods ?>';
     foods = JSON.parse(foods);
 
@@ -1938,6 +1945,7 @@
 </script>
 
 <script !src="">
+
     $(document).ready(function () {
         add();
 
@@ -2114,6 +2122,9 @@
 <script defer>
 
     var bodyWeight = 55;
+
+
+
 
     function roundNumberDecimal(number) {
         let floatNumber = parseFloat(number);
