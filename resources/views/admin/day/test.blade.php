@@ -1282,13 +1282,6 @@
 
 <script !src="">
 
-    var assessments = JSON.parse('<?php echo json_encode($assessments ?? ''); ?>');
-    console.log('assessments ======== ', assessments)
-
-    // for(let i=0; i<assessments.length; i++) {
-    //     console.log('111111111111111111111111111111111111111111111111111', assessments[i])
-    // }
-
     let foods = '<?php echo $foods ?>';
     foods = JSON.parse(foods);
 
@@ -2121,8 +2114,7 @@
 <!-- VUE -->
 <script defer>
 
-    var bodyWeight = 55;
-
+    // var bodyWeight = 55;
 
 
 
@@ -2371,6 +2363,8 @@
         data() {
             let self = this;
             return {
+                weight: 0,
+                //
                 staticTimes: [],
                 mealGraphic: [],
                 actions: [],
@@ -2401,6 +2395,9 @@
             }
         },
         methods: {
+            setProjectionWeight(weight) {
+                this.weight = weight
+            },
             setMealPopupData(data) {
                 this.mealPopupData = []
                 this.mealPopupData = data
@@ -2549,6 +2546,13 @@
             createTimeGraphic() {
 
                 console.log('Create time graphic..')
+                var assessments = JSON.parse('<?php echo json_encode($assessments ?? ''); ?>');
+                for(let i=0; i<assessments.length; i++) {
+                    if(assessments[i].type == 0) {
+                        this.setProjectionWeight(assessments[i].weight)
+                        console.log('78-----78', assessments[i].weight)
+                    }
+                }
 
                 let timeArr = [],
                     end = null,
@@ -2596,7 +2600,9 @@
 
                         for(let k=0; k<this.actions.length; k++) {
 
-                            let totalCal = this.totalCalFormula(this.actions[k].met, 80),
+                            console.log('45454545', this.weight)
+
+                            let totalCal = this.totalCalFormula(this.actions[k].met, this.weight),
                                 fatC = this.facCFormula(totalCal, this.actions[k].fatPercentage),
                                 fatG = this.fatGFormula(fatC),
                                 carbC = this.facCFormula(totalCal, this.actions[k].carbPercentage),
@@ -3263,6 +3269,9 @@
                 console.log('Actions', this.actions)
                 console.log('Water', this.water)
                 console.log('meals', this.meal)
+
+                
+
             }, 3000);
         }
     })
