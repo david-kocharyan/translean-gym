@@ -1281,7 +1281,7 @@
 
 
 <script !src="">
-
+//$assessments
     let foods = '<?php echo $foods ?>';
     foods = JSON.parse(foods);
 
