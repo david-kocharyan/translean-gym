@@ -648,7 +648,7 @@ class DayController extends Controller
         $user_name = $user->name;
         $assessments = UserAssessments::where('user_id', $user->id)->get();
         $projectionWeight = 0;
-        $projection = UserAssessments::where(array('user_id' => $id, 'type' => UserAssessments::TYPE[2]))->first();
+        $projection = UserAssessments::where(array('user_id' => $id, 'type' => 2))->first();
         if($projection) {
             $projectionWeight = $projection->weight;
         }
