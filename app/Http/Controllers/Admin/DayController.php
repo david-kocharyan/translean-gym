@@ -647,7 +647,11 @@ class DayController extends Controller
         $title = self::TITLE;
         $user_name = $user->name;
         $assessments = UserAssessments::where('user_id', $user->id)->get();
-        $projectionWeight = $this->getUserBodyWeight($user->id);
+        $projectionWeight = 0;
+        $projection = UserAssessments::where(array('user_id' => $id, 'type' => UserAssessments::TYPE[2]))->first();
+        if($projection) {
+            $projectionWeight = $projection->weight;
+        }
         
         return view(self::FOLDER . ".test", compact('user', 'title', 'user_name', 'activity', 'meals', 'foods',"assessments","projectionWeight"));
     }
