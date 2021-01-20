@@ -54,6 +54,7 @@
                                 </ul>
                             </div>
                             <div class="panel-footer text-right">
+
                                 <a href="{{"/assessments/".$val->id}}" data-toggle="tooltip"
                                    data-placement="top" title="Assessments"
                                    class="btn btn-warning btn-circle tooltip-warning">
@@ -84,6 +85,7 @@
                                                 class="fas fa-trash"></i></button>
                                     </a>
                                 </form>
+
                             </div>
                         </div>
                     </div>
@@ -101,6 +103,10 @@
 
 @push('footer')
         <script src="{{asset('assets/plugins/swal/sweetalert.min.js')}}"></script>
+        <script>
+             var assessments = JSON.parse('<?php echo json_encode($assessments ?? ''); ?>');
+             console.log('assessments', assessments)
+        </script>
 @endpush
 
 @push('header')

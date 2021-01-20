@@ -2545,14 +2545,20 @@
 
             createTimeGraphic() {
 
-                console.log('Create time graphic..')
-                var assessments = JSON.parse('<?php echo json_encode($assessments ?? ''); ?>');
-                for(let i=0; i<assessments.length; i++) {
-                    if(assessments[i].type == 0) {
-                        this.setProjectionWeight(assessments[i].weight)
-                        console.log('78-----78', assessments[i].weight)
-                    }
-                }
+                // console.log('Create time graphic..')
+                // var assessments = JSON.parse('<?php echo json_encode($assessments ?? ''); ?>');
+                // for(let i=0; i<assessments.length; i++) {
+                //     if(assessments[i].type == 0) {
+                //         this.setProjectionWeight(assessments[i].weight)
+                //         console.log('78-----78', assessments[i].weight)
+                //     }
+                // }
+
+                var projectionWeight = JSON.parse('<?php echo json_encode($projectionWeight ?? ''); ?>');
+                console.log('projectionWeight', projectionWeight)
+                this.setProjectionWeight(projectionWeight)
+
+
 
                 let timeArr = [],
                     end = null,
@@ -2599,8 +2605,6 @@
                         }
 
                         for(let k=0; k<this.actions.length; k++) {
-
-                            console.log('45454545', this.weight)
 
                             let totalCal = this.totalCalFormula(this.actions[k].met, this.weight),
                                 fatC = this.facCFormula(totalCal, this.actions[k].fatPercentage),
