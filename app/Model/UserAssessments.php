@@ -6,5 +6,5 @@ use Illuminate\Database\Eloquent\Model;
 
 class UserAssessments extends Model
 {
-   const TYPE = array(0=>'assessment', 2=>'projection', 1=>'current');
+   const TYPE = array(0=>0, 2=>2, 1=>1);
 }
