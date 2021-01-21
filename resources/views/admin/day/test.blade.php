@@ -2151,10 +2151,14 @@
 
     function calculateProteinLimit() {
 
+        console.log('calculateProteinLimit started ...')
+        console.log('dayTotals.energyExpenditure.totalMet', days.dayTotals.energyExpenditure.totalMet)
+
         let data = {
             date: $('.date-show').html(),
-            id: $('.user_id').val()
-        };
+            id: $('.user_id').val(),
+            total_met: days.dayTotals.energyExpenditure.totalMet,
+        }
 
         $.ajax({
             type: "POST",
@@ -2167,7 +2171,7 @@
                 let pr = (res.protein_must_eat).toFixed(2)
                 $('.protein_must').html(pr);
             }
-        });
+        })
     }
 
     function drawAssassmentAlert() {
@@ -2182,8 +2186,6 @@
     function getActivities() {
 
         console.log('Get activities')
-
-        calculateProteinLimit();
 
         days.actions = []
         days.meal = []
@@ -2353,6 +2355,8 @@
                 if(localStorage.getItem('hide-zero-to-eight') == 'true') {
                     days.hideTimeGraphic()
                 }
+
+                calculateProteinLimit();
 
             }
         })
@@ -2545,20 +2549,8 @@
 
             createTimeGraphic() {
 
-                // console.log('Create time graphic..')
-                // var assessments = JSON.parse('<?php echo json_encode($assessments ?? ''); ?>');
-                // for(let i=0; i<assessments.length; i++) {
-                //     if(assessments[i].type == 0) {
-                //         this.setProjectionWeight(assessments[i].weight)
-                //         console.log('78-----78', assessments[i].weight)
-                //     }
-                // }
-
                 var projectionWeight = JSON.parse('<?php echo json_encode($projectionWeight ?? ''); ?>');
-                console.log('projectionWeight', projectionWeight)
                 this.setProjectionWeight(projectionWeight)
-
-
 
                 let timeArr = [],
                     end = null,
