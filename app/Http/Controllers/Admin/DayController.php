@@ -87,26 +87,29 @@ class DayController extends Controller
     {
         $user_id = $request->id;
         $date = $request->date;
+        $total_met = $request->total_met;
 
-        $activity = DayActivity::with('getActivity')->where(["user_id" => $user_id, "date" => $date])->get();
+       /* $activity = DayActivity::with('getActivity')->where(["user_id" => $user_id, "date" => $date])->get();
         for ($i = 0; $i < count($activity); $i++) {
             $activity[$i]->from = Carbon::parse($activity[$i]->from)->format('H:i');
             $activity[$i]->to = Carbon::parse($activity[$i]->to)->format('H:i');
-        }
+        } */
 
-        $total_prot_met = 0;
-        foreach ($activity as $key => $val) {
+        $total_prot_met = (float)$total_met;
+         //print_r($total_prot_met); echo "<br>";
+        /*foreach ($activity as $key => $val) {
             $from = Carbon::createFromFormat('H:i', $val->from);
             $to = Carbon::createFromFormat('H:i', $val->to);
             $diff_in_minutes = $to->diffInMinutes($from);
             $total_prot_met += ($diff_in_minutes * $val->getActivity->met);
-        }
+        } */
+       
         $met_variable = MetRange::where('lower_limit', '<=', $total_prot_met)
             ->where('upper_limit', '>=', $total_prot_met)->first();
-        $assessment = UserAssessments::where(["user_id" => $user_id, "type" => 1])->first();
+        $assessment = UserAssessments::where(["user_id" => $user_id, "type" => 2])->first();
         $protein_must_eat = 0;
         if ($assessment != null and $met_variable != null) {
-            $protein_must_eat = $met_variable->met_variable * $assessment->lean_mass;
+            $protein_must_eat = $met_variable->met_variable * $assessment->weight;
         }
 
         return response()->json(['protein_must_eat' => $protein_must_eat], 200);
