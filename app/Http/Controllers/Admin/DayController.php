@@ -15,6 +15,7 @@ use App\Model\User;
 use App\Model\UserAssessments;
 use App\Model\Dimmer;
 use Carbon\Carbon;
+use Dompdf\Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -90,21 +91,21 @@ class DayController extends Controller
         $date = $request->date;
         $total_met = $request->total_met;
 
-       /* $activity = DayActivity::with('getActivity')->where(["user_id" => $user_id, "date" => $date])->get();
-        for ($i = 0; $i < count($activity); $i++) {
-            $activity[$i]->from = Carbon::parse($activity[$i]->from)->format('H:i');
-            $activity[$i]->to = Carbon::parse($activity[$i]->to)->format('H:i');
-        } */
+        /* $activity = DayActivity::with('getActivity')->where(["user_id" => $user_id, "date" => $date])->get();
+         for ($i = 0; $i < count($activity); $i++) {
+             $activity[$i]->from = Carbon::parse($activity[$i]->from)->format('H:i');
+             $activity[$i]->to = Carbon::parse($activity[$i]->to)->format('H:i');
+         } */
 
         $total_prot_met = (float)$total_met;
-         //print_r($total_prot_met); echo "<br>";
+        //print_r($total_prot_met); echo "<br>";
         /*foreach ($activity as $key => $val) {
             $from = Carbon::createFromFormat('H:i', $val->from);
             $to = Carbon::createFromFormat('H:i', $val->to);
             $diff_in_minutes = $to->diffInMinutes($from);
             $total_prot_met += ($diff_in_minutes * $val->getActivity->met);
         } */
-       
+
         $met_variable = MetRange::where('lower_limit', '<=', $total_prot_met)
             ->where('upper_limit', '>=', $total_prot_met)->first();
         $assessment = UserAssessments::where(["user_id" => $user_id, "type" => 2])->first();
@@ -654,11 +655,11 @@ class DayController extends Controller
         $assessments = UserAssessments::where('user_id', $user->id)->get();
         $projectionWeight = 0;
         $projection = UserAssessments::where(array('user_id' => $id, 'type' => 2))->first();
-        if($projection) {
+        if ($projection) {
             $projectionWeight = $projection->weight;
         }
-        
-        return view(self::FOLDER . ".test", compact('user', 'title', 'user_name', 'activity', 'meals', 'foods',"assessments","projectionWeight",'dimmer'));
+
+        return view(self::FOLDER . ".test", compact('user', 'title', 'user_name', 'activity', 'meals', 'foods', "assessments", "projectionWeight", 'dimmer'));
     }
 
     public function addDimmer(Request $request)
@@ -666,7 +667,7 @@ class DayController extends Controller
         $user_id = $request->userId;
         $date = $request->date;
         $data['user_id'] = (int)$user_id;
-        $data['date'] = date('Y-m-d',strtotime($date));
+        $data['date'] = date('Y-m-d', strtotime($date));
         $data['dimmer'] = (float)$request->dimmer;
         $dimmer = Dimmer::create($data);
         return response()->json(array('dimmer' => $dimmer), 200);
@@ -676,7 +677,20 @@ class DayController extends Controller
     {
         $user_id = $request->userId;
         $date = $request->date;
-        $dimmer = Dimmer::where(["user_id" => $user_id, "date" => date('Y-m-d',strtotime($date))])->first();
+        $dimmer = Dimmer::where(["user_id" => $user_id, "date" => date('Y-m-d', strtotime($date))])->first();
         return response()->json(array('dimmer' => $dimmer), 200);
+    }
+
+    public function editDimmer($dimmerId, Request $request)
+    {
+        $success = true;
+        try {
+            $data = $request->all();
+            $dimmer = Dimmer::find($dimmerId);
+            $dimmer->update($data);
+        } catch (\Throwable $e) {
+            $success = false;
+        }
+        return response()->json(array('dimmer' => $dimmer,'success'=>$success), 200);
     }
 }
