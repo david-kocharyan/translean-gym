@@ -96,7 +96,6 @@ class DayController extends Controller
         } */
 
         $total_prot_met = (float)$total_met;
-         //print_r($total_prot_met); echo "<br>";
         /*foreach ($activity as $key => $val) {
             $from = Carbon::createFromFormat('H:i', $val->from);
             $to = Carbon::createFromFormat('H:i', $val->to);
@@ -111,7 +110,7 @@ class DayController extends Controller
         if ($assessment != null and $met_variable != null) {
             $protein_must_eat = $met_variable->met_variable * $assessment->weight;
         }
-
+        
         return response()->json(['protein_must_eat' => $protein_must_eat], 200);
     }
 
