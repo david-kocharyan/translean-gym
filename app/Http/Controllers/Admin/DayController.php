@@ -54,6 +54,7 @@ class DayController extends Controller
         $activity = DayActivity::with('getActivity')->where(["user_id" => $user_id, "date" => $date])->get();
         $meals = DayMeal::with(['getMeals', 'getPersonalFood'])->where(["user_id" => $user_id, "date" => $date])->get();
         $water = DayWater::where(["user_id" => $user_id, "date" => $date])->get();
+        $dimmer = Dimmer::where(["user_id" => $user_id, "date" => $date])->first();
 
         for ($i = 0; $i < count($activity); $i++) {
             $activity[$i]->from = Carbon::parse($activity[$i]->from)->format('H:i');
@@ -74,6 +75,7 @@ class DayController extends Controller
         $data = array(
             'activity' => $activity,
             'meal' => $meals,
+            'dimmer' => $dimmer,
             'water' => $water,
             'body_weight' => $body_weight,
             'assessment_status' => $assessment_status,
