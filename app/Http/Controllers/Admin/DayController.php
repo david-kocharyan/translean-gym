@@ -13,6 +13,7 @@ use App\Model\MetRange;
 use App\Model\PersonalMeal;
 use App\Model\User;
 use App\Model\UserAssessments;
+use App\Model\Dimmer;
 use Carbon\Carbon;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
@@ -646,6 +647,7 @@ class DayController extends Controller
         $meals = Meal::all();
         $activity = Activity::all();
         $foods = Food::all();
+        $dimmer = Dimmer::where(["user_id" => $user->id, "date" => date('Y-m-d')])->first();
         $title = self::TITLE;
         $user_name = $user->name;
         $assessments = UserAssessments::where('user_id', $user->id)->get();
@@ -655,8 +657,25 @@ class DayController extends Controller
             $projectionWeight = $projection->weight;
         }
         
-        return view(self::FOLDER . ".test", compact('user', 'title', 'user_name', 'activity', 'meals', 'foods',"assessments","projectionWeight"));
+        return view(self::FOLDER . ".test", compact('user', 'title', 'user_name', 'activity', 'meals', 'foods',"assessments","projectionWeight",'dimmer'));
     }
 
+    public function addDimmer(Request $request)
+    {
+        $user_id = $request->userId;
+        $date = $request->date;
+        $data['user_id'] = (int)$user_id;
+        $data['date'] = date('Y-m-d',strtotime($date));
+        $data['dimmer'] = (float)$request->dimmer;
+        $dimmer = Dimmer::create($data);
+        return response()->json(array('dimmer' => $dimmer), 200);
+    }
 
+    public function getDimmerForDay(Request $request)
+    {
+        $user_id = $request->userId;
+        $date = $request->date;
+        $dimmer = Dimmer::where(["user_id" => $user_id, "date" => date('Y-m-d',strtotime($date))])->first();
+        return response()->json(array('dimmer' => $dimmer), 200);
+    }
 }
