@@ -1299,7 +1299,7 @@
     $('.name').html(userInfo.name)
 
 
-    let row = 0;
+    let row = 0, dimmer = null;
 
     function roundTime(time) {
         let timePart = time.split(':');
@@ -1461,9 +1461,6 @@
         
         
         days.proteinHourlyLimit = res.protein_hourly_limit
-
-        
-
 
         function show_date(type = 0, dateString = null) {
             let date = 0;
@@ -2008,16 +2005,26 @@
                 dimmer: $('#dimmer').val(),
             }
 
+            let url, id = dimmer.id;
+
+            if(dimmer == null) {
+                url = '{{ url('/day/add-dimmer') }}'
+            }else {
+                let id = dimmer.id
+                url = '{{ url('/day/edit-dimmer/') }}' + '/' + id
+            }
+
             $.ajax({
                 type: "POST",
                 headers: {
                     'X-CSRF-TOKEN': '{{csrf_token()}}'
                 },
-                url: '{{ url('/day/add-dimmer') }}',
+                url: url,
                 data: data,
                 success: function (res) {
-                    console.log('add dimmer res', res)
+                    getActivities()
                 }
+
             });
         })
 
@@ -2240,7 +2247,13 @@
                 }
 
                 $('.protein_eat').html(p_met.toFixed(2));
-                $('#dimmer').val(res.dimmer.dimmer)
+
+                dimmer = res.dimmer
+                $('#dimmer').val('')
+                if(dimmer != null) {
+                    $('#dimmer').val(dimmer.dimmer)
+                }
+                
 
                 let activities = res.activity,
                     meals = res.meal,
@@ -2641,7 +2654,7 @@
                                 carbPercentage: this.actions[k].carbPercentage,
                                 carbC: carbC,
                                 carbG: carbG,
-                                dimmCarbG: carbG * this.actions[k].dimmer,
+                                dimmCarbG: carbG * dimmer != null ? dimmer.dimmer : 1,
                             }
 
                             if(fm == this.actions[k].start) {
