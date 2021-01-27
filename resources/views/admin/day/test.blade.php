@@ -172,7 +172,7 @@
                     <tr>
                         <th class="d-flex justify-content-between align-items-center">
                             Activity
-                            <button class="add-btn green" data-toggle="modal" data-target="#activity">
+                            <button id="add-activity-btn" class="add-btn green" data-toggle="modal" data-target="#activity">
                                 <i class="fas fa-plus-circle"></i>
                             </button>
                         </th>
@@ -1943,7 +1943,8 @@
 
 <script !src="">
 
-    $(document).ready(function () {
+    $(document).ready(function () {        
+
         add();
 
         function add() {
@@ -2005,7 +2006,7 @@
                 dimmer: $('#dimmer').val(),
             }
 
-            let url, id = dimmer.id;
+            let url;
 
             if(dimmer == null) {
                 url = '{{ url('/day/add-dimmer') }}'
@@ -2250,8 +2251,13 @@
 
                 dimmer = res.dimmer
                 $('#dimmer').val('')
-                if(dimmer != null) {
-                    $('#dimmer').val(dimmer.dimmer)
+
+                if(dimmer == null) {
+                    $('#add-activity-btn').prop('disabled', true);
+                }
+                else {
+                    $('#add-activity-btn').prop('disabled', false);
+                    $('#dimmer').val(dimmer.dimmer);
                 }
                 
 
@@ -2654,7 +2660,7 @@
                                 carbPercentage: this.actions[k].carbPercentage,
                                 carbC: carbC,
                                 carbG: carbG,
-                                dimmCarbG: carbG * dimmer != null ? dimmer.dimmer : 1,
+                                dimmCarbG: carbG * dimmer != null ? dimmer.dimmer * carbG : 1,
                             }
 
                             if(fm == this.actions[k].start) {
@@ -3958,6 +3964,10 @@
         justify-content: flex-end;
     }
 
+    button#add-activity-btn:disabled i {
+        color: #9f9f9f;
+        cursor: no-drop;
+    }
     /* .right-section-total > div {
         margin-left: 25px;
     } */
