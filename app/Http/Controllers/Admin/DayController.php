@@ -665,7 +665,7 @@ class DayController extends Controller
 
     public function addDimmer(Request $request)
     {
-        $user_id = $request->userId;
+        $user_id = $request->user_id;
         $date = $request->date;
         $data['user_id'] = (int)$user_id;
         $data['date'] = date('Y-m-d', strtotime($date));
@@ -676,7 +676,7 @@ class DayController extends Controller
 
     public function getDimmerForDay(Request $request)
     {
-        $user_id = $request->userId;
+        $user_id = $request->user_id;
         $date = $request->date;
         $dimmer = Dimmer::where(["user_id" => $user_id, "date" => date('Y-m-d', strtotime($date))])->first();
         return response()->json(array('dimmer' => $dimmer), 200);
