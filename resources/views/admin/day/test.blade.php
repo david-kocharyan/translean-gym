@@ -248,7 +248,7 @@
             <table class="energy-table table table-striped border-green">
                 <thead>
                     <tr>
-                        <th colspan="8" class="text-center position-relative">
+                        <th colspan="9" class="text-center position-relative">
                             Energy Expenditure
                             <button
                                 class="mode-switcher-button mode-switcher-button-absolute"
@@ -266,11 +266,11 @@
                         <td v-if='energyExpendedMode'>Carb&nbsp;%</td>
                         <td v-if='energyExpendedMode'>Carb&nbsp;(c)</td>
                         <td>Carb&nbsp;(g)</td>
+                        <td v-if='energyExpendedMode'>Dimm&nbsp;Carb&nbsp;(g)</td>
                     </tr>
                 </thead>
                 <tbody>
                     <tr class="white-bg-table-tr">
-
                         <td v-if='energyExpendedMode'><b>@{{ (dayTotals.energyExpenditure.totalMet).toFixed(2) }}</b></td>
                         <td ><b>@{{ (dayTotals.energyExpenditure.totalCal).toFixed(2) }}</b></td>
                         <td v-if='energyExpendedMode'></td>
@@ -279,16 +279,11 @@
                         <td v-if='energyExpendedMode'></td>
                         <td v-if='energyExpendedMode'><b>@{{ (dayTotals.energyExpenditure.totalCarbC).toFixed(2) }}</b></td>
                         <td><b>@{{ (dayTotals.energyExpenditure.totalCarbG).toFixed(2) }}</b></td>
-
-                        <!-- <td v-if='energyExpendedMode'></td>
-                        <td><b>@{{ (dayTotals.energyExpenditure.totalFatC).toFixed(2) }}</b></td>
-                        <td><b>@{{ (dayTotals.energyExpenditure.totalFatG).toFixed(2) }}</b></td>
-                        <td v-if='energyExpendedMode'></td>
-                        <td v-if='energyExpendedMode'><b>@{{ (dayTotals.energyExpenditure.totalCarbC).toFixed(2) }}</b></td>
-                        <td><b>@{{ (dayTotals.energyExpenditure.totalCarbG).toFixed(2) }}</b></td> -->
+                        <td v-if='energyExpendedMode'><b>@{{ (dayTotals.energyExpenditure.totalDimmCarbG).toFixed(2) }}</b></td>
                     </tr>
                 </tbody>
                 <tbody v-for="(time, i) in staticTimes" :key="time.time" v-if="time.show">
+
                     <tr  @click="toggleTimes(i)" >
                         <td v-if='energyExpendedMode'><b>@{{ time.totals.totalMet }}</b></td>
                         <td><b>@{{ time.totals.totalCal }}</b></td>
@@ -298,6 +293,7 @@
                         <td v-if='energyExpendedMode'></td>
                         <td v-if='energyExpendedMode'><b>@{{ time.totals.totalCarbC }}</b></td>
                         <td><b>@{{ time.totals.totalCarbG }}</b></td>
+                        <td v-if='energyExpendedMode'><b>@{{ time.totals.totalDimmCarbG }}</b></td>
                     </tr>
 
                     <tr v-for="(minute, j) in time.minutes" :key="j"
@@ -311,6 +307,7 @@
                         <td v-if='energyExpendedMode'><span v-if="minute.borderColor">@{{ minute.energyExpenditure.carbPercentage }}</span></td>
                         <td v-if='energyExpendedMode'><span v-if="minute.borderColor">@{{ parseFloat(minute.energyExpenditure.carbC).toFixed(2) }}</span></td>
                         <td><span v-if="minute.borderColor">@{{ parseFloat(minute.energyExpenditure.carbG).toFixed(2) }}</span></td>
+                        <td v-if='energyExpendedMode'><span v-if="minute.borderColor">@{{ parseFloat(minute.energyExpenditure.dimmCarbG).toFixed(2) }}</span></td>
                     </tr>
                 </tbody>
             </table>
@@ -2243,7 +2240,7 @@
                 }
 
                 $('.protein_eat').html(p_met.toFixed(2));
-                $('#dimmer').val(res.dimmer)
+                $('#dimmer').val(res.dimmer.dimmer)
 
                 let activities = res.activity,
                     meals = res.meal,
@@ -2262,7 +2259,8 @@
 
                         fatPercentage: activities[i].get_activity.fat_ratio,
                         carbPercentage: activities[i].get_activity.carb_ratio,
-                        met: activities[i].get_activity.met
+                        met: activities[i].get_activity.met,
+                        dimmer: res.dimmer.dimmer,
                     };
                     days.addActivity(activityObj)
                 }
@@ -2593,7 +2591,8 @@
                         totalFatC: 0, 
                         totalFatG: 0, 
                         totalCarbC: 0, 
-                        totalCarbG: 0
+                        totalCarbG: 0,
+                        totalDimmCarbG: 0
                     };
 
                 for(let i=0; i<=23; i++) {
@@ -2610,7 +2609,8 @@
                             totalFatG: null,
                             totalCarbC: null,
                             totalCarbG: null,
-                            totalFatG: null
+                            totalFatG: null,
+                            totalDimmCarbG: null,
                         }
                     }
 
@@ -2641,6 +2641,7 @@
                                 carbPercentage: this.actions[k].carbPercentage,
                                 carbC: carbC,
                                 carbG: carbG,
+                                dimmCarbG: carbG * this.actions[k].dimmer,
                             }
 
                             if(fm == this.actions[k].start) {
@@ -2695,7 +2696,6 @@
                                     minute.minuteActivityPopover = popoverParent
 
                                     if( !minute.energyExpenditure ) {
-                                        // totalCount++;
                                         minute.energyExpenditure = minuteExpenditure
                                     }
                                 }
@@ -2718,7 +2718,8 @@
                         _totalFatC = 0,
                         _totalFatG = 0,
                         _totalCarbC = 0,
-                        _totalCarbG = 0;
+                        _totalCarbG = 0,
+                        _totalDimmeredCarbG = 0;
 
                     for(let i=0; i<timeObj.minutes.length; i++) {
                         if(timeObj.minutes[i].energyExpenditure) {
@@ -2728,6 +2729,7 @@
                             _totalFatG += parseFloat (timeObj.minutes[i].energyExpenditure.fatG)
                             _totalCarbC += parseFloat (timeObj.minutes[i].energyExpenditure.carbC)
                             _totalCarbG += parseFloat (timeObj.minutes[i].energyExpenditure.carbG)
+                            _totalDimmeredCarbG += parseFloat (timeObj.minutes[i].energyExpenditure.dimmCarbG)
                         }
                     }
 
@@ -2739,8 +2741,9 @@
                     timeObj.totals.totalFatG = _totalFatG != 0 ? _totalFatG.toFixed(2) : ""
                     timeObj.totals.totalCarbC = _totalCarbC != 0 ? _totalCarbC.toFixed(2) : ""
                     timeObj.totals.totalCarbG = _totalCarbG != 0 ? _totalCarbG.toFixed(2) : ""
+                    timeObj.totals.totalDimmCarbG = _totalDimmeredCarbG != 0 ? _totalDimmeredCarbG.toFixed(2) : ""
 
-            
+                    
                     timeArr.push(timeObj)
 
                     
@@ -2752,11 +2755,13 @@
                         energyExpenditureDayTotal.totalFatG += parseFloat(timeObj.totals.totalFatG)
                         energyExpenditureDayTotal.totalCarbC += parseFloat(timeObj.totals.totalCarbC)
                         energyExpenditureDayTotal.totalCarbG += parseFloat(timeObj.totals.totalCarbG)
+                        energyExpenditureDayTotal.totalDimmCarbG += parseFloat(timeObj.totals.totalDimmCarbG)
                     }
                 }
 
                 this.staticTimes = timeArr
                 this.dayTotals.energyExpenditure = energyExpenditureDayTotal
+
                 console.log('Static Times : ', this.staticTimes)
                 console.log('asdasdasd',this.dayTotals.energyExpenditure )
 
@@ -2769,6 +2774,7 @@
                 minuteIntake = {},
                 sw = false;
                 let x = {},
+
                 intakeDayTotal = {
                     totalCarb: 0,
                     totalFat: 0,
@@ -2965,7 +2971,7 @@
 
                         if(minutes[j].energyExpenditure) {
                             fatG = minutes[j].energyExpenditure.fatG
-                            carbG = minutes[j].energyExpenditure.carbG
+                            carbG = minutes[j].energyExpenditure.dimmCarbG
                         }
 
                         if(intake) {
@@ -3047,24 +3053,6 @@
                 this.mealGraphicPopup = fArr
                 console.log('final final final', fArr)
             },
-
-            // calculateStatus(fatGr, carbGr) {
-            //     var fatStatus = fatGr - 0;
-            //     var fatStatusText = fatStatus > 0 ? "loss" : "access";
-            //     fatStatus = Math.abs(fatStatus);
-
-            //     var carbStatus = carbGr - 0;
-            //     var carbStatusText = carbStatus > 0 ? "loss" : "access";
-            //     carbStatus = Math.abs(carbStatus);
-
-            //     return {
-            //         'carbStatus': carbStatus,
-            //         'carbStatusText': carbStatusText,
-            //         'fatStatusText': fatStatusText,
-            //         'fatStatus': fatStatus
-            //     }
-            // },
-
             calculateStatusPopup() {
                 console.log('Calculate popup status ...');
                 this.mealStatusPopup = []
