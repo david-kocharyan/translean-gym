@@ -21,7 +21,7 @@
                         <label>Dimmer</label> 
                         <div class="d-flex">
                             <input type="number" id="dimmer" class="form-control bg-white">
-                            <button class="btn btn-primary">
+                            <button class="btn btn-primary" id="addDimmer">
                                 <i class="fas fa-sync-alt"></i>
                             </button>
                         </div>
@@ -1505,6 +1505,8 @@
 
         }
 
+        
+
 
 
         $('.activity_from').clockpicker({
@@ -2000,6 +2002,27 @@
                 calculate();
             });
         });
+
+        $('#addDimmer').click(function() {
+
+            let data = { 
+                user_id: $('.user_id').val(),
+                date: $('.date-show').html(),
+                dimmer: $('#dimmer').val(),
+            }
+
+            $.ajax({
+                type: "POST",
+                headers: {
+                    'X-CSRF-TOKEN': '{{csrf_token()}}'
+                },
+                url: '{{ url('/day/add-dimmer') }}',
+                data: data,
+                success: function (res) {
+                    console.log('add dimmer res', res)
+                }
+            });
+        })
 
         function calculate() {
             let total_mass = 0;
