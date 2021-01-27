@@ -2278,8 +2278,7 @@
 
                         fatPercentage: activities[i].get_activity.fat_ratio,
                         carbPercentage: activities[i].get_activity.carb_ratio,
-                        met: activities[i].get_activity.met,
-                        dimmer: res.dimmer.dimmer,
+                        met: activities[i].get_activity.met
                     };
                     days.addActivity(activityObj)
                 }
