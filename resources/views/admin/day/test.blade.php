@@ -2659,7 +2659,7 @@
                                 carbPercentage: this.actions[k].carbPercentage,
                                 carbC: carbC,
                                 carbG: carbG,
-                                dimmCarbG: carbG * dimmer != null ? dimmer.dimmer * carbG : 1,
+                                dimmCarbG: dimmer != null ? dimmer.dimmer * carbG : 1,
                             }
 
                             if(fm == this.actions[k].start) {
