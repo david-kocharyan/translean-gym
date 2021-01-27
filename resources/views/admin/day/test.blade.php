@@ -15,7 +15,18 @@
         <input type="hidden" class="user_id" name="id" value="{{$user->id}}">
         <div class="container m-t-10 m-b-20">
             <div class="row">
-                <div class="col-md-12" style="display: flex; justify-content: center; align-items: center">
+                <div class="col-md-12" style="display: flex; justify-content: space-between; align-items: center">
+                  
+                    <div class="form-group float-left">
+                        <label>Dimmer</label> 
+                        <div class="d-flex">
+                            <input type="number" id="dimmer" class="form-control bg-white">
+                            <button class="btn btn-primary">
+                                <i class="fas fa-sync-alt"></i>
+                            </button>
+                        </div>
+                    </div>
+                 
                     <div class="day-parent" style="display: flex; justify-content: center; align-items: center">
                         <div style="cursor: pointer" class="date-minus">
                             <i class="fas fa-angle-left"></i>
@@ -1293,9 +1304,6 @@
 
     let row = 0;
 
-
-
-
     function roundTime(time) {
         let timePart = time.split(':');
 
@@ -2114,10 +2122,6 @@
 <!-- VUE -->
 <script defer>
 
-    // var bodyWeight = 55;
-
-
-
     function roundNumberDecimal(number) {
         let floatNumber = parseFloat(number);
         return Math.round((floatNumber + Number.EPSILON) * 100) / 100
@@ -2216,6 +2220,7 @@
                 }
 
                 $('.protein_eat').html(p_met.toFixed(2));
+                $('#dimmer').val(res.dimmer)
 
                 let activities = res.activity,
                     meals = res.meal,
@@ -3922,16 +3927,16 @@
     }
 
     .right-section-total {
-        position: absolute;
+        /* position: absolute;
         right: 0%;
-        width: 30%;
+        width: 30%; */
         display: flex;
         justify-content: flex-end;
     }
 
-    .right-section-total > div {
+    /* .right-section-total > div {
         margin-left: 25px;
-    }
+    } */
 
 </style>
 
