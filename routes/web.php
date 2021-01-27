@@ -54,7 +54,7 @@ Route::group(['namespace' => 'Admin', 'middleware' => 'auth:admin'], function ()
     Route::post('/day/add-dimmer', 'DayController@addDimmer');
     Route::post('/day/get-all-data', 'DayController@getAllData');
     Route::post('/day/get-dimmer', 'DayController@getDimmerForDay');
-    Route::put('/day/edit-dimmer/{dimmerId}', 'DayController@editDimmer');
+    Route::post('/day/edit-dimmer/{dimmerId}', 'DayController@editDimmer');
 
     Route::post('/day/add-activity', 'DayController@addActivity');
     Route::post('/day/delete-activity', 'DayController@deleteActivity');
