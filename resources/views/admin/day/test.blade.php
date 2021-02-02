@@ -2221,8 +2221,11 @@
         if(parseFloat(eat) > parseFloat(must)) {
             rs = '<span class="text-success">' + res.toFixed(2) + ' loss </span>'
             $('#protF').html(rs)
-        }else {
+        }else if(parseFloat(eat) < parseFloat(must)) {
             rs = '<span class="text-danger">' + res.toFixed(2) + ' access </span>'
+            $('#protF').html(rs)
+        }else {
+            rs = '<span">' + res.toFixed(2) + ' </span>'
             $('#protF').html(rs)
         }
 
@@ -2247,7 +2250,7 @@
             url: "{{ url('/day/calculate-protein-limit') }}",
             data: data,
             success: function (res) {
-                
+
                 let prr = res.protein_must_eat
                 if(!prr) { prr = 0 }
 
