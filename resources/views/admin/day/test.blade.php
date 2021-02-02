@@ -85,7 +85,7 @@
                             <tr>
                                 <th></th>
                                 <td></td>
-                                <td v-bind:class=" dayTotals.energyExpenditure.totalCarbG > dayTotals.intake.totalCarb ? 'text-danger' : 'text-success' ">
+                                <td v-bind:class=" dayTotals.energyExpenditure.totalCarbG > dayTotals.intake.totalCarb ? 'text-success' : 'text-danger' ">
                                     <span v-if="dayTotals.energyExpenditure.totalCarbG > dayTotals.intake.totalCarb"> 
                                         @{{ (dayTotals.energyExpenditure.totalCarbG - dayTotals.intake.totalCarb).toFixed(2) }}
                                         loss 
@@ -96,14 +96,12 @@
                                     </span>
                                     <span v-else>0</span>
                                 </td>
-                                <td  v-bind:class=" dayTotals.energyExpenditure.totalFatG > dayTotals.intake.totalFat ? 'text-danger' : 'text-success' ">
+                                <td  v-bind:class=" dayTotals.energyExpenditure.totalFatG > dayTotals.intake.totalFat ? 'text-success' : 'text-danger' ">
                                     <span v-if="dayTotals.energyExpenditure.totalFatG > dayTotals.intake.totalFat"> 
                                         @{{ (dayTotals.energyExpenditure.totalFatG - dayTotals.intake.totalFat).toFixed(2) }}
-                                        loss 
                                     </span>
                                     <span v-else-if="dayTotals.energyExpenditure.totalFatG < dayTotals.intake.totalFat">
                                         @{{ (dayTotals.energyExpenditure.totalFatG - dayTotals.intake.totalFat).toFixed(2) }}
-                                        access
                                     </span>
                                     <span v-else>0</span>
                                 </td>
