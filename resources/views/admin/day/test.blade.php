@@ -85,8 +85,8 @@
                             <tr>
                                 <th></th>
                                 <td></td>
-                                <td>@{{  dayTotals.energyExpenditure.totalCarbG - dayTotals.intake.totalCarb  }}</td>
-                                <td>@{{  dayTotals.energyExpenditure.totalFatG - dayTotals.intake.totalFat  }}</td>
+                                <td id="totC">0</td>
+                                <td id="totF">0</td>
                                 <td id="protF">0</td>
                             </tr>
                         </tbody>
@@ -2206,6 +2206,36 @@
         }else {
             rs = '<span class="text-danger">' + res.toFixed(2) + ' access </span>'
             $('#protF').html(rs)
+        }
+
+
+        let expFat = days.dayTotals.energyExpenditure.totalFatG
+        let intFat = days.dayTotals.intake.totalFat
+
+        let res1 = expFat - intFat
+        let rs1 = ''
+
+        if(expFat > intFat) {
+            rs = '<span class="text-success">' + res1.toFixed(2) + ' loss </span>'
+            $('#totF').html(rs1)
+        }else {
+            rs = '<span class="text-danger">' + res1.toFixed(2) + ' access </span>'
+            $('#totF').html(rs1)
+        }
+
+
+        let expCarb = days.dayTotals.energyExpenditure.totalCarbG
+        let intCarb = days.dayTotals.intake.totalCarb
+
+        let res2 = expCarb - intCarb
+        let rs2 = ''
+
+        if(expCarb > intCarb) {
+            rs = '<span class="text-success">' + res2.toFixed(2) + ' loss </span>'
+            $('#totC').html(rs2)
+        }else {
+            rs = '<span class="text-danger">' + res2.toFixed(2) + ' access </span>'
+            $('#totC').html(rs2)
         }
         
 
