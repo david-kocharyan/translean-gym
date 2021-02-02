@@ -73,14 +73,14 @@
                                 <td>@{{ (dayTotals.energyExpenditure.totalCal).toFixed(2) }}</td>
                                 <td>@{{ (dayTotals.energyExpenditure.totalCarbG).toFixed(2) }}</td>
                                 <td>@{{ (dayTotals.energyExpenditure.totalFatG).toFixed(2) }}</td>
-                                <td> <span class="protein_eat">0</span> </td>
+                                <td> <span class="protein_must">0</span> </td>
                             </tr>
                             <tr>
                                 <th scope="row">Intake</th>
                                 <td></td>
                                 <td>@{{ (dayTotals.intake.totalCarb).toFixed(2) }}</td>
                                 <td>@{{ (dayTotals.intake.totalFat).toFixed(2) }}</td>
-                                <td> <span class="protein_must">0</span> </td>
+                                <td> <span class="protein_eat">0</span> </td>
                             </tr>
                             <tr>
                                 <th></th>
@@ -2215,22 +2215,20 @@
 
         let eat = $('.protein_eat').text()
         let must = $('.protein_must').text()
-        let res = parseFloat(eat) - parseFloat(must)
+
+        let res =  parseFloat(must) - parseFloat(eat)
         let rs = ''
 
-        if(parseFloat(eat) > parseFloat(must)) {
+        if(parseFloat(must) > parseFloat(eat)) {
             rs = '<span class="text-success">' + res.toFixed(2) + ' loss </span>'
             $('#protF').html(rs)
-        }else if(parseFloat(eat) < parseFloat(must)) {
+        }else if(parseFloat(must) < parseFloat(eat)) {
             rs = '<span class="text-danger">' + res.toFixed(2) + ' access </span>'
             $('#protF').html(rs)
         }else {
             rs = '<span">' + res.toFixed(2) + ' </span>'
             $('#protF').html(rs)
         }
-
-
-       
 
     }   
 
