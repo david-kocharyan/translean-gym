@@ -57,12 +57,45 @@
                     </div>
                     <div class="right-section-total">
 
-                        <div>
+                    <table class="table table-bordered table-sm table-shadow">
+                        <thead>
+                            <tr>
+                                <th scope="col">&nbsp;</th>
+                                <th scope="col">Calories</th>
+                                <th scope="col">Carb</th>
+                                <th scope="col">Fat</th>
+                                <th scope="col">Protein</th>
+                            </tr>
+                        </thead>
+                        <tbody class="top-header">
+                            <tr>
+                                <th scope="row">Expenditure</th>
+                                <td>@{{ (dayTotals.energyExpenditure.totalCal).toFixed(2) }}</td>
+                                <td>@{{ (dayTotals.energyExpenditure.totalCarbG).toFixed(2) }}</td>
+                                <td>@{{ (dayTotals.energyExpenditure.totalFatG).toFixed(2) }}</td>
+                                <td> <span class="protein_eat">0</span> </td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Intake</th>
+                                <td></td>
+                                <td>@{{ (dayTotals.intake.totalCarb).toFixed(2) }}</td>
+                                <td>@{{ (dayTotals.intake.totalFat).toFixed(2) }}</td>
+                                <td> <span class="protein_must">0</span> </td>
+                            </tr>
+                            <tr>
+                                <th></th>
+                                <td></td>
+                                <td>@{{  dayTotals.energyExpenditure.totalCarbG - dayTotals.intake.totalCarb  }}</td>
+                                <td>@{{  dayTotals.energyExpenditure.totalFatG - dayTotals.intake.totalFat  }}</td>
+                                <td id="protF">0</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                        <!-- <div>
                             <h5>Calories` </h5>
                             <div>
                                 <span>@{{ (dayTotals.energyExpenditure.totalCal).toFixed(2) }}</span>
-                                <!-- /
-                                <span class="protein_must">0</span> -->
                             </div>
                         </div>
 
@@ -78,9 +111,9 @@
                         <div>
                             <h5>Fat` </h5>
                             <div>
-                                <span>@{{ (dayTotals.energyExpenditure.totalFatG).toFixed(2) }}</span>
+                                <span>@{{ (dayTotals.energyExpenditure.totalFatG) }}</span>
                                 /
-                                <span>@{{ (dayTotals.intake.totalFat).toFixed(2) }}</span>
+                                <span>@{{ (dayTotals.intake.totalFat) }}</span>
                             </div>
                         </div>
 
@@ -91,7 +124,7 @@
                                 /
                                 <span class="protein_must">0</span>
                             </div>
-                        </div>
+                        </div> -->
  
                     </div>
                 </div>
@@ -266,7 +299,7 @@
                         <td v-if='energyExpendedMode'>Carb&nbsp;%</td>
                         <td v-if='energyExpendedMode'>Carb&nbsp;(c)</td>
                         <td>Carb&nbsp;(g)</td>
-                        <td v-if='energyExpendedMode'>Dimm&nbsp;Carb&nbsp;(g)</td>
+                        <td>Dimm&nbsp;Carb&nbsp;(g)</td>
                     </tr>
                 </thead>
                 <tbody>
@@ -279,7 +312,7 @@
                         <td v-if='energyExpendedMode'></td>
                         <td v-if='energyExpendedMode'><b>@{{ (dayTotals.energyExpenditure.totalCarbC).toFixed(2) }}</b></td>
                         <td><b>@{{ (dayTotals.energyExpenditure.totalCarbG).toFixed(2) }}</b></td>
-                        <td v-if='energyExpendedMode'><b>@{{ (dayTotals.energyExpenditure.totalDimmCarbG).toFixed(2) }}</b></td>
+                        <td><b>@{{ (dayTotals.energyExpenditure.totalDimmCarbG).toFixed(2) }}</b></td>
                     </tr>
                 </tbody>
                 <tbody v-for="(time, i) in staticTimes" :key="time.time" v-if="time.show">
@@ -293,7 +326,7 @@
                         <td v-if='energyExpendedMode'></td>
                         <td v-if='energyExpendedMode'><b>@{{ time.totals.totalCarbC }}</b></td>
                         <td><b>@{{ time.totals.totalCarbG }}</b></td>
-                        <td v-if='energyExpendedMode'><b>@{{ time.totals.totalDimmCarbG }}</b></td>
+                        <td><b>@{{ time.totals.totalDimmCarbG }}</b></td>
                     </tr>
 
                     <tr v-for="(minute, j) in time.minutes" :key="j"
@@ -307,7 +340,7 @@
                         <td v-if='energyExpendedMode'><span v-if="minute.borderColor">@{{ minute.energyExpenditure.carbPercentage }}</span></td>
                         <td v-if='energyExpendedMode'><span v-if="minute.borderColor">@{{ parseFloat(minute.energyExpenditure.carbC).toFixed(2) }}</span></td>
                         <td><span v-if="minute.borderColor">@{{ parseFloat(minute.energyExpenditure.carbG).toFixed(2) }}</span></td>
-                        <td v-if='energyExpendedMode'><span v-if="minute.borderColor">@{{ parseFloat(minute.energyExpenditure.dimmCarbG).toFixed(2) }}</span></td>
+                        <td><span v-if="minute.borderColor">@{{ parseFloat(minute.energyExpenditure.dimmCarbG).toFixed(2) }}</span></td>
                     </tr>
                 </tbody>
             </table>
@@ -994,27 +1027,6 @@
                                             </div>
 
                                         </div>
-                                        
-                                        <!-- <div class="col-md-9 table-of-carb-fat">
-                                            <table class="intake-table border-green table table-striped">
-                                                <thead>
-                                                <tr>
-                                                    <th colspan="2">Expenditure</th>
-                                                    <th colspan="2">Intake</th>
-                                                    <th colspan="2">Status</th>
-                                                </tr>
-                                                <tr>
-                                                    <th>Carb</th>
-                                                    <th>Fat</th>
-                                                    <th>Carb</th>
-                                                    <th>Fat</th>
-                                                    <th>Carb</th>
-                                                    <th>Fat</th>
-                                                </tr>
-                                                </thead>
-                                                <tbody id="meal_carb_fat_add"></tbody>
-                                            </table>
-                                        </div> -->
 
                                     </div>
                                 </div>
@@ -2181,10 +2193,26 @@
         return tr;
     }
 
-    function calculateProteinLimit() {
+    function calculateProteinFinal() {
 
-        console.log('calculateProteinLimit started ...')
-        console.log('dayTotals.energyExpenditure.totalMet', days.dayTotals.energyExpenditure.totalMet)
+        let eat = $('.protein_eat').text()
+        let must = $('.protein_must').text()
+        let res = parseInt(eat) - parseInt(must)
+        let rs = ''
+
+        if(parseInt(eat) > parseInt(must)) {
+            rs = '<span class="text-danger">' + res + ' loss </span>'
+            $('#protF').html(rs)
+        }else {
+            rs = '<span class="text-success">' + res + ' access </span>'
+            $('#protF').html(rs)
+        }
+        
+
+
+    }   
+
+    function calculateProteinLimit() {
 
         let data = {
             date: $('.date-show').html(),
@@ -2200,11 +2228,16 @@
             url: "{{ url('/day/calculate-protein-limit') }}",
             data: data,
             success: function (res) {
-                let pr = (res.protein_must_eat).toFixed(2)
-                $('.protein_must').html(pr);
+                if(res.protein_must_eat) {
+                    let pr = (res.protein_must_eat).toFixed(2)
+                    $('.protein_must').html(pr);
+                    calculateProteinFinal()
+                }
             }
         })
     }
+
+
 
     function drawAssassmentAlert() {
         $('#assassmentAlert').html('');
@@ -2391,10 +2424,6 @@
                 layOutDay(actions, 'actions-pdf');
                 layOutDay(waterEvents, 'water-pdf');
                 layOutDay(meal, 'meal-pdf');
-
-                console.log('actions 777777777777777777777 = ', actions)
-                console.log('water 777777777777777777777 = ', waterEvents)
-                console.log('meal 777777777777777777777 = ', meal)
 
                 if(localStorage.getItem('hide-zero-to-eight') == 'true') {
                     days.hideTimeGraphic()
@@ -3008,8 +3037,6 @@
                         }
 
                         this.mealGraphic[i].minutes[j].statusObj = statusObj
-
-                        // console.log( 'Status = ', fatStatus.toFixed(2), carbStatus.toFixed(2) )
                     }
                 }
                 console.log('status = ',this.mealGraphic )
@@ -3970,6 +3997,20 @@
     /* .right-section-total > div {
         margin-left: 25px;
     } */
+
+    .table-shadow {
+        box-shadow: 3px 0px 8px #e4e7ea;
+    }
+
+    tbody.top-header tr:nth-child(1) :not(:first-child) {
+        background: #4caf50;
+        color: #fff;
+    }
+
+    tbody.top-header tr:nth-child(2) :not(:first-child) {
+        background: #f44336;
+        color: #fff;
+    }
 
 </style>
 
