@@ -2212,6 +2212,8 @@
         let expFat = days.dayTotals.energyExpenditure.totalFatG
         let intFat = days.dayTotals.intake.totalFat
 
+        console.log(expFat, 'intFat', intFat)
+
         let res1 = expFat - intFat
         let rs1 = ''
 
@@ -2266,8 +2268,6 @@
             }
         })
     }
-
-
 
     function drawAssassmentAlert() {
         $('#assassmentAlert').html('');
@@ -2460,6 +2460,7 @@
                 }
 
                 calculateProteinLimit();
+                calculateProteinFinal()
 
             }
         })
