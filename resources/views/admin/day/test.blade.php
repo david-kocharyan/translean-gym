@@ -2197,14 +2197,14 @@
 
         let eat = $('.protein_eat').text()
         let must = $('.protein_must').text()
-        let res = parseInt(eat) - parseInt(must)
+        let res = parseFloat(eat) - parseFloat(must)
         let rs = ''
 
-        if(parseInt(eat) > parseInt(must)) {
-            rs = '<span class="text-danger">' + res + ' loss </span>'
+        if(parseFloat(eat) > parseFloat(must)) {
+            rs = '<span class="text-success">' + res.toFixed(2) + ' loss </span>'
             $('#protF').html(rs)
         }else {
-            rs = '<span class="text-success">' + res + ' access </span>'
+            rs = '<span class="text-danger">' + res.toFixed(2) + ' access </span>'
             $('#protF').html(rs)
         }
         
