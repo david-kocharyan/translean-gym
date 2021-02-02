@@ -85,8 +85,28 @@
                             <tr>
                                 <th></th>
                                 <td></td>
-                                <td id="totC">0</td>
-                                <td id="totF">0</td>
+                                <td v-bind:class=" dayTotals.energyExpenditure.totalCarbG > dayTotals.intake.totalCarb ? 'text-danger' : 'text-success' ">
+                                    <span v-if="dayTotals.energyExpenditure.totalCarbG > dayTotals.intake.totalCarb"> 
+                                        @{{ (dayTotals.energyExpenditure.totalCarbG - dayTotals.intake.totalCarb).toFixed(2) }}
+                                        loss 
+                                    </span>
+                                    <span v-else-if="dayTotals.energyExpenditure.totalCarbG < dayTotals.intake.totalCarb">
+                                        @{{ (dayTotals.energyExpenditure.totalCarbG - dayTotals.intake.totalCarb).toFixed(2) }}
+                                        access
+                                    </span>
+                                    <span v-else>0</span>
+                                </td>
+                                <td  v-bind:class=" dayTotals.energyExpenditure.totalFatG > dayTotals.intake.totalFat ? 'text-danger' : 'text-success' ">
+                                    <span v-if="dayTotals.energyExpenditure.totalFatG > dayTotals.intake.totalFat"> 
+                                        @{{ (dayTotals.energyExpenditure.totalFatG - dayTotals.intake.totalFat).toFixed(2) }}
+                                        loss 
+                                    </span>
+                                    <span v-else-if="dayTotals.energyExpenditure.totalFatG < dayTotals.intake.totalFat">
+                                        @{{ (dayTotals.energyExpenditure.totalFatG - dayTotals.intake.totalFat).toFixed(2) }}
+                                        access
+                                    </span>
+                                    <span v-else>0</span>
+                                </td>
                                 <td id="protF">0</td>
                             </tr>
                         </tbody>
@@ -2209,38 +2229,7 @@
         }
 
 
-        let expFat = days.dayTotals.energyExpenditure.totalFatG
-        let intFat = days.dayTotals.intake.totalFat
-
-        console.log(expFat, 'intFat', intFat)
-
-        let res1 = expFat - intFat
-        let rs1 = ''
-
-        if(expFat > intFat) {
-            rs = '<span class="text-success">' + res1.toFixed(2) + ' loss </span>'
-            $('#totF').html(rs1)
-        }else {
-            rs = '<span class="text-danger">' + res1.toFixed(2) + ' access </span>'
-            $('#totF').html(rs1)
-        }
-
-
-        let expCarb = days.dayTotals.energyExpenditure.totalCarbG
-        let intCarb = days.dayTotals.intake.totalCarb
-
-        let res2 = expCarb - intCarb
-        let rs2 = ''
-
-        if(expCarb > intCarb) {
-            rs = '<span class="text-success">' + res2.toFixed(2) + ' loss </span>'
-            $('#totC').html(rs2)
-        }else {
-            rs = '<span class="text-danger">' + res2.toFixed(2) + ' access </span>'
-            $('#totC').html(rs2)
-        }
-        
-
+       
 
     }   
 
@@ -2460,7 +2449,6 @@
                 }
 
                 calculateProteinLimit();
-                calculateProteinFinal()
 
             }
         })
