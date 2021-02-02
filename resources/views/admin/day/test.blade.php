@@ -2247,11 +2247,15 @@
             url: "{{ url('/day/calculate-protein-limit') }}",
             data: data,
             success: function (res) {
-                if(res.protein_must_eat) {
-                    let pr = (res.protein_must_eat).toFixed(2)
+                
+                let prr = res.protein_must_eat
+                if(!prr) { prr = 0 }
+
+                    let pr = (prr).toFixed(2)
                     $('.protein_must').html(pr);
+
                     calculateProteinFinal()
-                }
+                
             }
         })
     }
