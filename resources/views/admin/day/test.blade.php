@@ -729,7 +729,7 @@
                                 </div>
 
                                 <div class="form-row">
-                                    <div class="form-group col-md-3">
+                                    <div class="form-group col-md-2">
                                         <label for="meal_from">Time</label>
                                         <!-- grigortime -->
                                         <input 
@@ -740,7 +740,7 @@
                                         >
                                     </div>
 
-                                    <div class="col-md-9 table-of-carb-fat">
+                                    <div class="col-md-10 table-of-carb-fat">
 
                                         <div class="row">
                                             <div class="col-md-1 p-0">
@@ -766,19 +766,21 @@
                                                 <table class="energy-table table table-striped border-green">
                                                     <thead>
                                                         <tr>
-                                                            <th colspan="2" class="text-center position-relative">
+                                                            <th colspan="3" class="text-center position-relative">
                                                                 Energy Expenditure
                                                             </th>
                                                         </tr>
                                                         <tr>
                                                             <th>Carb</th>
                                                             <th>Fat</th>
+                                                            <th>Dimm Carb</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody v-for="(time, i) in mealPopupData" :key="i">
                                                         <tr>
-                                                            <td>@{{time.totals.totalCarb}}</td>
-                                                            <td>@{{time.totals.totalFat}}</td>
+                                                            <td> @{{time.totals.totalCarb}} </td>
+                                                            <td> @{{time.totals.totalFat}} </td>
+                                                            <td> @{{time.totals.totalDim}} </td>
                                                         </tr>
                                                     </tbody>
                                                 </table>
@@ -939,7 +941,7 @@
 
                                 <div class="form-row">
                                     <div class="col-md-12">
-                                        <div class="form-group col-md-3">
+                                        <div class="form-group col-md-2">
                                             <label for="meal_from">Time</label>
                                             <!-- grigortime -->
                                             <input 
@@ -951,7 +953,7 @@
                                         </div>
 
 
-                                        <div class="col-md-9 table-of-carb-fat">
+                                        <div class="col-md-10 table-of-carb-fat">
 
                                             <div class="row">
                                                 <div class="col-md-1 p-0">
@@ -977,19 +979,21 @@
                                                     <table class="energy-table table table-striped border-green">
                                                         <thead>
                                                             <tr>
-                                                                <th colspan="2" class="text-center position-relative">
+                                                                <th colspan="3" class="text-center position-relative">
                                                                     Energy Expenditure
                                                                 </th>
                                                             </tr>
                                                             <tr>
                                                                 <th>Carb</th>
                                                                 <th>Fat</th>
+                                                                <td>Dimm Carb</td>
                                                             </tr>
                                                         </thead>
                                                         <tbody v-for="(time, i) in mealPopupData" :key="i">
                                                             <tr>
-                                                                <td>@{{time.totals.totalCarb}}</td>
-                                                                <td>@{{time.totals.totalFat}}</td>
+                                                                <td> @{{time.totals.totalCarb}} </td>
+                                                                <td> @{{time.totals.totalFat}} </td>
+                                                                <td> @{{time.totals.totalDim}} </td>
                                                             </tr>
                                                         </tbody>
                                                     </table>
@@ -1451,7 +1455,8 @@
                 minutes: x[i],
                 totals: {
                     totalCarb: null,
-                    totalFat: null
+                    totalFat: null,
+                    totalDim: null,
                 }
             }
 
@@ -1459,17 +1464,21 @@
             startEveryHour++;
 
             let _totalCarb = 0,
-                _totalFat = 0;
+                _totalFat = 0,
+                _totalDim = 0;
 
             for(let t=0; t<obj.minutes.length; t++) {
+                console.log('obj.minutes[t].energyExpenditure', obj.minutes[t])
                 if(obj.minutes[t].energyExpenditure) {
                     _totalCarb  += parseFloat(obj.minutes[t].energyExpenditure.carbG)
                     _totalFat   += parseFloat(obj.minutes[t].energyExpenditure.fatG)
+                    _totalDim +=  parseFloat(obj.minutes[t].energyExpenditure.dimmCarbG)
                 }
             }
 
             obj.totals.totalCarb =  _totalCarb != 0 ? _totalCarb.toFixed(2) : "";
             obj.totals.totalFat =  _totalFat != 0 ? _totalFat.toFixed(2) : "";
+            obj.totals.totalDim =  totalDim != 0 ? totalDim.toFixed(2) : "";
 
 
             ffArr.push(obj)
@@ -1477,6 +1486,8 @@
         }
 
         console.log('MINUTE = ', ffArr)
+        console.log('FINAL = ', final)
+
         days.setMealPopupData(ffArr)
 
         setTimeout(() => {
