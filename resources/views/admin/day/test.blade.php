@@ -8,6 +8,10 @@
 
 <div class="row"  id="_days">
 
+    <div v-if="loading" class="loading">
+        <img src="/assets/images/logo_small.png" alt="">
+    </div>
+
     <div class="col-md-12 text-center" id="assassmentAlert"></div>
 
     <div class="col-md-12">
@@ -2529,7 +2533,7 @@
                 },
 
                 proteinMust: 0,
-                proteinEat: 0,
+                loading: true,
             }
         },
         methods: {
@@ -2643,22 +2647,6 @@
                 return (carbC / 4).toFixed(2)
             },
             existMealTimeFormula(glycemicLoad) {
-
-                // if(glycemicLoad < 40) {
-                //     return 4
-                // }
-
-                // if(glycemicLoad > 40 && glycemicLoad < 55) {
-                //     return 3
-                // }
-
-                // if(glycemicLoad > 55 && glycemicLoad < 70) {
-                //     return 2
-                // }
-
-                // if(glycemicLoad > 70) {
-                //     return 1
-                // }
 
                 if(glycemicLoad > 20 && glycemicLoad < 40 ) {
                     return 4
@@ -3402,15 +3390,17 @@
 
             this.createTimeGraphic();
             this.createMealGraphic();
+            
 
             setTimeout(() => {
                 console.log('Actions', this.actions)
                 console.log('Water', this.water)
                 console.log('meals', this.meal)
-
-                
-
-            }, 3000);
+                this.loading = false
+            }, 2500);
+        },
+        created() {
+            
         }
     })
 
@@ -4091,6 +4081,29 @@
     tbody.top-header tr:nth-child(2) :not(:first-child) {
         background: #f44336;
         color: #fff;
+    }
+
+    .loading {
+        position: fixed;
+        width: 100%;
+        height: 100%;
+        background: #ffffffcf;
+        top: 0;
+        left: 0;
+        z-index: 9999;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .loading img {
+        animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+        from { transform: scale(1); }
+        50% { transform: scale(0.75); }
+        to { transform: scale(1); }
     }
 
 </style>
