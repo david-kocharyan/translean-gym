@@ -1415,8 +1415,6 @@
 
         let testMinus = timeMinusOneHour(time)
 
-
-
         let roundedTime = roundTime(time);
         let start = parseInt(roundedTime.substring(0, 2));
         let startEveryHour = start
@@ -1515,11 +1513,6 @@
 
         return final
     }
-
-
-
-
-
 
 
     $(document).ready(function () {
@@ -2226,31 +2219,31 @@
         return Math.round((floatNumber + Number.EPSILON) * 100) / 100
     }
 
-    function calculateCarbDigestion(glycemicLoad , carbs, fat) {
-        var tr = "";
-        var carb = (glycemicLoad <= 40 ) ? carbs / 4 : (glycemicLoad > 40 && glycemicLoad <= 55) ? carbs / 3 : (glycemicLoad > 55 && glycemicLoad <= 70) ? carbs / 2 : carbs;
-        var fourHourFat = fat / 4;
-        var prevCarb = 0;
-        for (var i = 1; i < 5; i++) {
-            let fatGr = $('.energy-table tbody:nth-child('+(i+1)+')').find('tr:first').find('td.fatGr span').text();
-            let carbGr = $('.energy-table tbody:nth-child('+(i+1)+')').find('tr:first').find('td.fatGr span').text();
-            prevCarb += carb;
-            var currentCarb = (prevCarb != carbs) ? roundNumberDecimal(carb) : '-'
-            let carbStatus = (currentCarb != '-') ? currentCarb - carbGr : '-';
-            let carbStatusText = (carbStatus > 0 && carbStatus != '-') ? roundNumberDecimal(Math.abs(currentCarb - carbGr)) + " access" : roundNumberDecimal(Math.abs(currentCarb - carbGr)) + ' loss';
-            let fatStatus = fourHourFat - fatGr;
-            let fatStatusText = (fatStatus > 0) ? roundNumberDecimal(Math.abs(fourHourFat - fatGr)) + " access " : roundNumberDecimal(Math.abs(fourHourFat - fatGr)) + ' loss';
-            tr += `<tr>
-                        <td>${carbGr}</td>
-                        <td>${fatGr}</td>
-                        <td>${currentCarb}</td>
-                        <td>${roundNumberDecimal(fourHourFat)}</td>
-                        <td>${carbStatusText}</td>
-                        <td>${fatStatusText}</td>
-                    </tr>`;
-        }
-        return tr;
-    }
+    // function calculateCarbDigestion(glycemicLoad , carbs, fat) {
+    //     var tr = "";
+    //     var carb = (glycemicLoad <= 40 ) ? carbs / 4 : (glycemicLoad > 40 && glycemicLoad <= 55) ? carbs / 3 : (glycemicLoad > 55 && glycemicLoad <= 70) ? carbs / 2 : carbs;
+    //     var fourHourFat = fat / 4;
+    //     var prevCarb = 0;
+    //     for (var i = 1; i < 5; i++) {
+    //         let fatGr = $('.energy-table tbody:nth-child('+(i+1)+')').find('tr:first').find('td.fatGr span').text();
+    //         let carbGr = $('.energy-table tbody:nth-child('+(i+1)+')').find('tr:first').find('td.fatGr span').text();
+    //         prevCarb += carb;
+    //         var currentCarb = (prevCarb != carbs) ? roundNumberDecimal(carb) : '-'
+    //         let carbStatus = (currentCarb != '-') ? currentCarb - carbGr : '-';
+    //         let carbStatusText = (carbStatus > 0 && carbStatus != '-') ? roundNumberDecimal(Math.abs(currentCarb - carbGr)) + " access" : roundNumberDecimal(Math.abs(currentCarb - carbGr)) + ' loss';
+    //         let fatStatus = fourHourFat - fatGr;
+    //         let fatStatusText = (fatStatus > 0) ? roundNumberDecimal(Math.abs(fourHourFat - fatGr)) + " access " : roundNumberDecimal(Math.abs(fourHourFat - fatGr)) + ' loss';
+    //         tr += `<tr>
+    //                     <td>${carbGr}</td>
+    //                     <td>${fatGr}</td>
+    //                     <td>${currentCarb}</td>
+    //                     <td>${roundNumberDecimal(fourHourFat)}</td>
+    //                     <td>${carbStatusText}</td>
+    //                     <td>${fatStatusText}</td>
+    //                 </tr>`;
+    //     }
+    //     return tr;
+    // }
 
     function calculateProteinFinal() {
 
@@ -2651,19 +2644,35 @@
             },
             existMealTimeFormula(glycemicLoad) {
 
-                if(glycemicLoad < 40) {
+                // if(glycemicLoad < 40) {
+                //     return 4
+                // }
+
+                // if(glycemicLoad > 40 && glycemicLoad < 55) {
+                //     return 3
+                // }
+
+                // if(glycemicLoad > 55 && glycemicLoad < 70) {
+                //     return 2
+                // }
+
+                // if(glycemicLoad > 70) {
+                //     return 1
+                // }
+
+                if(glycemicLoad > 20 && glycemicLoad < 40 ) {
                     return 4
                 }
 
-                if(glycemicLoad > 40 && glycemicLoad < 55) {
+                if(glycemicLoad > 40 && glycemicLoad < 60) {
                     return 3
                 }
 
-                if(glycemicLoad > 55 && glycemicLoad < 70) {
+                if(glycemicLoad > 60 && glycemicLoad < 80) {
                     return 2
                 }
-
-                if(glycemicLoad > 70) {
+                
+                if(glycemicLoad > 80 && glycemicLoad < 100) {
                     return 1
                 }
 
