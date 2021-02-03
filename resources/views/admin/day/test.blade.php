@@ -3151,6 +3151,7 @@
                 console.log('final final final', fArr)
             },
             calculateStatusPopup() {
+                
                 console.log('Calculate popup status ...');
                 this.mealStatusPopup = []
 
@@ -3166,13 +3167,12 @@
                    
                     if(this.mealPopupData[i]) {
                         fatExpenditure =  this.mealPopupData[i].totals.totalFat
-                        carbExpenditure = this.mealPopupData[i].totals.totalCarb
+                        carbExpenditure = this.mealPopupData[i].totals.totalDim
                     }
 
                     if(this.mealGraphicPopup[i]) {
-                        // console.log('2= ', this.mealGraphicPopup[i].totals)
                         fatIntake = this.mealGraphicPopup[i].totals.totalFat
-                        carbIntake = this.mealGraphicPopup[i].totals.totalCarb
+                        carbIntake = this.mealGraphicPopup[i].totals.totalDim
                     }
 
                     fatStatus = fatExpenditure - fatIntake
