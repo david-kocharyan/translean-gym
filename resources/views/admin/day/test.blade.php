@@ -91,6 +91,7 @@
                                     </span>
                                     <span  v-if="dayTotals.energyExpenditure.totalCal <  ( (dayTotals.energyExpenditure.totalFatG * 9) + (dayTotals.energyExpenditure.totalCarbG * 4) + ( proteinMust * 4) ) ">
                                          @{{ (dayTotals.energyExpenditure.totalCal - ( (dayTotals.energyExpenditure.totalFatG * 9) + (dayTotals.energyExpenditure.totalCarbG * 4) + ( proteinMust * 4) ) ).toFixed(2) }}
+                                         access
                                     </span>
                                     <span v-else>0</span>
                                 </td>
