@@ -3166,15 +3166,13 @@
                     // console.log('1= ', this.mealPopupData[i].totals)
                    
                     if(this.mealPopupData[i]) {
-                        console.log(this.mealPopupData[i].totals)
                         fatExpenditure =  this.mealPopupData[i].totals.totalFat
                         carbExpenditure = this.mealPopupData[i].totals.totalDim
                     }
 
                     if(this.mealGraphicPopup[i]) {
-                        console.log(this.mealGraphicPopup[i].totals)
                         fatIntake = this.mealGraphicPopup[i].totals.totalFat
-                        carbIntake = this.mealGraphicPopup[i].totals.totalDim
+                        carbIntake = this.mealGraphicPopup[i].totals.totalCarb
                     }
 
                     fatStatus = fatExpenditure - fatIntake
