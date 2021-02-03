@@ -77,14 +77,23 @@
                             </tr>
                             <tr>
                                 <th scope="row">Intake</th>
-                                <td></td>
+                                <td>@{{ ( (dayTotals.energyExpenditure.totalFatG * 9) + (dayTotals.energyExpenditure.totalCarbG * 4) + ( proteinMust * 4) ).toFixed(2) }}</td>
                                 <td>@{{ (dayTotals.intake.totalCarb).toFixed(2) }}</td>
                                 <td>@{{ (dayTotals.intake.totalFat).toFixed(2) }}</td>
                                 <td> <span class="protein_eat">0</span> </td>
                             </tr>
                             <tr>
                                 <th></th>
-                                <td></td>
+                                <td v-bind:class="dayTotals.energyExpenditure.totalCal > ( (dayTotals.energyExpenditure.totalFatG * 9) + (dayTotals.energyExpenditure.totalCarbG * 4) + ( proteinMust * 4) ) ? 'text-success' : 'text-danger' ">
+                                    <span v-if="dayTotals.energyExpenditure.totalCal >  ( (dayTotals.energyExpenditure.totalFatG * 9) + (dayTotals.energyExpenditure.totalCarbG * 4) + ( proteinMust * 4) ) ">
+                                         @{{ (dayTotals.energyExpenditure.totalCal - ( (dayTotals.energyExpenditure.totalFatG * 9) + (dayTotals.energyExpenditure.totalCarbG * 4) + ( proteinMust * 4) ) ).toFixed(2) }}
+                                        loss 
+                                    </span>
+                                    <span  v-if="dayTotals.energyExpenditure.totalCal <  ( (dayTotals.energyExpenditure.totalFatG * 9) + (dayTotals.energyExpenditure.totalCarbG * 4) + ( proteinMust * 4) ) ">
+                                         @{{ (dayTotals.energyExpenditure.totalCal - ( (dayTotals.energyExpenditure.totalFatG * 9) + (dayTotals.energyExpenditure.totalCarbG * 4) + ( proteinMust * 4) ) ).toFixed(2) }}
+                                    </span>
+                                    <span v-else>0</span>
+                                </td>
                                 <td v-bind:class=" dayTotals.energyExpenditure.totalCarbG > dayTotals.intake.totalCarb ? 'text-success' : 'text-danger' ">
                                     <span v-if="dayTotals.energyExpenditure.totalCarbG > dayTotals.intake.totalCarb"> 
                                         @{{ (dayTotals.energyExpenditure.totalCarbG - dayTotals.intake.totalCarb).toFixed(2) }}
@@ -2255,6 +2264,8 @@
                     let pr = (prr).toFixed(2)
                     $('.protein_must').html(pr);
 
+                    days.setProteinMust(prr)
+
                     calculateProteinFinal()
                 
             }
@@ -2490,10 +2501,17 @@
                 dayTotals: {
                     energyExpenditure: {},
                     intake: {}
-                }
+                },
+
+                proteinMust: 0,
+                proteinEat: 0,
             }
         },
         methods: {
+            setProteinMust(protein) {
+                this.proteinMust = protein
+                console.log('pppp', this.proteinMust)
+            },
             setProjectionWeight(weight) {
                 this.weight = weight
             },
