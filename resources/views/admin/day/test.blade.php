@@ -754,7 +754,7 @@
                                                         </tr>
                                                     </thead>
                                                     <tbody v-for="(time, i) in mealPopupData" :key="i">
-                                                        <tr>
+                                                        <tr v-if="i != 4">
                                                             <th class="parent-time">
                                                                 @{{ time.headTime }}
                                                             </th>
@@ -777,7 +777,7 @@
                                                         </tr>
                                                     </thead>
                                                     <tbody v-for="(time, i) in mealPopupData" :key="i">
-                                                        <tr>
+                                                        <tr v-if="i != 4">
                                                             <td> @{{time.totals.totalCarb}} </td>
                                                             <td> @{{time.totals.totalFat}} </td>
                                                             <td> @{{time.totals.totalDim}} </td>
@@ -820,7 +820,7 @@
                                                         </tr>
                                                     </thead>
                                                     <tbody v-for="(status, i) in mealStatusPopup" :key="i">
-                                                        <tr>
+                                                        <tr v-if="i != 4">
                                                             <td class="bg-dark-p">
                                                                 <div>
                                                                     @{{ Math.abs(status.carb) }}
@@ -1395,21 +1395,39 @@
         console.log('timePlusOneHour : ', newTime)
         return newTime
     }
+    function timeMinusOneHour(time) {
+        let timePart = time.split(":")
+        let firstPart =  parseInt(timePart[0])-1;
+
+        if(firstPart < 10) {
+            firstPart = '0' + firstPart
+        }
+
+        let newTime = firstPart + ':' + timePart[1]
+        console.log('timePlusOneHour : ', newTime)
+        return newTime
+    }
+
     // return plus 4 time
     function returnPlus4Time(time) {
+
+        console.log('dddddd uuuuuu iiiiii oooooo', time)
+
+        let testMinus = timeMinusOneHour(time)
+
+
 
         let roundedTime = roundTime(time);
         let start = parseInt(roundedTime.substring(0, 2));
         let startEveryHour = start
         let startsEnd = roundedTime.substring(3);
-        start += 3;
-
-        
+        start += 2;
 
         if(start < 10) {
             start = "0" + start
         }
         let final = start + ":" + startsEnd;
+        let ffinal = timePlusOneHour(final)
 
         let _finalArr = []
         let concatArr = []
@@ -1422,18 +1440,18 @@
             let _minutes = days.staticTimes[i].minutes
             for(let j=0; j<_minutes.length; j++) {
 
-                if(_minutes[j].minute == time) {
+                if(_minutes[j].minute == testMinus) {
                     doing = true
                     concatArr.push(_minutes[j])
                 }
 
-                if(_minutes[j].minute == final) {
+                if(_minutes[j].minute == ffinal) {
                     doing = false
                     concatArr.push(_minutes[j])
                     break firstLoop
                 }
 
-                if(doing && _minutes[j].minute != time) {
+                if(doing && _minutes[j].minute != testMinus) {
                     concatArr.push(_minutes[j])
                 }
 
@@ -1441,7 +1459,10 @@
             
         }
 
+        console.log('concatArr', concatArr)
         let x = _.chunk(concatArr, 6);
+        console.log('x', x)
+        
 
         let ffArr = []
         for(let i=0; i<x.length; i++) {
@@ -1468,7 +1489,6 @@
                 _totalDim = 0;
 
             for(let t=0; t<obj.minutes.length; t++) {
-                console.log('obj.minutes[t].energyExpenditure', obj.minutes[t])
                 if(obj.minutes[t].energyExpenditure) {
                     _totalCarb  += parseFloat(obj.minutes[t].energyExpenditure.carbG)
                     _totalFat   += parseFloat(obj.minutes[t].energyExpenditure.fatG)
@@ -1486,7 +1506,6 @@
         }
 
         console.log('MINUTE = ', ffArr)
-        console.log('FINAL = ', final)
 
         days.setMealPopupData(ffArr)
 
@@ -1571,6 +1590,7 @@
         });
 
         // ######################################################
+        // doctest
 
         $('.meal_from').clockpicker({
             autoclose: true,
