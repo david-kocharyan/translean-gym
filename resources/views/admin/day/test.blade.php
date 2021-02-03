@@ -1472,13 +1472,13 @@
                 if(obj.minutes[t].energyExpenditure) {
                     _totalCarb  += parseFloat(obj.minutes[t].energyExpenditure.carbG)
                     _totalFat   += parseFloat(obj.minutes[t].energyExpenditure.fatG)
-                    _totalDim +=  parseFloat(obj.minutes[t].energyExpenditure.dimmCarbG)
+                    _totalDim   +=  parseFloat(obj.minutes[t].energyExpenditure.dimmCarbG)
                 }
             }
 
             obj.totals.totalCarb =  _totalCarb != 0 ? _totalCarb.toFixed(2) : "";
             obj.totals.totalFat =  _totalFat != 0 ? _totalFat.toFixed(2) : "";
-            obj.totals.totalDim =  totalDim != 0 ? totalDim.toFixed(2) : "";
+            obj.totals.totalDim =  _totalDim != 0 ? _totalDim.toFixed(2) : "";
 
 
             ffArr.push(obj)
