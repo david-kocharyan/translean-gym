@@ -60,6 +60,7 @@
 
                     </div>
                     <div class="right-section-total">
+                    <p>@{{dayTotals.intake}}</p>
 
                     <table class="table table-bordered table-sm table-shadow">
                         <thead>
@@ -72,6 +73,7 @@
                             </tr>
                         </thead>
                         <tbody class="top-header">
+                        
                             <tr>
                                 <th scope="row">Expenditure</th>
                                 <td>@{{ (dayTotals.energyExpenditure.totalCal).toFixed(2) }}</td>
@@ -81,10 +83,10 @@
                             </tr>
                             <tr>
                                 <th scope="row">Intake</th>
-                                <td>@{{ ( (dayTotals.energyExpenditure.totalFatG * 9) + (dayTotals.energyExpenditure.totalCarbG * 4) + ( proteinMust * 4) ).toFixed(2) }}</td>
+                                <td>@{{ ( (dayTotals.intake.totalFat * 9) + (dayTotals.intake.totalCarb * 4) + ( proteinEat * 4) ).toFixed(2) }}</td>
                                 <td>@{{ (dayTotals.intake.totalCarb).toFixed(2) }}</td>
                                 <td>@{{ (dayTotals.intake.totalFat).toFixed(2) }}</td>
-                                <td> <span class="protein_eat">0</span> </td>
+                                <td> <span class="protein_eat">0 </span> </td>
                             </tr>
                             <tr>
                                 <th></th>
@@ -971,7 +973,7 @@
                                                             </tr>
                                                         </thead>
                                                         <tbody v-for="(time, i) in mealPopupData" :key="i">
-                                                            <tr>
+                                                            <tr v-if="i != 4">
                                                                 <th class="parent-time">
                                                                     @{{ time.headTime }}
                                                                 </th>
@@ -994,7 +996,7 @@
                                                             </tr>
                                                         </thead>
                                                         <tbody v-for="(time, i) in mealPopupData" :key="i">
-                                                            <tr>
+                                                        <tr v-if="i != 4">  
                                                                 <td> @{{time.totals.totalCarb}} </td>
                                                                 <td> @{{time.totals.totalFat}} </td>
                                                                 <td> @{{time.totals.totalDim}} </td>
@@ -1037,7 +1039,7 @@
                                                             </tr>
                                                         </thead>
                                                         <tbody v-for="(status, i) in mealStatusPopup" :key="i">
-                                                            <tr>
+                                                            <tr v-if="i != 4">
                                                                 <td class="bg-dark-p">
                                                                     <div>
                                                                         @{{ Math.abs(status.carb) }}
@@ -1463,7 +1465,6 @@
 
         console.log('concatArr', concatArr)
         let x = _.chunk(concatArr, 6);
-        console.log('x', x)
         
 
         let ffArr = []
@@ -1473,8 +1474,12 @@
                 startEveryHour = "0" + startEveryHour
             }
 
+            
+            const thtime = startEveryHour + ":" + startsEnd
+            const minusOneHour = timeMinusOneHour(thtime)
+
             let obj = {
-                headTime: startEveryHour + ":" + startsEnd,
+                headTime: minusOneHour + ' - ' + thtime,
                 minutes: x[i],
                 totals: {
                     totalCarb: null,
@@ -1605,10 +1610,8 @@
             autoclose: true,
             placement: 'top',
         }).change(function(){
-
             let onePlusHour = timePlusOneHour($(this).val())
             let finTime = returnPlus4Time(onePlusHour)
-
             let roundedTime = roundTime($(this).val())
             $(this).val(roundedTime)
         });
@@ -2344,6 +2347,8 @@
 
                 $('.protein_eat').html(p_met.toFixed(2));
 
+                days.setProteinEat(p_met)
+
                 dimmer = res.dimmer
                 $('#dimmer').val('')
 
@@ -2533,6 +2538,7 @@
                 },
 
                 proteinMust: 0,
+                proteinEat: 0,
                 loading: true,
             }
         },
@@ -2540,6 +2546,9 @@
             setProteinMust(protein) {
                 this.proteinMust = protein
                 console.log('pppp', this.proteinMust)
+            },
+            setProteinEat(protein) {
+                this.proteinEat = protein
             },
             setProjectionWeight(weight) {
                 this.weight = weight
