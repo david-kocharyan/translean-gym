@@ -59,6 +59,12 @@
                                     <input type="number" class="form-control" id="total_ph" placeholder="Total PH"
                                            name="total_ph" readonly required value="{{$meal->ph}}">
                                 </div>
+                                
+                                 <div class="form-group col-md-2">
+                                    <label for="total_ph">Total Fiber</label>
+                                    <input type="number" class="form-control" id="total_fiber" placeholder="Total Fiber"
+                                           name="total_fiber" readonly required value="{{$meal->fiber}}">
+                                </div>
 
                                 <div class="form-group col-md-2">
                                     <label for="total_glycemic_load">Total Glycemic Load</label>
@@ -207,6 +213,7 @@
                 let total_ph = 0;
                 let total_glycemic_load = 0;
                 let food_mass = 0;
+                let total_fiber = 0;
 
                 // other variable
                 var ph_sum = 0;
@@ -225,6 +232,7 @@
                     total_fat += parseFloat($(this).find("#food_sel").find(":selected").data('fat'))/food_mass*mass;
                     total_proteins += parseFloat($(this).find("#food_sel").find(":selected").data('proteins'))/food_mass*mass;
                     total_calories += parseFloat($(this).find("#food_sel").find(":selected").data('calories'))/food_mass*mass;
+                    total_fiber += parseFloat($(this).find("#food_sel").find(":selected").data('fiber'))/food_mass*mass;
 
                     let nums = $('.food_items').length;
 
@@ -247,6 +255,7 @@
                     $('#total_calories').val(total_calories);
                     $('#total_ph').val(total_ph);
                     $('#total_glycemic_load').val(total_glycemic_load);
+                    $('#total_fiber').val(total_fiber);
                 });
             }
 

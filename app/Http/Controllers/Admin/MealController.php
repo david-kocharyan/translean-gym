@@ -62,6 +62,7 @@ class MealController extends Controller
             "total_calories" => "required|numeric",
             "total_ph" => "required|numeric",
             "total_glycemic_load" => "required|numeric",
+            "total_fiber" => "required|numeric",
         ]);
 
         DB::beginTransaction();
@@ -75,6 +76,7 @@ class MealController extends Controller
         $meal->calories = $request->total_calories;
         $meal->ph = $request->total_ph;
         $meal->glycemic_load = $request->total_glycemic_load;
+        $meal->fiber = $request->total_fiber;
         $meal->save();
 
         $arr = array();
@@ -138,6 +140,7 @@ class MealController extends Controller
             "total_calories" => "required|numeric",
             "total_ph" => "required|numeric",
             "total_glycemic_load" => "required|numeric",
+            "total_fiber" => "required|numeric",
         ]);
 
         DB::beginTransaction();
@@ -150,6 +153,7 @@ class MealController extends Controller
         $meal->calories = $request->total_calories;
         $meal->ph = $request->total_ph;
         $meal->glycemic_load = $request->total_glycemic_load;
+        $meal->fiber = $request->total_fiber;
         $meal->save();
 
         MealsFood::where('meal_id', $meal->id)->delete();

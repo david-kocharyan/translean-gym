@@ -24,6 +24,7 @@
                             <th>Proteins</th>
                             <th>Calories</th>
                             <th>Glycemic Load</th>
+                            <th>Fiber</th>
                             <th>PH</th>
                             <th>Options</th>
                         </tr>
@@ -40,6 +41,7 @@
                                 <td>{{$val->proteins}}</td>
                                 <td>{{$val->calories}}</td>
                                 <td>{{$val->glycemic_load}}</td>
+                                 <td>{{$val->fiber}}</td>
                                 <td>{{$val->ph}}</td>
                                 <td>
                                     <a href="{{$route."/".$val->id."/edit"}}" data-toggle="tooltip"
