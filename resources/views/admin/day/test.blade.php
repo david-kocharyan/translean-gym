@@ -88,7 +88,7 @@
                                 <td>@{{ (dayTotals.intake.totalCarb).toFixed(2) }}</td>
                                 <td>@{{ (dayTotals.intake.totalFat).toFixed(2) }}</td>
                                 <td> <span class="protein_eat">0 </span> </td>
-                                <td>Fiber</td>
+                                <td>@{{ (dayTotals.intake.totalFiber).toFixed(2) }}</td>
                             </tr>
                             <tr>
                                 <th></th>
@@ -733,7 +733,7 @@
                                     <div class="form-group col-md-1">
                                         <label for="total_glycemic_load">Fiber</label>
                                         <input type="number" class="form-control" id="m_total_fiber"
-                                                placeholder="Fiber" name="m_total_fiber" readonly
+                                                placeholder="Fiber" name="total_fiber" readonly
                                                 required value="">
                                     </div>
 
@@ -949,8 +949,8 @@
 
                                     <div class="form-group col-md-1">
                                         <label for="total_glycemic_load">Fiber</label>
-                                        <input type="number" class="form-control" id="m_total_fiber"
-                                                placeholder="Fiber" name="m_total_fiber" readonly
+                                        <input type="number" class="form-control" id="total_fiber"
+                                                placeholder="Fiber" name="total_fiber" readonly
                                                 required value="">
                                     </div>
                                 </div>
@@ -1435,10 +1435,21 @@
     }
     function timeMinus10Minutes(time) {
         let timePart = time.split(":")
-        let secondPart =  parseInt(timePart[1])-10;
-        console.log(secondPart)
+        let firstPart =  parseInt(timePart[0]);
+        let secondPart =   parseInt(timePart[1]);
+        
 
-        let newTime = timePart[0] + ':' + secondPart
+        if(secondPart == '00') {
+            secondPart = '50';
+            firstPart = parseInt(timePart[0]) - 1;
+            if(firstPart < 10) {
+                firstPart = '0' + firstPart
+            }
+        }else {
+            secondPart = parseInt(timePart[1])-10;
+        }
+
+        let newTime = firstPart + ':' + secondPart
         return newTime
     }
 
@@ -2065,7 +2076,7 @@
             let btn = `<button type="button" class="btn btn-danger col-md-12 m-b-20 minus" data-row="${row}"><i class="fa fa-minus"></i></button>`
             let element = ` <div class="form-group col-md-3 row_${row} food_items">
                                 <label for="name">Food</label>
-                                <select name="food[]" id="food_sel" class="form-control m-b-20">
+                                <select name="food[]" id="food_sel" class="food_sel form-control m-b-20">
                                     ${food}
                                 </select>
                                 <input type="number" name="mass[]" id="mass" class="form-control m-b-20 c_mass" placeholder="Mass" required>
@@ -2129,6 +2140,7 @@
         })
 
         function calculate() {
+
             let total_mass = 0;
             let total_carbs = 0;
             let total_fat = 0;
@@ -2137,6 +2149,7 @@
             let total_ph = 0;
             let total_glycemic_load = 0;
             let food_mass = 0;
+            let total_fiber = 0;
 
             // other variable
             var ph_sum = 0;
@@ -2150,6 +2163,7 @@
 
                 if($(this).find('input').val()) {
 
+
                     let mass = parseFloat($(this).find("#mass").val());
 
                     food_mass = parseFloat($(this).find("#food_sel").find(":selected").data('quantity_measure'));
@@ -2159,6 +2173,7 @@
                     total_fat += parseFloat($(this).find("#food_sel").find(":selected").data('fat')) / food_mass * mass;
                     total_proteins += parseFloat($(this).find("#food_sel").find(":selected").data('proteins')) / food_mass * mass;
                     total_calories += parseFloat($(this).find("#food_sel").find(":selected").data('calories')) / food_mass * mass;
+                    total_fiber += parseFloat($(this).find("#food_sel").find(":selected").data('fiber'))/food_mass*mass;
 
                     let nums = $('.food_items').length;
 
@@ -2181,6 +2196,7 @@
                     $('#total_calories').val(total_calories);
                     $('#total_ph').val(total_ph);
                     $('#total_glycemic_load').val(total_glycemic_load);
+                    $('#total_fiber').val(total_fiber);
 
                     // var tr = calculateCarbDigestion(total_glycemic_load, total_carbs, total_fat);
                     // console.log(tr)
@@ -2412,6 +2428,7 @@
                         personal_meal_id: meals[i].personal_meal_id,
                         get_personal_food: meals[i].get_personal_food,
                         get_meals: meals[i].get_meals,
+                        fiber: meals[i].fiber,
                     };
 
                     days.addMeals(mealObj)
@@ -2440,8 +2457,7 @@
                 ];
                 const waterEvents = [
                 ]
-                const meal = [
-                ]
+                const meal = []
 
                 for(let i=0; i<activities.length; i++) {
 
@@ -2807,10 +2823,14 @@
                                 minute.minuteActivityPopover = popover
 
                             } else {
-                                if(end == fm) {
-                                    console.log('end j = ', i, j, inProgressAction)
 
-                                        if(startIndex == i) {
+                                let io = end, ioo = timeMinus10Minutes(fm) ;
+                                if(io != null) {
+                                    io = timeMinus10Minutes(end)
+                                }
+
+                                if(io == ioo) {
+                                    if(startIndex == i) {
                                             console.log('nuyn row um')
                                         }else {
 
@@ -2832,9 +2852,15 @@
                                                 activity_id:inProgressAction.activity_id,
                                                 total: ((finalResult / 10) * totalCal).toFixed(2),
                                             }
-                                            
+
                                             timeObj.activityPopover.push(popover)
                                         }
+                                }
+
+                                if(end == fm) {
+                                    console.log('end j = ', i, j, inProgressAction)
+
+                                       
                                     end = null
                                     color = this.returnRandomColor()
                                 }
@@ -2916,7 +2942,8 @@
                 intakeDayTotal = {
                     totalCarb: 0,
                     totalFat: 0,
-                    totalProteinG: 0
+                    totalProteinG: 0,
+                    totalFiber: 0,
                 }
 
                 for(let i=0; i<=23; i++) {
@@ -3052,7 +3079,8 @@
                         _totalCarbD = 0,
                         _totalProteinG = 0,
                         _totalProtein = 0,
-                        _proteinHourlyLimit = 0;
+                        _proteinHourlyLimit = 0,
+                        _totalFiber = 0;
 
                     for(let i=0; i<timeObj.minutes.length; i++) {
                         if(timeObj.minutes[i].intake) {
@@ -3060,6 +3088,7 @@
                                 _totalFat += parseFloat(timeObj.minutes[i].intake.fatG)
                                 _totalCarb += parseFloat(timeObj.minutes[i].intake.carbG)
                                 _totalProteinG += parseFloat(timeObj.minutes[i].intake.proteinG)
+                                _totalFiber += parseFloat(timeObj.minutes[i].intake.fiber)
                             }
 
                             _totalFatD += parseFloat(timeObj.minutes[i].intake.fatD)
@@ -3077,6 +3106,7 @@
                     timeObj.totals.totalProteinG = _totalProteinG != 0 ? _totalProteinG.toFixed(2) : ""
                     timeObj.totals.totalProtein = _totalProtein != 0 ? _totalProtein.toFixed(2) : ""
                     timeObj.totals.proteinHourlyLimit = proteinHLFinal != 0 ? proteinHLFinal.toFixed(2) : ""
+                    timeObj.totals.totalFiber = _totalFiber != 0 ? _totalFiber.toFixed(2) : ""
 
                     mealArr.push(timeObj)
 
@@ -3085,15 +3115,15 @@
                         intakeDayTotal.totalFat += parseFloat(timeObj.totals.totalFat)
                         intakeDayTotal.totalCarb += parseFloat(timeObj.totals.totalCarb)
                         intakeDayTotal.totalProteinG += parseFloat(timeObj.totals.totalProteinG)
+                        intakeDayTotal.totalFiber += parseFloat(timeObj.totals.totalFiber)
                         
                     }
 
-                    // console.log(typeof('typeof typeof typeof typeof', intakeDayTotal.totalFat))
                 }
 
                 this.mealGraphic = mealArr
                 this.dayTotals.intake = intakeDayTotal
-                console.log('Meal graphic : ', this.mealGraphic)
+                console.log('66666666666666666666666666666666666666666666666 ======== : ',  this.dayTotals)
             },
             createStatusGraphic() {
                 for(let i=0; i<this.staticTimes.length; i++) {
@@ -3484,6 +3514,7 @@
                     $('#m_total_calories').val(roundNumberDecimal(data.calories));
                     $('#m_total_ph').val(roundNumberDecimal(data.ph));
                     $('#m_total_glycemic_load').val(roundNumberDecimal(data.glycemic_load));
+                    $('#m_total_fiber').val(roundNumberDecimal(data.fiber));
                     
                     let mealObj = {
                         glycemicLoad: data.glycemic_load,
@@ -3495,9 +3526,9 @@
                     days.createMealPopupGraphic(mealObj)
                     days.calculateStatusPopup()
 
-                    var m_pl = `    <button type="button" class="btn btn-success col-md-2 m-b-20 m_plus" style=" height: 50px;width: 50px;">
-                                        <i class="fa fa-plus" style="font-size: 25px;"></i>
-                                    </button>`;
+                    var m_pl = `<button type="button" class="btn btn-success col-md-2 m-b-20 m_plus" style=" height: 50px;width: 50px;">
+                                    <i class="fa fa-plus" style="font-size: 25px;"></i>
+                                </button>`;
                     $('.m_foods').empty();
                     $('.m_foods').append(m_pl);
 
@@ -3610,6 +3641,7 @@
         });
 
         function m_calculate() {
+
             console.log('m_calculate')
             let total_mass = 0;
             let total_carbs = 0;
@@ -3619,6 +3651,7 @@
             let total_ph = 0;
             let total_glycemic_load = 0;
             let food_mass = 0;
+            let total_fiber = 0;
 
             // other variable
             var ph_sum = 0;
@@ -3639,6 +3672,7 @@
                     total_fat += parseFloat($(this).find(".m_food_sel").find(":selected").data('fat')) / food_mass * mass;
                     total_proteins += parseFloat($(this).find(".m_food_sel").find(":selected").data('proteins')) / food_mass * mass;
                     total_calories += parseFloat($(this).find(".m_food_sel").find(":selected").data('calories')) / food_mass * mass;
+                    total_fiber += parseFloat($(this).find(".m_food_sel").find(":selected").data('fiber'))/food_mass*mass;
 
                     let nums = $('.food_items').length;
 
@@ -3661,6 +3695,7 @@
                     $('#m_total_calories').val(roundNumberDecimal(total_calories));
                     $('#m_total_ph').val(total_ph);
                     $('#m_total_glycemic_load').val(total_glycemic_load);
+                    $('#m_total_fiber').val(total_fiber);
 
                     // var tr = calculateCarbDigestion(total_glycemic_load, total_carbs, total_fat);
                     // $('#meal_carb_fat').html(tr);
