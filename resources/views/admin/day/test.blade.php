@@ -60,7 +60,6 @@
 
                     </div>
                     <div class="right-section-total">
-                    <p>@{{dayTotals.intake}}</p>
 
                     <table class="table table-bordered table-sm table-shadow">
                         <thead>
@@ -70,6 +69,7 @@
                                 <th scope="col">Carb</th>
                                 <th scope="col">Fat</th>
                                 <th scope="col">Protein</th>
+                                <th scope="col">Fiber</th>
                             </tr>
                         </thead>
                         <tbody class="top-header">
@@ -80,6 +80,7 @@
                                 <td>@{{ (dayTotals.energyExpenditure.totalCarbG).toFixed(2) }}</td>
                                 <td>@{{ (dayTotals.energyExpenditure.totalFatG).toFixed(2) }}</td>
                                 <td> <span class="protein_must">0</span> </td>
+                                <td>-</td>
                             </tr>
                             <tr>
                                 <th scope="row">Intake</th>
@@ -87,19 +88,20 @@
                                 <td>@{{ (dayTotals.intake.totalCarb).toFixed(2) }}</td>
                                 <td>@{{ (dayTotals.intake.totalFat).toFixed(2) }}</td>
                                 <td> <span class="protein_eat">0 </span> </td>
+                                <td>Fiber</td>
                             </tr>
                             <tr>
                                 <th></th>
-                                <td v-bind:class="dayTotals.energyExpenditure.totalCal > ( (dayTotals.energyExpenditure.totalFatG * 9) + (dayTotals.energyExpenditure.totalCarbG * 4) + ( proteinMust * 4) ) ? 'text-success' : 'text-danger' ">
-                                    <span v-if="dayTotals.energyExpenditure.totalCal >  ( (dayTotals.energyExpenditure.totalFatG * 9) + (dayTotals.energyExpenditure.totalCarbG * 4) + ( proteinMust * 4) ) ">
-                                         @{{ (dayTotals.energyExpenditure.totalCal - ( (dayTotals.energyExpenditure.totalFatG * 9) + (dayTotals.energyExpenditure.totalCarbG * 4) + ( proteinMust * 4) ) ).toFixed(2) }}
-                                        loss 
+                                <td v-bind:class="dayTotals.energyExpenditure.totalCal > (dayTotals.intake.totalFat * 9) + (dayTotals.intake.totalCarb * 4) + ( proteinEat * 4) ? 'text-success' : 'text-danger' ">
+                                    
+                                    <span v-if="dayTotals.energyExpenditure.totalCal > (dayTotals.intake.totalFat * 9) + (dayTotals.intake.totalCarb * 4) + ( proteinEat * 4) ">
+                                         @{{ (dayTotals.energyExpenditure.totalCal - ((dayTotals.intake.totalFat * 9) + (dayTotals.intake.totalCarb * 4) + ( proteinEat * 4))).toFixed(2) }}
                                     </span>
-                                    <span  v-if="dayTotals.energyExpenditure.totalCal <  ( (dayTotals.energyExpenditure.totalFatG * 9) + (dayTotals.energyExpenditure.totalCarbG * 4) + ( proteinMust * 4) ) ">
-                                         @{{ (dayTotals.energyExpenditure.totalCal - ( (dayTotals.energyExpenditure.totalFatG * 9) + (dayTotals.energyExpenditure.totalCarbG * 4) + ( proteinMust * 4) ) ).toFixed(2) }}
-                                         access
+                                    <span  v-else-if="dayTotals.energyExpenditure.totalCal <  (dayTotals.intake.totalFat * 9) + (dayTotals.intake.totalCarb * 4) + ( proteinEat * 4) ">
+                                         @{{ (dayTotals.energyExpenditure.totalCal - ((dayTotals.intake.totalFat * 9) + (dayTotals.intake.totalCarb * 4) + ( proteinEat * 4))).toFixed(2) }}
                                     </span>
                                     <span v-else>0</span>
+
                                 </td>
                                 <td v-bind:class=" dayTotals.energyExpenditure.totalCarbG > dayTotals.intake.totalCarb ? 'text-success' : 'text-danger' ">
                                     <span v-if="dayTotals.energyExpenditure.totalCarbG > dayTotals.intake.totalCarb"> 
@@ -122,6 +124,7 @@
                                     <span v-else>0</span>
                                 </td>
                                 <td id="protF">0</td>
+                                <td>-</td>
                             </tr>
                         </tbody>
                     </table>
@@ -253,8 +256,10 @@
                 <tbody class="font-sm">
                     <tr v-for="(activity, i) in staticTimes" :key="activity.time" v-if="activity.show">
 
-                        <td class="d-flex align-items-center activity-color"
-                        @click="toggleTimes(i)" >
+                        <td 
+                            class="d-flex align-items-center activity-color"
+                            @click="toggleTimes(i)" 
+                        >
                             <span
                                 v-for="info in activity.activityPopover"
                                 class="mr-2 tooltipp"
@@ -298,7 +303,6 @@
                                         </div>
                                     </span>
                                 </div>
-                                <!-- @click="openEditActionPopup(activity_info.minuteActivityPopover)" -->
                                 <div> <i class="fas fa-edit"></i>
                                 </div>
 
@@ -677,6 +681,7 @@
                                 </div>
 
                                 <div class="form-row display-inline">
+
                                     <div class="form-group col-md-1">
                                         <label for="total_mass">Total Mass</label>
                                         <input type="number" class="form-control" id="m_total_mass"
@@ -718,12 +723,20 @@
                                                 name="total_ph" readonly required value="">
                                     </div>
 
-                                    <div class="form-group col-md-2">
+                                    <div class="form-group col-md-1">
                                         <label for="total_glycemic_load">Total Glycemic Load</label>
                                         <input type="number" class="form-control" id="m_total_glycemic_load"
                                                 placeholder="Total Glycemic Load" name="total_glycemic_load" readonly
                                                 required value="">
                                     </div>
+
+                                    <div class="form-group col-md-1">
+                                        <label for="total_glycemic_load">Fiber</label>
+                                        <input type="number" class="form-control" id="m_total_fiber"
+                                                placeholder="Fiber" name="m_total_fiber" readonly
+                                                required value="">
+                                    </div>
+
                                 </div>
 
                                 <div class="form-row">
@@ -778,15 +791,15 @@
                                                         </tr>
                                                         <tr>
                                                             <th>Carb</th>
-                                                            <th>Fat</th>
                                                             <th>Dimm Carb</th>
+                                                            <th>Fat</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody v-for="(time, i) in mealPopupData" :key="i">
                                                         <tr v-if="i != 4">
                                                             <td> @{{time.totals.totalCarb}} </td>
-                                                            <td> @{{time.totals.totalFat}} </td>
                                                             <td> @{{time.totals.totalDim}} </td>
+                                                            <td> @{{time.totals.totalFat}} </td>
                                                         </tr>
                                                     </tbody>
                                                 </table>
@@ -927,11 +940,18 @@
                                                 name="total_ph" readonly required>
                                     </div>
 
-                                    <div class="form-group col-md-2">
+                                    <div class="form-group col-md-1">
                                         <label for="total_glycemic_load">Total Glycemic Load</label>
                                         <input type="number" class="form-control" id="total_glycemic_load"
                                                 placeholder="Total Glycemic Load" name="total_glycemic_load" readonly
                                                 required>
+                                    </div>
+
+                                    <div class="form-group col-md-1">
+                                        <label for="total_glycemic_load">Fiber</label>
+                                        <input type="number" class="form-control" id="m_total_fiber"
+                                                placeholder="Fiber" name="m_total_fiber" readonly
+                                                required value="">
                                     </div>
                                 </div>
 
@@ -991,15 +1011,15 @@
                                                             </tr>
                                                             <tr>
                                                                 <th>Carb</th>
-                                                                <th>Fat</th>
                                                                 <td>Dimm Carb</td>
+                                                                <th>Fat</th>
                                                             </tr>
                                                         </thead>
                                                         <tbody v-for="(time, i) in mealPopupData" :key="i">
                                                         <tr v-if="i != 4">  
                                                                 <td> @{{time.totals.totalCarb}} </td>
-                                                                <td> @{{time.totals.totalFat}} </td>
                                                                 <td> @{{time.totals.totalDim}} </td>
+                                                                <td> @{{time.totals.totalFat}} </td>
                                                             </tr>
                                                         </tbody>
                                                     </table>
@@ -1411,6 +1431,14 @@
 
         let newTime = firstPart + ':' + timePart[1]
         console.log('timePlusOneHour : ', newTime)
+        return newTime
+    }
+    function timeMinus10Minutes(time) {
+        let timePart = time.split(":")
+        let secondPart =  parseInt(timePart[1])-10;
+        console.log(secondPart)
+
+        let newTime = timePart[0] + ':' + secondPart
         return newTime
     }
 
@@ -2226,32 +2254,6 @@
         return Math.round((floatNumber + Number.EPSILON) * 100) / 100
     }
 
-    // function calculateCarbDigestion(glycemicLoad , carbs, fat) {
-    //     var tr = "";
-    //     var carb = (glycemicLoad <= 40 ) ? carbs / 4 : (glycemicLoad > 40 && glycemicLoad <= 55) ? carbs / 3 : (glycemicLoad > 55 && glycemicLoad <= 70) ? carbs / 2 : carbs;
-    //     var fourHourFat = fat / 4;
-    //     var prevCarb = 0;
-    //     for (var i = 1; i < 5; i++) {
-    //         let fatGr = $('.energy-table tbody:nth-child('+(i+1)+')').find('tr:first').find('td.fatGr span').text();
-    //         let carbGr = $('.energy-table tbody:nth-child('+(i+1)+')').find('tr:first').find('td.fatGr span').text();
-    //         prevCarb += carb;
-    //         var currentCarb = (prevCarb != carbs) ? roundNumberDecimal(carb) : '-'
-    //         let carbStatus = (currentCarb != '-') ? currentCarb - carbGr : '-';
-    //         let carbStatusText = (carbStatus > 0 && carbStatus != '-') ? roundNumberDecimal(Math.abs(currentCarb - carbGr)) + " access" : roundNumberDecimal(Math.abs(currentCarb - carbGr)) + ' loss';
-    //         let fatStatus = fourHourFat - fatGr;
-    //         let fatStatusText = (fatStatus > 0) ? roundNumberDecimal(Math.abs(fourHourFat - fatGr)) + " access " : roundNumberDecimal(Math.abs(fourHourFat - fatGr)) + ' loss';
-    //         tr += `<tr>
-    //                     <td>${carbGr}</td>
-    //                     <td>${fatGr}</td>
-    //                     <td>${currentCarb}</td>
-    //                     <td>${roundNumberDecimal(fourHourFat)}</td>
-    //                     <td>${carbStatusText}</td>
-    //                     <td>${fatStatusText}</td>
-    //                 </tr>`;
-    //     }
-    //     return tr;
-    // }
-
     function calculateProteinFinal() {
 
         let eat = $('.protein_eat').text()
@@ -2604,7 +2606,6 @@
 
                 for(let k=0; k <= 23; k++) {
                     if(k>sleepTime) {
-                        console.log('k', k)
                         times[k].show ? times[k].show = false : times[k].show = true
                         meals[k].show ? meals[k].show = false : meals[k].show = true
                     }
@@ -2706,6 +2707,8 @@
                 let timeArr = [],
                     end = null,
                     color = this.returnRandomColor(),
+                    startIndex = 0,
+                    inProgressAction = {},
                     
                     // totalCount = 0,
                     minuteExpenditure = {}
@@ -2719,7 +2722,6 @@
                         totalCarbG: 0,
                         totalDimmCarbG: 0
                     };
-
                 for(let i=0; i<=23; i++) {
 
                     let timeObj = {
@@ -2743,7 +2745,6 @@
 
                         let m = i + ':' + j + '0';
                         let fm = i < 10 ? '0' + m : m;
-
                         let minute = {
                             minute: fm,
                             show: false
@@ -2770,29 +2771,20 @@
                             }
 
                             if(fm == this.actions[k].start) {
-
                                 end = this.actions[k].end
-
+                                startIndex = i
+                                inProgressAction = this.actions[k]
+                               
                                 // ################### Hashvark te qani hat 10 rope ka ###################
-
                                 let t1 = parseInt(this.actions[k].start.substring(0,2)),
                                     t11 = parseInt(this.actions[k].start.substring(3,5));
-
                                 let t2 = parseInt(end.substring(0,2)),
                                     t22 = parseInt(end.substring(3,5));
-
                                 let result1 = t2 -t1,
                                     result2 = t22 - t11;
-
                                 let finalResult = parseInt((result1 * 60) + result2);
                                 // #########################################################################
-
-                                minute.borderColor = color
-                                minute.name = this.actions[k].name
-
-                                minute.energyExpenditure = expenditure
-                                minuteExpenditure = expenditure
-
+                                
                                 let popover = {
                                     id: this.actions[k].id,
                                     name: this.actions[k].name,
@@ -2801,40 +2793,69 @@
                                     activity_id: this.actions[k].activity_id,
                                     total: ((finalResult / 10) * totalCal).toFixed(2),
                                 }
-                                popoverParent = popover 
                                 timeObj.activityPopover.push(popover)
+
+                                // if(j == 0) {
+                                    console.log('start j = ', i, j)
+                                // }
+
+                                minute.borderColor = color
+                                minute.name = this.actions[k].name
+                                minute.energyExpenditure = expenditure
+                                minuteExpenditure = expenditure
+                                popoverParent = popover 
                                 minute.minuteActivityPopover = popover
 
                             } else {
-
                                 if(end == fm) {
+                                    console.log('end j = ', i, j, inProgressAction)
+
+                                        if(startIndex == i) {
+                                            console.log('nuyn row um')
+                                        }else {
+
+                                            // ################### Hashvark te qani hat 10 rope ka ###################
+                                            let t1 = parseInt(inProgressAction.start.substring(0,2)),
+                                                t11 = parseInt(inProgressAction.start.substring(3,5));
+                                            let t2 = parseInt(end.substring(0,2)),
+                                                t22 = parseInt(end.substring(3,5));
+                                            let result1 = t2 -t1,
+                                                result2 = t22 - t11;
+                                            let finalResult = parseInt((result1 * 60) + result2);
+                                            // #########################################################################
+                                            
+                                            let popover = {
+                                                id: inProgressAction.id,
+                                                name:inProgressAction.name,
+                                                start: inProgressAction.start,
+                                                end:inProgressAction.end,
+                                                activity_id:inProgressAction.activity_id,
+                                                total: ((finalResult / 10) * totalCal).toFixed(2),
+                                            }
+                                            
+                                            timeObj.activityPopover.push(popover)
+                                        }
                                     end = null
                                     color = this.returnRandomColor()
-                                    // totalCount = 0;
                                 }
-
                                 else if(fm != this.actions[k].start && end != null) {
 
                                     minute.borderColor = color
                                     minute.actionType = 1
-
                                     minute.minuteActivityPopover = popoverParent
 
                                     if( !minute.energyExpenditure ) {
                                         minute.energyExpenditure = minuteExpenditure
                                     }
+                                    
+                                    
                                 }
-
                             }
-
                         }
-
-
                         // Red cyrcle
                         if(!minute.borderColor) {
                             timeObj.circle = true
                         }
-
                         timeObj.minutes.push(minute)
                     }
 
@@ -2857,9 +2878,7 @@
                             _totalDimmeredCarbG += parseFloat (timeObj.minutes[i].energyExpenditure.dimmCarbG)
                         }
                     }
-
                     
-
                     timeObj.totals.totalMet = _totalMet != 0 ? _totalMet.toFixed(2) : ""
                     timeObj.totals.totalCal = _totalCal != 0 ? _totalCal.toFixed(2) : ""
                     timeObj.totals.totalFatC = _totalFatC != 0 ? _totalFatC.toFixed(2) : ""
@@ -2867,12 +2886,9 @@
                     timeObj.totals.totalCarbC = _totalCarbC != 0 ? _totalCarbC.toFixed(2) : ""
                     timeObj.totals.totalCarbG = _totalCarbG != 0 ? _totalCarbG.toFixed(2) : ""
                     timeObj.totals.totalDimmCarbG = _totalDimmeredCarbG != 0 ? _totalDimmeredCarbG.toFixed(2) : ""
-
                     
                     timeArr.push(timeObj)
-
                     
-
                     if(timeObj.totals.totalCal != "") {
                         energyExpenditureDayTotal.totalMet += parseFloat(timeObj.totals.totalMet)
                         energyExpenditureDayTotal.totalCal += parseFloat(timeObj.totals.totalCal)
@@ -2883,13 +2899,10 @@
                         energyExpenditureDayTotal.totalDimmCarbG += parseFloat(timeObj.totals.totalDimmCarbG)
                     }
                 }
-
                 this.staticTimes = timeArr
                 this.dayTotals.energyExpenditure = energyExpenditureDayTotal
-
                 console.log('Static Times : ', this.staticTimes)
                 console.log('asdasdasd',this.dayTotals.energyExpenditure )
-
             },
             createMealGraphic() {
                 console.log('Create Meal graphic..')
@@ -3361,7 +3374,6 @@
                     }
                 });
             },
-
 
             clearActivity() {
                 this.activities = []
@@ -3917,7 +3929,6 @@
             event.start += 9.5
             let name = event.name
             let height = (event.end - event.start) / minutesinDay * containerHeight;
-            console.log(event.end, event.start, minutesinDay, containerHeight)
             let top = event.start / minutesinDay * containerHeight; 
             let end = event.end;
             let start = event.start;
