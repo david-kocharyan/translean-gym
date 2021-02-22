@@ -303,7 +303,7 @@ class DayController extends Controller
         $personal_meal->calories = $data['total_calories'];
         $personal_meal->ph = $data['total_ph'];
         $personal_meal->glycemic_load = $data['total_glycemic_load'];
-        $personal_meal->total_fiber = $data['total_fiber'];
+        $personal_meal->fiber = $data['total_fiber'];
         $personal_meal->save();
 
         $arr = array();
