@@ -2428,8 +2428,10 @@
                         personal_meal_id: meals[i].personal_meal_id,
                         get_personal_food: meals[i].get_personal_food,
                         get_meals: meals[i].get_meals,
-                        fiber: meals[i].fiber,
+                        fiber:  meals[i].get_meals.fiber,
                     };
+
+                    console.log('0202020202', meals[i].get_meals.fiber)
 
                     days.addMeals(mealObj)
                 }
@@ -2960,7 +2962,8 @@
                             totalCarbD: null,
                             totalProteinG: null,
                             totalProtein: null,
-                            proteinHourlyLimit: null
+                            proteinHourlyLimit: null,
+                            totalFiber: null,
                         }
                     }
 
@@ -3005,7 +3008,8 @@
                                     carbD: carbD,
 
                                     proteinG: this.meal[k].proteinG,
-                                    proteinD: ((this.meal[k].proteinG / 4) / 6).toFixed(2)
+                                    proteinD: ((this.meal[k].proteinG / 4) / 6).toFixed(2),
+                                    fiber: this.meal[k].fiber
                                 }
 
                                 if(fm == this.meal[k].start) {
@@ -3038,6 +3042,8 @@
 
                                             proteinG: intake.proteinG,
                                             proteinD: parseFloat(minute.intake.proteinD) + parseFloat(minuteIntake.proteinD),
+
+                                            fiber: intake.fiber
                                         }
                                         minute.intake = x
                                     }
@@ -3083,7 +3089,13 @@
                         _totalFiber = 0;
 
                     for(let i=0; i<timeObj.minutes.length; i++) {
+
+                        if( timeObj.minutes[i]) {
+                            console.log('timeObj.minutes[i].intake.fiber', timeObj.minutes[i].intake)
+                        }
+                        
                         if(timeObj.minutes[i].intake) {
+
                             if(timeObj.minutes[i].name && !timeObj.minutes[i].water) {
                                 _totalFat += parseFloat(timeObj.minutes[i].intake.fatG)
                                 _totalCarb += parseFloat(timeObj.minutes[i].intake.carbG)
@@ -3091,6 +3103,9 @@
                                 _totalFiber += parseFloat(timeObj.minutes[i].intake.fiber)
                             }
 
+                            console.log('_______', _totalFiber)
+                            
+                            
                             _totalFatD += parseFloat(timeObj.minutes[i].intake.fatD)
                             _totalCarbD += parseFloat(timeObj.minutes[i].intake.carbD)
                             _totalProtein += parseFloat(timeObj.minutes[i].intake.proteinD)
@@ -3110,20 +3125,25 @@
 
                     mealArr.push(timeObj)
 
+                    console.log('_______88888888888', _totalFiber)
+
                     if(timeObj.totals.totalFat != "") {
 
                         intakeDayTotal.totalFat += parseFloat(timeObj.totals.totalFat)
                         intakeDayTotal.totalCarb += parseFloat(timeObj.totals.totalCarb)
                         intakeDayTotal.totalProteinG += parseFloat(timeObj.totals.totalProteinG)
-                        intakeDayTotal.totalFiber += parseFloat(timeObj.totals.totalFiber)
-                        
+                        console.log('timeObj.totals.totalFibertimeObj.totals.totalFibertimeObj.totals.totalFiber', timeObj.totals.totalFiber)
+                        intakeDayTotal.totalFiber += parseFloat(timeObj.totals.totalFiber)    
+                        console.log('222222', intakeDayTotal)
                     }
+                    
 
                 }
 
                 this.mealGraphic = mealArr
+                console.log('a0000000', intakeDayTotal)
                 this.dayTotals.intake = intakeDayTotal
-                console.log('66666666666666666666666666666666666666666666666 ======== : ',  this.dayTotals)
+
             },
             createStatusGraphic() {
                 for(let i=0; i<this.staticTimes.length; i++) {
@@ -3768,6 +3788,7 @@
             $('#m_total_calories').val(roundNumberDecimal(getMeals.calories));
             $('#m_total_ph').val(roundNumberDecimal(getMeals.ph));
             $('#m_total_glycemic_load').val(roundNumberDecimal(getMeals.glycemic_load));
+            $('#m_total_fiber').val(roundNumberDecimal(getMeals.fiber));
 
 
             let mealObj = {
